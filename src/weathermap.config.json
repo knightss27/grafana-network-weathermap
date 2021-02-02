@@ -1,0 +1,435 @@
+{
+    "WIDTH": "800",
+    "HEIGHT": "600",
+    "BACKGROUND": "background.png",
+    "HTMLOUTPUTFILE": "example.html",
+    "IMAGEOUTPUTFILE": "example.png",
+    "TITLE": [
+        "Network",
+        "Overview"
+    ],
+    "HTMLSTYLE": "overlib",
+    "KEYPOS": [
+        "10",
+        "400"
+    ],
+    "FONTDEFINE": [
+        "102",
+        "Vera",
+        "9"
+    ],
+    "SCALE": {
+        "DEFAULT": {
+            "0": [
+                "purple"
+            ],
+            "12": [
+                "violet"
+            ],
+            "25": [
+                "blue"
+            ],
+            "50": [
+                "limegreen"
+            ],
+            "60": [
+                "yellow"
+            ],
+            "75": [
+                "orange"
+            ],
+            "100": [
+                "red"
+            ]
+        }
+    },
+    "KEYFONT": "102",
+    "LINK": {
+        "DEFAULT": {
+            "BANDWIDTH": [
+                "100M"
+            ],
+            "BWLABEL": [
+                "bits"
+            ],
+            "BWFONT": [
+                "100"
+            ],
+            "OVERLIBWIDTH": [
+                "395"
+            ],
+            "OVERLIBHEIGHT": [
+                "153"
+            ],
+            "WIDTH": [
+                "6"
+            ]
+        },
+        "sync-core": {
+            "NODES": [
+                "sync",
+                "core"
+            ],
+            "TARGET": [
+                "data/sync_traffic_in_259.rrd"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=256&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=256"
+            ]
+        },
+        "sync-site1a": {
+            "NODES": [
+                "sync:N",
+                "site1:W"
+            ],
+            "WIDTH": [
+                "3"
+            ],
+            "TARGET": [
+                "data/sync_traffic_in_257.rrd"
+            ],
+            "BANDWIDTH": [
+                "2M"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=254&rra_id=0&graph_nolegend=true&graph_height=100&graph_width="
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=126"
+            ]
+        },
+        "sync-site1b": {
+            "NODES": [
+                "sync:E",
+                "site1:SE"
+            ],
+            "WIDTH": [
+                "3"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=255&rra_id=0&graph_nolegend=true&graph_height=100&graph_width="
+            ],
+            "TARGET": [
+                "data/sync_traffic_in_258.rrd"
+            ],
+            "BANDWIDTH": [
+                "2M"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=56"
+            ]
+        },
+        "sync-site2a": {
+            "NODES": [
+                "sync",
+                "site2"
+            ],
+            "WIDTH": [
+                "3"
+            ],
+            "VIA": [
+                "650",
+                "380"
+            ],
+            "TARGET": [
+                "data/sync_traffic_in_251.rrd"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=248&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "BANDWIDTH": [
+                "1M"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=252"
+            ]
+        },
+        "sync-site2b": {
+            "NODES": [
+                "sync",
+                "site2"
+            ],
+            "WIDTH": [
+                "3"
+            ],
+            "VIA": [
+                "650",
+                "420"
+            ],
+            "TARGET": [
+                "data/sync_traffic_in_252.rrd"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=228&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "BANDWIDTH": [
+                "1M"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=561"
+            ]
+        },
+        "transit-isp1": {
+            "NODES": [
+                "transit",
+                "isp1"
+            ],
+            "TARGET": [
+                "data/trans1_traffic_in_352.rrd",
+                "data/trans1_traffic_in_378.rrd",
+                "data/trans1_traffic_in_420.rrd"
+            ],
+            "BANDWIDTH": [
+                "10M"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=355&rra_id=0&graph_nolegend=true&graph_height=100&graph_width="
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=633"
+            ]
+        },
+        "transit-isp2": {
+            "NODES": [
+                "transit",
+                "isp2"
+            ],
+            "TARGET": [
+                "data/trans1_traffic_in_438.rrd"
+            ],
+            "BANDWIDTH": [
+                "34M"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=433&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=265"
+            ]
+        },
+        "core-transit": {
+            "NODES": [
+                "transit",
+                "core"
+            ],
+            "TARGET": [
+                "data/trans1_traffic_in_350.rrd"
+            ],
+            "ARROWSTYLE": [
+                "compact"
+            ],
+            "WIDTH": [
+                "4"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=347&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=122"
+            ]
+        },
+        "cust1-core": {
+            "NODES": [
+                "customer1",
+                "core"
+            ],
+            "TARGET": [
+                "data/extreme_traffic_in_299.rrd"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=296&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=237"
+            ]
+        },
+        "cust2-core": {
+            "NODES": [
+                "customer2",
+                "core"
+            ],
+            "TARGET": [
+                "data/extreme_traffic_in_286.rrd"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=283&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=222"
+            ]
+        },
+        "infra-core": {
+            "NODES": [
+                "infra",
+                "core"
+            ],
+            "TARGET": [
+                "data/extreme_traffic_in_294.rrd"
+            ],
+            "OVERLIBGRAPH": [
+                "http://support.mynet.net/cacti/graph_image.php?local_graph_id=291&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
+            ],
+            "INFOURL": [
+                "http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=228"
+            ]
+        }
+    },
+    "NODE": {
+        "DEFAULT": {
+            "LABELFONT": [
+                "101"
+            ]
+        },
+        "transit": {
+            "POSITION": [
+                "400",
+                "180"
+            ],
+            "LABEL": [
+                "TRANSIT"
+            ]
+        },
+        "isp1": {
+            "POSITION": [
+                "250",
+                "100"
+            ],
+            "LABEL": [
+                "ISP1"
+            ],
+            "INFOURL": [
+                "http://www.isp1.com/support/lookingglass.html"
+            ],
+            "LABELBGCOLOR": [
+                "255",
+                "224",
+                "224"
+            ]
+        },
+        "isp2": {
+            "POSITION": [
+                "550",
+                "100"
+            ],
+            "LABEL": [
+                "ISP2"
+            ],
+            "INFOURL": [
+                "http://www.isp2.net/portal/"
+            ],
+            "LABELBGCOLOR": [
+                "224",
+                "255",
+                "224"
+            ]
+        },
+        "core": {
+            "POSITION": [
+                "400",
+                "300"
+            ],
+            "LABEL": [
+                "CORE"
+            ],
+            "INFOURL": [
+                "https://core.mynet.net/admin/"
+            ]
+        },
+        "customer1": {
+            "LABEL": [
+                "xy.com"
+            ],
+            "POSITION": [
+                "150",
+                "370"
+            ],
+            "ICON": [
+                "https://findicons.com/files/icons/977/rrze/720/user_computer.png"
+            ],
+            "ICONWIDTH": [
+                "40"
+            ],
+            "ICONHEIGHT": [
+                "40"
+            ],
+            "LABELOFFSET": [
+                "W"
+            ]
+        },
+        "customer2": {
+            "LABEL": [
+                "ww.co.uk"
+            ],
+            "POSITION": [
+                "250",
+                "450"
+            ]
+        },
+        "infra": {
+            "LABEL": [
+                "INFRASTRUCTURE"
+            ],
+            "ICON": [
+                "https://findicons.com/files/icons/977/rrze/720/server_multiple.png"
+            ],
+            "ICONWIDTH": [
+                "40"
+            ],
+            "ICONHEIGHT": [
+                "40"
+            ],
+            "LABELOFFSET": [
+                "S"
+            ],
+            "POSITION": [
+                "450",
+                "540"
+            ]
+        },
+        "sync": {
+            "LABEL": [
+                "Sync"
+            ],
+            "ICON": [
+                "https://findicons.com/files/icons/977/rrze/720/server_multiple.png"
+            ],
+            "ICONWIDTH": [
+                "40"
+            ],
+            "ICONHEIGHT": [
+                "40"
+            ],
+            "LABELOFFSET": [
+                "S"
+            ],
+            "LABELFONT": [
+                "2"
+            ],
+            "POSITION": [
+                "550",
+                "370"
+            ]
+        },
+        "site1": {
+            "LABEL": [
+                "site1"
+            ],
+            "POSITION": [
+                "700",
+                "220"
+            ]
+        },
+        "site2": {
+            "LABEL": [
+                "site2"
+            ],
+            "POSITION": [
+                "750",
+                "420"
+            ]
+        }
+    }
+}

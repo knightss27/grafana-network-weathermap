@@ -1,0 +1,38 @@
+{
+  "type": "panel",
+  "name": "d3-weathermap",
+  "id": "knightss-27-d-3-weathermap",
+  "info": {
+    "description": "Network weathermap",
+    "author": {
+      "name": "knightss@catlin.edu",
+      "url": "https://seth.cx"
+    },
+    "keywords": [
+      "network",
+      "weathermap",
+      "network weathermap"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/simple-react-panel"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "7.0.x",
+    "plugins": []
+  }
+}
