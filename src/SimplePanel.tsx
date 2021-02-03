@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-nocheck
 
 import React, {useEffect, useState} from 'react';
 import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
@@ -27,14 +27,14 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
     const width = parseInt(settings.WIDTH);
     const height = parseInt(settings.HEIGHT);
     let backgroundColor: string = options.backgroundColor;
-    let weathermap: Weathermap = options.weathermap;
+    // let weathermap: Weathermap = options.weathermap;
 
-    const setBackgroundWhite = () => {
-        onOptionsChange({
-            ...options,
-            backgroundColor: "#fff"
-        })
-    }
+    // const setBackgroundWhite = () => {
+    //     onOptionsChange({
+    //         ...options,
+    //         backgroundColor: "#fff"
+    //     })
+    // }
 
     /** ----------------------------------------------------------------------------------- */
 
@@ -193,8 +193,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
     }
 
     useEffect(() => {
-        setBackgroundWhite();
-        console.log(weathermap);
+        // setBackgroundWhite();
+        // console.log(weathermap);
     }, [])
 
   return (

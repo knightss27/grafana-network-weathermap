@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, {useEffect, useState} from 'react';
 import { css } from 'emotion';
 import { Select, stylesFactory } from '@grafana/ui';
@@ -50,8 +52,9 @@ export const NodeForm = (props: Props) => {
         props.onChange(weathermap);
     }
 
-    useEffect(() => {
-    })
+    // useEffect(() => {
+    //     onChange({NODES: [], LINKS: [], SCALE: []})
+    // }, [])
 
     const [currentNode, setCurrentNode] = useState(value.NODES[0]?.ID || 'null');
 

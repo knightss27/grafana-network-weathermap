@@ -15,7 +15,8 @@ export const NodeBuilder = (props: Props) => {
     // const styles = getStyles();
 
     useEffect(() => {
-    })
+        // props.onChange({NODES: [], LINKS: [], SCALE: []})
+    }, [])
 
     return(
         <React.Fragment>
