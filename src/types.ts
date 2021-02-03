@@ -4,8 +4,31 @@ export interface SimpleOptions {
   backgroundColor: string;
   showSeriesCount: boolean;
   seriesCountSize: SeriesSize;
-  editNodes: string;
-  color: CircleColor;
+  weathermap: Weathermap;
 }
 
-type CircleColor = 'red' | 'green' | 'blue';
+export interface Node {
+  ID: string;
+  LABEL?: string;
+  POSITION: [number, number];
+  INFOURL?: string;
+  ICON?: string;
+  ICONHEIGHT?: string;
+  LABELOFFSET?: 'N' | 'S' | 'E' | 'W';
+  [propName: string]: any;
+}
+
+export interface Link {
+  ID: string;
+  NODES: [Node, Node] | [string, string];
+  BANDWIDTH: string;
+  TARGET?: string;
+  WIDTH?: string;
+  [propName: string]: any;
+}
+
+export interface Weathermap {
+  NODES: Node[];
+  LINKS: Link[];
+  SCALE: {[propName: number]: string};
+}

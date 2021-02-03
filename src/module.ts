@@ -45,10 +45,10 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       showIf: config => config.showSeriesCount,
     })
     .addCustomEditor({
-      id: 'editNodes',
-      path: 'editNodes',
-      name: 'Edit Nodes',
-      description: 'Add, remove, and edit weathermap nodes.',
+      id: 'weathermapEditor',
+      path: 'weathermap',
+      name: 'Edit Weathermap',
+      description: 'Add, remove, and edit weathermap nodes and links.',
       editor: NodeBuilder,
       settings: {
         placeholder: 'This is my placeholder.',

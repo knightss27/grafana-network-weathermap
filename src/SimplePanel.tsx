@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
-import { SimpleOptions } from 'types';
+import { SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { stylesFactory, useTheme } from '@grafana/ui';
 import settings from './weathermap.config.json';
@@ -11,7 +11,7 @@ import Draggable from 'react-draggable';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, height: height2 }) => {
+export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, height: height2, onOptionsChange }) => {
     const theme = useTheme();
     const styles = getStyles();
     /** FIELDS */
@@ -27,6 +27,15 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
     const width = parseInt(settings.WIDTH);
     const height = parseInt(settings.HEIGHT);
     let backgroundColor: string = options.backgroundColor;
+    let weathermap: Weathermap = options.weathermap;
+
+    const setBackgroundWhite = () => {
+        onOptionsChange({
+            ...options,
+            backgroundColor: "#fff"
+        })
+    }
+
     /** ----------------------------------------------------------------------------------- */
 
     /** COLOR SCALES */
@@ -182,6 +191,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
         let height: number = (next - current)/100 * 200;
         return height.toString() + "px";
     }
+
+    useEffect(() => {
+        setBackgroundWhite();
+        console.log(weathermap);
+    }, [])
 
   return (
     <div
