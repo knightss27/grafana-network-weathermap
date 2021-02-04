@@ -14,9 +14,9 @@ interface Settings {
 
 interface Props extends StandardEditorProps<Weathermap, Settings> {};
 
-export const NodeForm = (props: Props) => {
+export const NodeForm = ({ value, onChange }: Props) => {
 
-    const { value, onChange } = props;
+    // const  = props;
     // const theme = useTheme();
     const styles = getStyles();
 
@@ -46,13 +46,13 @@ export const NodeForm = (props: Props) => {
         onChange(weathermap);
     }
 
-    const clearWeathermap = () => {
+    const clearNodes = () => {
         let weathermap: Weathermap = value;
         weathermap.NODES = [];
-        props.onChange(weathermap);
+        onChange(weathermap);
     }
 
-    const [currentNode, setCurrentNode] = useState(value.NODES[0]?.ID || 'null');
+    const [currentNode, setCurrentNode] = useState('null');
 
     return(
         <React.Fragment>
@@ -129,9 +129,9 @@ export const NodeForm = (props: Props) => {
             </Button>
             <Button
                 variant="secondary"
-                icon="plus"
+                icon="trash-alt"
                 size="md"
-                onClick={clearWeathermap}
+                onClick={clearNodes}
                 className={styles.addNew}
             >
                 Clear All

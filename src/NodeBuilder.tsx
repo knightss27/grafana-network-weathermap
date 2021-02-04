@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import { StandardEditorProps } from '@grafana/data';
 import {Weathermap} from 'types';
 import {NodeForm} from './NodeForm'
+import {LinkForm} from './LinkForm'
 
 interface Settings {
     placeholder: string;
@@ -21,6 +22,7 @@ export const NodeBuilder = (props: Props) => {
     return(
         <React.Fragment>
             <NodeForm {...props}></NodeForm>
+            <LinkForm {...props}></LinkForm>
         </React.Fragment>
     )
 }

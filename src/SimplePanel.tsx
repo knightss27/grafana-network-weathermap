@@ -1,5 +1,5 @@
-// @ts-nocheck
-import React, {useEffect, useState} from 'react';
+//@ts-nocheck
+import React, {useEffect, useState, useRef} from 'react';
 import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
 import { SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
@@ -10,7 +10,8 @@ import Draggable from 'react-draggable';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, height: height2, onOptionsChange }) => {
+export const SimplePanel: React.FC<Props> = (props) => {
+    const { options, data, width: width2, height: height2, onOptionsChange } = props;
     const theme = useTheme();
     const styles = getStyles();
     /** FIELDS */
@@ -120,10 +121,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
     const [links, setLinks] = useState(options.weathermap.LINKS.map((d, i) => {
         let toReturn = Object.create(d)
         toReturn.index = i;
-        toReturn.source = toReturn.NODES[0].replace(/:.*/g, '');
-        toReturn.target = toReturn.NODES[1].replace(/:.*/g, '');
+        toReturn.source = toReturn.NODES[0].ID;
+        toReturn.target = toReturn.NODES[1].ID;
         return toReturn;
-    }))
+    }));
 
     const [nodes, setNodes] = useState(options.weathermap.NODES.map((d, i) => {
         let toReturn = Object.create(d)
@@ -132,7 +133,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
         toReturn.x = parseInt(toReturn.POSITION[0]);
         toReturn.y = parseInt(toReturn.POSITION[1]);
         return toReturn;
-    }))
+    }));
 
     function calculateRectX(d: any) {
         // This allows for NSEW offsets.
@@ -190,29 +191,29 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
         return height.toString() + "px";
     }
 
-    // useEffect(() => {
-    //     setLinks(options.weathermap.LINKS.map((d, i) => {
-    //         let toReturn = Object.create(d)
-    //         toReturn.index = i;
-    //         toReturn.source = toReturn.NODES[0].replace(/:.*/g, '');
-    //         toReturn.target = toReturn.NODES[1].replace(/:.*/g, '');
-    //         return toReturn;
-    //     }))
-    
-    //     setNodes(options.weathermap.NODES.map((d, i) => {
-    //         let toReturn = Object.create(d)
-    //         toReturn.name = d.ID;
-    //         toReturn.index = i;
-    //         toReturn.x = parseInt(toReturn.POSITION[0]);
-    //         toReturn.y = parseInt(toReturn.POSITION[1]);
-    //         return toReturn;
-    //     }))
-    //     console.log('updating')
-    // }, [options.weathermap])
-
-    // useEffect(() => {
-    //     console.log('weathermap updated')
-    // }, [options.weathermap])
+    const mounted = useRef(false);
+    useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true;
+        } else {
+            setLinks(options.weathermap.LINKS.map((d, i) => {
+                let toReturn = Object.create(d)
+                toReturn.index = i;
+                toReturn.source = toReturn.NODES[0].ID;
+                toReturn.target = toReturn.NODES[1].ID;
+                return toReturn;
+            }))
+            setNodes(options.weathermap.NODES.map((d, i) => {
+                let toReturn = Object.create(d)
+                toReturn.name = d.ID;
+                toReturn.index = i;
+                toReturn.x = parseInt(toReturn.POSITION[0]);
+                toReturn.y = parseInt(toReturn.POSITION[1]);
+                return toReturn;
+            }))
+        }
+        // console.log('simple panel updated')
+    }, [props])
 
   return (
     <div
