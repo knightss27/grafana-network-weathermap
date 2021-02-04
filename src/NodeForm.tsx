@@ -37,7 +37,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
         const node: Node = {ID: uuidv4(), POSITION: [400, 400], LABEL: 'Test Label'};
         weathermap.NODES.push(node);
         onChange(weathermap);
-        setCurrentNode(node.ID);
+        setCurrentNode(node);
     }
 
     const removeNode = (i: number) => {
@@ -49,6 +49,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     const clearNodes = () => {
         let weathermap: Weathermap = value;
         weathermap.NODES = [];
+        weathermap.LINKS = [];
         onChange(weathermap);
     }
 
@@ -57,7 +58,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     return(
         <React.Fragment>
             <Select
-                onChange={(v) => {setCurrentNode(v.ID)}}
+                onChange={(v) => {setCurrentNode(v)}}
                 value={currentNode}
                 options={value.NODES}
                 getOptionLabel={node => node.LABEL}
@@ -67,7 +68,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
             ></Select>
 
             {value.NODES.map((node, i) => {
-                if (node.ID == currentNode) {
+                if (node.ID == currentNode.ID) {
                     return (
                         <InlineFieldRow>
                             <InlineField label={"X"}>

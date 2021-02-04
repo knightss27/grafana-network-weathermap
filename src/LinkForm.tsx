@@ -42,11 +42,14 @@ export const LinkForm = (props: Props) => {
     }
 
     const addNewLink = () => {
+        if (value.NODES.length == 0) {
+            throw new Error('There must be >= 1 Nodes to create a link.');
+        }
         let weathermap: Weathermap = value;
         const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], BANDWIDTH: 50};
         weathermap.LINKS.push(link);
         onChange(weathermap);
-        setCurrentLink(link.ID);
+        setCurrentLink(link);
     }
 
     const removeLink = (i: number) => {
@@ -61,25 +64,25 @@ export const LinkForm = (props: Props) => {
         props.onChange(weathermap);
     }
 
-    const [currentLink, setCurrentLink] = useState('null');
+    const [currentLink, setCurrentLink] = useState('null' as unknown as Link);
 
     return(
         <React.Fragment>
             <Select
-                onChange={(v) => {setCurrentLink(v.ID)}}
+                onChange={(v) => {setCurrentLink(v as Link)}}
                 value={currentLink}
                 options={value.LINKS}
-                getOptionLabel={link => `${link.NODES[0].LABEL} --> ${link.NODES[1].LABEL}`}
+                getOptionLabel={link => link.NODES.length > 0 ? `${link.NODES[0]?.LABEL} <> ${link.NODES[0]?.LABEL}` : ''}
                 getOptionValue={link => link.ID}
                 className={styles.nodeSelect}
                 placeholder={"Select a link"}
             ></Select>
 
             {value.LINKS.map((link, i) => {
-                if (link.ID == currentLink) {
+                if (link.ID == currentLink.ID) {
                     return (
                         <InlineFieldRow>
-                            <InlineField label={"NODE 1"} labelWidth={"auto"}>
+                            <InlineField label={"A Side"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node1', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -87,11 +90,11 @@ export const LinkForm = (props: Props) => {
                                     getOptionLabel={node => node?.LABEL || 'No label'}
                                     getOptionValue={node => node.ID}
                                     className={styles.nodeSelect}
-                                    placeholder={"Select Node 1"}
+                                    placeholder={"Select A Side"}
                                     defaultValue={link.NODES[0]}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"NODE 2"} labelWidth={"auto"}>
+                            <InlineField label={"Z Side"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node2', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -99,7 +102,7 @@ export const LinkForm = (props: Props) => {
                                     getOptionLabel={node => node?.LABEL || 'No label'}
                                     getOptionValue={node => node.ID}
                                     className={styles.nodeSelect}
-                                    placeholder={"Select Node 2"}
+                                    placeholder={"Select Z Side"}
                                     defaultValue={link.NODES[1]}
                                 ></Select>
                             </InlineField>

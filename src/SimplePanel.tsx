@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, {useEffect, useState, useRef} from 'react';
 import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
 import { SimpleOptions, Weathermap } from 'types';
@@ -11,6 +10,7 @@ import Draggable from 'react-draggable';
 interface Props extends PanelProps<SimpleOptions> {}
 
 export const SimplePanel: React.FC<Props> = (props) => {
+    // @ts-ignore
     const { options, data, width: width2, height: height2, onOptionsChange } = props;
     const theme = useTheme();
     const styles = getStyles();
@@ -316,7 +316,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         })
                         console.log('dragged')
                   }}
-                  
+                  grid={[10,10]} //TODO: Implement this fully!
                   >
                     <g  
                         display={d.LABEL != undefined ? "inline" : "none"}
