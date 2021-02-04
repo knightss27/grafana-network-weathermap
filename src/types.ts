@@ -20,7 +20,7 @@ export interface Node {
 
 export interface Link {
   ID: string;
-  NODES: [Node, Node] | [string, string];
+  NODES: [string, string];
   BANDWIDTH: string;
   TARGET?: string;
   WIDTH?: string;

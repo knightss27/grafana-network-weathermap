@@ -52,10 +52,6 @@ export const NodeForm = (props: Props) => {
         props.onChange(weathermap);
     }
 
-    // useEffect(() => {
-    //     onChange({NODES: [], LINKS: [], SCALE: []})
-    // }, [])
-
     const [currentNode, setCurrentNode] = useState(value.NODES[0]?.ID || 'null');
 
     return(

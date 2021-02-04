@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import React, {useEffect, useState} from 'react';
 import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
 import { SimpleOptions, Weathermap } from 'types';
@@ -27,7 +26,6 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
     const width = parseInt(settings.WIDTH);
     const height = parseInt(settings.HEIGHT);
     let backgroundColor: string = options.backgroundColor;
-    // let weathermap: Weathermap = options.weathermap;
 
     // const setBackgroundWhite = () => {
     //     onOptionsChange({
@@ -119,17 +117,17 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
         }
     }
 
-    const [links] = useState(Object.keys(settings.LINK).filter(name => name != "DEFAULT").map((d, i) => {
-        let toReturn = Object.create((settings as any).LINK[d])
+    const [links, setLinks] = useState(options.weathermap.LINKS.map((d, i) => {
+        let toReturn = Object.create(d)
         toReturn.index = i;
         toReturn.source = toReturn.NODES[0].replace(/:.*/g, '');
         toReturn.target = toReturn.NODES[1].replace(/:.*/g, '');
         return toReturn;
     }))
 
-    const [nodes, setNodes] = useState(Object.keys(settings.NODE).filter(name => name != "DEFAULT").map((d, i) => {
-        let toReturn = Object.create((settings as any).NODE[d])
-        toReturn.name = d;
+    const [nodes, setNodes] = useState(options.weathermap.NODES.map((d, i) => {
+        let toReturn = Object.create(d)
+        toReturn.name = d.ID;
         toReturn.index = i;
         toReturn.x = parseInt(toReturn.POSITION[0]);
         toReturn.y = parseInt(toReturn.POSITION[1]);
@@ -138,7 +136,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
 
     function calculateRectX(d: any) {
         // This allows for NSEW offsets.
-        let offset = (d.LABEL != undefined) ?  -(d.LABEL[0].length * (parseInt(settings.FONTDEFINE[2])))/2 : 0;
+        let offset = (d.LABEL != undefined) ?  -(d.LABEL.length * (parseInt(settings.FONTDEFINE[2])))/2 : 0;
         if (d.LABELOFFSET == "W" ) {
             return 2*offset + getImageRectOffset(d, d.LABELOFFSET);
         } else if (d.LABELOFFSET == "E") {
@@ -158,7 +156,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
     }
 
     function calculateTextX(d: any) {
-        let offset = (d.LABEL != undefined) ?  -(d.LABEL[0].length * (parseInt(settings.FONTDEFINE[2])))/2 : 0;
+        let offset = (d.LABEL != undefined) ?  -(d.LABEL.length * (parseInt(settings.FONTDEFINE[2])))/2 : 0;
         if (d.ICON !== undefined && d.LABELOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
             if (d.LABELOFFSET == "W" ) {
                 return offset + getImageRectOffset(d, d.LABELOFFSET);
@@ -181,7 +179,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
 
 
     d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => (d as any).name).strength(0))
+        .force("link", d3.forceLink(links).id(d => (d as any).ID).strength(0))
         
   
     function getScaleColorHeight(index: number) {
@@ -192,10 +190,29 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
         return height.toString() + "px";
     }
 
-    useEffect(() => {
-        // setBackgroundWhite();
-        // console.log(weathermap);
-    }, [])
+    // useEffect(() => {
+    //     setLinks(options.weathermap.LINKS.map((d, i) => {
+    //         let toReturn = Object.create(d)
+    //         toReturn.index = i;
+    //         toReturn.source = toReturn.NODES[0].replace(/:.*/g, '');
+    //         toReturn.target = toReturn.NODES[1].replace(/:.*/g, '');
+    //         return toReturn;
+    //     }))
+    
+    //     setNodes(options.weathermap.NODES.map((d, i) => {
+    //         let toReturn = Object.create(d)
+    //         toReturn.name = d.ID;
+    //         toReturn.index = i;
+    //         toReturn.x = parseInt(toReturn.POSITION[0]);
+    //         toReturn.y = parseInt(toReturn.POSITION[1]);
+    //         return toReturn;
+    //     }))
+    //     console.log('updating')
+    // }, [options.weathermap])
+
+    // useEffect(() => {
+    //     console.log('weathermap updated')
+    // }, [options.weathermap])
 
   return (
     <div
@@ -231,6 +248,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox={`0 0 ${width} ${height}`}
+        shapeRendering="crispEdges"
+        textRendering="geometricPrecision"
       >
           <g>
               {links.map((d, i) => (
@@ -286,7 +305,18 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
                             }
                             return val;
                         }))
-                  }}>
+                  }}
+                  onStop={(e, position) => {
+                    let current: Weathermap = options.weathermap;
+                        current.NODES[i].POSITION = [position.x, position.y]
+                        onOptionsChange({
+                            ...options,
+                            weathermap: current
+                        })
+                        console.log('dragged')
+                  }}
+                  
+                  >
                     <g  
                         display={d.LABEL != undefined ? "inline" : "none"}
                         cursor={"move"}
@@ -306,7 +336,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
                         <rect
                             x={calculateRectX(d)}
                             y={calculateRectY(d)}
-                            width={(d.LABEL != undefined) ? d.LABEL[0].length * (parseInt(settings.FONTDEFINE[2])) : 0}
+                            width={(d.LABEL != undefined) ? d.LABEL.length * (parseInt(settings.FONTDEFINE[2])) : 0}
                             height={parseInt(settings.FONTDEFINE[2]) + 10}
                             fill={"#fff"}
                             stroke={"#000"}
@@ -324,7 +354,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width: width2, hei
                             letterSpacing={".12em"}
                             className={styles.nodeText}
                         >
-                            {(d.LABEL != undefined) ? d.LABEL[0] : ""}
+                            {(d.LABEL != undefined) ? d.LABEL : ""}
                         </text>
                     </g>
                 </Draggable>
