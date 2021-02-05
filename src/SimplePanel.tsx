@@ -191,6 +191,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
         return height.toString() + "px";
     }
 
+    function nearestMultiple(i: number, j: number): number {
+        return Math.ceil(i/j) * j;
+    }
+
     const mounted = useRef(false);
     useEffect(() => {
         if (!mounted.current) {
@@ -301,22 +305,23 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   <Draggable position={{x: d.x, y: d.y}} onDrag={(e, position) => {
                         setNodes(prevState => prevState.map((val, index) => {
                             if(index == i) {
-                                val.x = position.x;
-                                val.y = position.y;
+                                val.x = options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x;
+                                val.y = options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y;
                             }
                             return val;
                         }))
                   }}
                   onStop={(e, position) => {
                     let current: Weathermap = options.weathermap;
-                        current.NODES[i].POSITION = [position.x, position.y]
+                        current.NODES[i].POSITION = [options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x, options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y]
                         onOptionsChange({
                             ...options,
                             weathermap: current
                         })
                         console.log('dragged')
                   }}
-                  grid={[10,10]} //TODO: Implement this fully!
+                  
+                   //TODO: Implement this fully!
                   >
                     <g  
                         display={d.LABEL != undefined ? "inline" : "none"}

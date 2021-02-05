@@ -5,6 +5,8 @@ export interface SimpleOptions {
   showSeriesCount: boolean;
   seriesCountSize: SeriesSize;
   weathermap: Weathermap;
+  enableNodeGrid: boolean;
+  gridSizePx: number;
 }
 
 export interface Node {

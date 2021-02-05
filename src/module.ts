@@ -21,4 +21,17 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       description: 'Choose a background color.',
       defaultValue: '#fff',
     })
+    .addBooleanSwitch({
+      path: 'enableNodeGrid',
+      name: 'Node Grid Snapping',
+      description: "Turn on or off a snappable grid for dragging.",
+      defaultValue: false,
+    })
+    .addNumberInput({
+      path: 'gridSizePx',
+      name: 'Grid Size (px)',
+      description: "Set the nodes' snappable grid size.",
+      defaultValue: 10,
+      showIf: config => config.enableNodeGrid,
+    })
 });
