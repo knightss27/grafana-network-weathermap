@@ -16,7 +16,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const styles = getStyles();
     /** FIELDS */
     /** ----------------------------------------------------------------------------------- */
+    const nodeData = data.series
+        .map(series => series.fields.find(field => field.type === 'number'))
+        .map(field => field?.values.get(field.values.length - 1));
 
+    // console.log(nodeData);
     // Used to caclulate width of link text boxes.
     const averageTransitDataLength = 5;
 
@@ -132,6 +136,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         toReturn.index = i;
         toReturn.x = parseInt(toReturn.POSITION[0]);
         toReturn.y = parseInt(toReturn.POSITION[1]);
+        toReturn.data = nodeData[0];
         return toReturn;
     }));
 
@@ -213,6 +218,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 toReturn.index = i;
                 toReturn.x = parseInt(toReturn.POSITION[0]);
                 toReturn.y = parseInt(toReturn.POSITION[1]);
+                toReturn.data = nodeData[0];
                 return toReturn;
             }))
         }

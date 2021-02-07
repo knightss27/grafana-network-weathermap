@@ -146,7 +146,7 @@ export const LinkForm = (props: Props) => {
                 icon="trash-alt"
                 size="md"
                 onClick={clearLinks}
-                className={styles.addNew}
+                className={styles.clearAll}
             >
                 Clear All
             </Button>
@@ -163,6 +163,11 @@ const getStyles = stylesFactory(() => {
         width: 100%;
         justify-content: center;
         margin: 10px 0px 0px;
+      `,
+      clearAll: css`
+        width: 100%;
+        justify-content: center;
+        margin: 10px 0px;
       `,
       nodeSelect: css`
         margin: 5px 0px;
