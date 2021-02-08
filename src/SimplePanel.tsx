@@ -16,8 +16,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const styles = getStyles();
     /** FIELDS */
     /** ----------------------------------------------------------------------------------- */
-    data.series
-        .map(series => console.log(series))
+    // data.series
+    //     .map(series => console.log(series))
         // .map(field => field?.values.get(field.values.length - 1));
 
     // console.log(nodeData);

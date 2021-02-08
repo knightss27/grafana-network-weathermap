@@ -1,9 +1,5 @@
-type SeriesSize = 'sm' | 'md' | 'lg';
-
 export interface SimpleOptions {
   backgroundColor: string;
-  showSeriesCount: boolean;
-  seriesCountSize: SeriesSize;
   weathermap: Weathermap;
   enableNodeGrid: boolean;
   gridSizePx: number;
@@ -24,6 +20,8 @@ export interface Link {
   ID: string;
   NODES: [Node, Node];
   BANDWIDTH: number;
+  TX: string | undefined;
+  RX: string | undefined;
   TARGET?: string;
   WIDTH?: string;
   [propName: string]: any;

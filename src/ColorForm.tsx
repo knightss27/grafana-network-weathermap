@@ -24,7 +24,7 @@ export const ColorForm = ({ value, onChange }: Props) => {
         weathermap.SCALE[parseInt(e.currentTarget.value)] = prev;
         onChange(weathermap);
     }
-
+    
     // const editValue = (e: any, key: number) => {
     //     let weathermap: Weathermap = value;
     //     weathermap.SCALE[key] = e.currentTarget.value;

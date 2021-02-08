@@ -1,10 +1,8 @@
-
-
 import React, {useState} from 'react';
 import { css } from 'emotion';
 import { Select, stylesFactory } from '@grafana/ui';
 import { Button, Input, InlineField, InlineFieldRow} from '@grafana/ui';
-import { StandardEditorProps } from '@grafana/data';
+import { StandardEditorProps, DataFrame } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import {Weathermap, Node, Link} from 'types';
 
@@ -16,9 +14,11 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {};
 
 export const LinkForm = (props: Props) => {
 
-    const { value, onChange } = props;
+    const { value, onChange, context } = props;
     // const theme = useTheme();
     const styles = getStyles();
+
+    // const dataOptions: DataFrame[] | undefined = ;
 
     const handleChange = (e: any, i: number, node1?: Node, node2?: Node) => {
         let weathermap: Weathermap = value; 
@@ -31,7 +31,6 @@ export const LinkForm = (props: Props) => {
     }
 
     const handleNodeChange = (node: Node, name: string, i: number) => {
-        console.log('node change', node)
         let weathermap: Weathermap = value;
         if (name == 'node1') {
             weathermap.LINKS[i].NODES[0] = node;
@@ -41,12 +40,22 @@ export const LinkForm = (props: Props) => {
         onChange(weathermap);
     }
 
+    const handleDataChange = (name: string, i: number, dataFrame: DataFrame) => {
+        let weathermap: Weathermap = value;
+        if (name == 'node1') {
+            weathermap.LINKS[i].TX = dataFrame.name;
+        } else if (name == 'node2') {
+            weathermap.LINKS[i].RX = dataFrame.name;
+        }
+        onChange(weathermap);
+    }
+
     const addNewLink = () => {
         if (value.NODES.length == 0) {
             throw new Error('There must be >= 1 Nodes to create a link.');
         }
         let weathermap: Weathermap = value;
-        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], BANDWIDTH: 50};
+        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], BANDWIDTH: 50, TX: undefined, RX: undefined};
         weathermap.LINKS.push(link);
         onChange(weathermap);
         setCurrentLink(link);
@@ -72,7 +81,7 @@ export const LinkForm = (props: Props) => {
                 onChange={(v) => {setCurrentLink(v as Link)}}
                 value={currentLink}
                 options={value.LINKS}
-                getOptionLabel={link => link.NODES.length > 0 ? `${link.NODES[0]?.LABEL} <> ${link.NODES[0]?.LABEL}` : ''}
+                getOptionLabel={link => link.NODES.length > 0 ? `${link.NODES[0]?.LABEL} <> ${link.NODES[1]?.LABEL}` : ''}
                 getOptionValue={link => link.ID}
                 className={styles.nodeSelect}
                 placeholder={"Select a link"}
@@ -82,7 +91,7 @@ export const LinkForm = (props: Props) => {
                 if (link.ID == currentLink.ID) {
                     return (
                         <InlineFieldRow>
-                            <InlineField label={"A Side"} labelWidth={"auto"}>
+                            <InlineField label={"A Side"} labelWidth={15}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node1', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -94,7 +103,18 @@ export const LinkForm = (props: Props) => {
                                     defaultValue={link.NODES[0]}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"Z Side"} labelWidth={"auto"}>
+                            <InlineField label={"A Side Data"} labelWidth={15}>
+                                <Select
+                                    onChange={(v) => {handleDataChange('node1', i, v.name)}}
+                                    value={link.TX}
+                                    options={context.data}
+                                    getOptionLabel={data => data?.name || 'No label'}
+                                    getOptionValue={data => data.name}
+                                    className={styles.nodeSelect}
+                                    placeholder={"Select A Side Query"}
+                                ></Select>
+                            </InlineField>
+                            <InlineField label={"Z Side"} labelWidth={15}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node2', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -104,6 +124,17 @@ export const LinkForm = (props: Props) => {
                                     className={styles.nodeSelect}
                                     placeholder={"Select Z Side"}
                                     defaultValue={link.NODES[1]}
+                                ></Select>
+                            </InlineField>
+                            <InlineField label={"Z Side Query"} labelWidth={15}>
+                                <Select
+                                    onChange={(v) => {handleDataChange('node2', i, v.name)}}
+                                    value={link.RX}
+                                    options={context.data}
+                                    getOptionLabel={data => data?.name || 'No label'}
+                                    getOptionValue={data => data?.name}
+                                    className={styles.nodeSelect}
+                                    placeholder={"Select Z Side Query"}
                                 ></Select>
                             </InlineField>
                             <InlineField label={"BANDWIDTH"}>
