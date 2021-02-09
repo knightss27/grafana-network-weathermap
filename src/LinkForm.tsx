@@ -91,7 +91,7 @@ export const LinkForm = (props: Props) => {
                 if (link.ID == currentLink.ID) {
                     return (
                         <InlineFieldRow>
-                            <InlineField label={"A Side"} labelWidth={15}>
+                            <InlineField label={"A Side"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node1', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -103,7 +103,7 @@ export const LinkForm = (props: Props) => {
                                     defaultValue={link.NODES[0]}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"A Side Data"} labelWidth={15}>
+                            <InlineField label={"A Side Query"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node1', i, v.name)}}
                                     value={link.TX}
@@ -114,7 +114,7 @@ export const LinkForm = (props: Props) => {
                                     placeholder={"Select A Side Query"}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"Z Side"} labelWidth={15}>
+                            <InlineField label={"Z Side"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node2', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -126,7 +126,7 @@ export const LinkForm = (props: Props) => {
                                     defaultValue={link.NODES[1]}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"Z Side Query"} labelWidth={15}>
+                            <InlineField label={"Z Side Query"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node2', i, v.name)}}
                                     value={link.RX}
