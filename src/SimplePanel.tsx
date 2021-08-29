@@ -146,7 +146,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     function calculateRectX(d: any) {
         // This allows for NSEW offsets.
-        let offset = (d.LABEL != undefined) ? -(measureText(d.LABEL, 14).width/2 + 20/2) : 0;
+        let offset = (d.LABEL != undefined) ? -(measureText(d.LABEL, 10).width/2 + 20/2) : 0;
         if (d.LABELOFFSET == "W" ) {
             return 2*offset + getImageRectOffset(d, d.LABELOFFSET);
         } else if (d.LABELOFFSET == "E") {
@@ -162,7 +162,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 return getImageRectOffset(d, d.LABELOFFSET);
             }
         }
-        return -16/2;
+        return -8/2;
     }
 
     function calculateTextX(d: any) {
@@ -310,68 +310,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 ></polygon>
             </g>))}
           </g>
-          <g>
-              {nodes.map((d, i) => (
-                  <Draggable position={{x: d.x, y: d.y}} onDrag={(e, position) => {
-                        setNodes(prevState => prevState.map((val, index) => {
-                            if(index == i) {
-                                val.x = options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x;
-                                val.y = options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y;
-                            }
-                            return val;
-                        }))
-                  }}
-                  onStop={(e, position) => {
-                    let current: Weathermap = options.weathermap;
-                        current.NODES[i].POSITION = [options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x, options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y]
-                        onOptionsChange({
-                            ...options,
-                            weathermap: current
-                        })
-                        console.log('dragged')
-                  }}
-                  
-                   //TODO: Implement this fully!
-                  >
-                    <g  
-                        display={d.LABEL != undefined ? "inline" : "none"}
-                        cursor={"move"}
-                        onDoubleClick={() => {console.log("double clicked")}}
-                        transform={`translate(${d.x},${d.y})`}
-                    >
-                        {d.ICON !== undefined ?
-                            <image
-                                xlinkHref={d.ICON}
-                                height={d.ICONHEIGHT !== undefined ? d.ICONHEIGHT : 0}
-                                x={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT)/2 : 0}
-                                y={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT)/2 : 0}
-                            ></image>
-                            :
-                            null
-                        }
-                        <rect
-                            x={calculateRectX(d)}
-                            y={calculateRectY(d)}
-                            width={(d.LABEL != undefined) ? measureText(d.LABEL, 14).width + 20 : 0}
-                            height={parseInt(settings.FONTDEFINE[2]) + 16}
-                            fill={"#E6E6E6"}
-                            rx={6}
-                            ry={7}
-                        ></rect>
-                        <text
-                            x={calculateTextX(d)}
-                            y={calculateTextY(d)}
-                            textAnchor={"middle"}
-                            alignmentBaseline={"central"}
-                            color={"#2B2B2B"}
-                            className={styles.nodeText}
-                        >
-                            {(d.LABEL != undefined) ? d.LABEL : ""}
-                        </text>
-                    </g>
-                </Draggable>
-              ))}
-          </g>
+          
           <g>
               {links.map((d, i) => ( //TODO: FIX THIS!! This is doubling the links and adding the second stat card. Make sure this takes different data.
                   <g
@@ -430,6 +369,70 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   </g>
               ))}
           </g>
+          <g>
+              {nodes.map((d, i) => (
+                  <Draggable position={{x: d.x, y: d.y}} onDrag={(e, position) => {
+                        setNodes(prevState => prevState.map((val, index) => {
+                            if(index == i) {
+                                val.x = options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x;
+                                val.y = options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y;
+                            }
+                            return val;
+                        }))
+                  }}
+                  onStop={(e, position) => {
+                    let current: Weathermap = options.weathermap;
+                        current.NODES[i].POSITION = [options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x, options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y]
+                        onOptionsChange({
+                            ...options,
+                            weathermap: current
+                        })
+                        console.log('dragged')
+                  }}
+                  
+                   //TODO: Implement this fully!
+                  >
+                    <g  
+                        display={d.LABEL != undefined ? "inline" : "none"}
+                        cursor={"move"}
+                        onDoubleClick={() => {console.log("double clicked")}}
+                        transform={`translate(${d.x},${d.y})`}
+                    >
+                        {d.ICON !== undefined ?
+                            <image
+                                xlinkHref={d.ICON}
+                                height={d.ICONHEIGHT !== undefined ? d.ICONHEIGHT : 0}
+                                x={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT)/2 : 0}
+                                y={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT)/2 : 0}
+                            ></image>
+                            :
+                            null
+                        }
+                        <rect
+                            x={calculateRectX(d)}
+                            y={calculateRectY(d)}
+                            width={(d.LABEL != undefined) ? measureText(d.LABEL, 10).width + 20 : 0}
+                            height={parseInt(settings.FONTDEFINE[2]) + 8}
+                            fill={"#EFEFEF"}
+                            stroke={"#DCDCDC"}
+                            strokeWidth={2}
+                            rx={6}
+                            ry={7}
+                        ></rect>
+                        <text
+                            x={calculateTextX(d)}
+                            y={calculateTextY(d)}
+                            textAnchor={"middle"}
+                            alignmentBaseline={"central"}
+                            color={"#2B2B2B"}
+                            className={styles.nodeText}
+                        >
+                            {(d.LABEL != undefined) ? d.LABEL : ""}
+                        </text>
+                    </g>
+                </Draggable>
+              ))}
+          </g>
       </svg>
     </div>
   );
@@ -439,6 +442,7 @@ const getStyles = stylesFactory(() => {
   return {
     wrapper: css`
       position: relative;
+      font-size: 10px;
     `,
     svg: css`
       position: absolute;
