@@ -1,8 +1,18 @@
 export interface SimpleOptions {
-  backgroundColor: string;
+  panelOptions: PanelOptions;
   weathermap: Weathermap;
   enableNodeGrid: boolean;
   gridSizePx: number;
+}
+
+export interface PanelOptions {
+  backgroundColor: string;
+  panelSize: PanelSize;
+}
+
+export interface PanelSize {
+  width: number,
+  height: number,
 }
 
 export interface Node {
@@ -33,3 +43,4 @@ export interface Weathermap {
   SCALE: {[propName: number]: string};
   BG_COLOR: string;
 }
+

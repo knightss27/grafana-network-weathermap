@@ -17,14 +17,11 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       },
     })
     .addCustomEditor({
-      id: 'backgroundColorEditor',
-      path: 'backgroundColor',
-      name: 'Background Color',
-      description: 'Choose a background color.',
+      id: 'panelEditor',
+      path: 'panelOptions',
+      name: 'Panel Options',
+      description: 'Edit panel settings.',
       editor: NewColorPicker,
-      settings: {
-        placeholder: 'This is my placeholder.',
-      },
     })
     .addBooleanSwitch({
       path: 'enableNodeGrid',

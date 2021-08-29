@@ -1,8 +1,8 @@
 import React, {useEffect, useState, useRef} from 'react';
-import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
+import { PanelProps } from '@grafana/data';
 import { SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
-import { measureText, stylesFactory, useTheme } from '@grafana/ui';
+import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import * as d3 from 'd3';
 import Draggable from 'react-draggable';
@@ -12,7 +12,6 @@ interface Props extends PanelProps<SimpleOptions> {}
 export const SimplePanel: React.FC<Props> = (props) => {
     // @ts-ignore
     const { options, data, width: width2, height: height2, onOptionsChange } = props;
-    const theme = useTheme();
     const styles = getStyles();
     /** FIELDS */
     /** ----------------------------------------------------------------------------------- */
@@ -31,17 +30,19 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const height = parseInt(settings.HEIGHT);
     // let backgroundColor: string = options.backgroundColor;
 
-    useEffect(() => {
-        console.log(options.backgroundColor);
-        console.log(getColorFromHexRgbOrName(options.backgroundColor, theme.type))
-    }, [options])
-
     // const setBackgroundWhite = () => {
     //     onOptionsChange({
     //         ...options,
-    //         backgroundColor: "#fff"
+    //         panelOptions: {
+    //             backgroundColor: "#fff",
+    //             panelSize: { width: 500, height: 500 }
+    //         } 
     //     })
     // }
+
+    // useEffect(() => {
+    //     setBackgroundWhite();
+    // }, [])
 
     /** ----------------------------------------------------------------------------------- */
 
@@ -255,14 +256,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
       <svg
         className={cx(
             styles.svg,
-            css`background-color: ${options.backgroundColor}`
+            css`background-color: ${options.panelOptions.backgroundColor}`
         )}
         id="viz"
         width={width2}
         height={height2}
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        viewBox={`0 0 ${width} ${height}`}
+        viewBox={`0 0 ${options.panelOptions.panelSize.width} ${options.panelOptions.panelSize.height}`}
         shapeRendering="crispEdges"
         textRendering="geometricPrecision"
       >
