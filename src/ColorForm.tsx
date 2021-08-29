@@ -17,7 +17,7 @@ export const ColorForm = ({ value, onChange }: Props) => {
     // const theme = useTheme();
     const styles = getStyles();
 
-    const handleChange = (e: any, key: number) => {
+    const handleNumberChange = (e: any, key: number) => {
         let weathermap: Weathermap = value;
         let prev: string = weathermap.SCALE[key];
         delete weathermap.SCALE[key];
@@ -25,11 +25,11 @@ export const ColorForm = ({ value, onChange }: Props) => {
         onChange(weathermap);
     }
     
-    // const editValue = (e: any, key: number) => {
-    //     let weathermap: Weathermap = value;
-    //     weathermap.SCALE[key] = e.currentTarget.value;
-    //     onChange(weathermap);
-    // }
+    const handleColorChange = (e: any, key: number) => {
+        let weathermap: Weathermap = value;
+        weathermap.SCALE[key] = e.currentTarget.value;
+        onChange(weathermap);
+    }
 
     const addNewValue = () => {
         let weathermap: Weathermap = value;
@@ -38,7 +38,7 @@ export const ColorForm = ({ value, onChange }: Props) => {
         } else {
             weathermap.SCALE[parseInt(Object.keys(value.SCALE)[Object.keys(value.SCALE).length - 1]) + 1] = "#ffffff";
         }
-        
+        console.log(weathermap.SCALE)
         onChange(weathermap);
     }
 
@@ -57,12 +57,23 @@ export const ColorForm = ({ value, onChange }: Props) => {
                         <InlineField label="%">
                         <Input
                             value={percent}
-                            onChange={e => handleChange(e, parseInt(percent))}
                             placeholder={'Percent Load'}
                             type={"number"}
                             css={""}
                             className={styles.nodeLabel}
                             name={"percent"}
+                            onChange={e => handleNumberChange(e, parseInt(percent))}
+                        ></Input>
+                        </InlineField>
+                        <InlineField label="Color">
+                        <Input
+                            value={value.SCALE[parseInt(percent)]}
+                            onChange={e => handleColorChange(e, parseInt(percent))}
+                            placeholder={'Percent Color'}
+                            type={"string"}
+                            css={""}
+                            className={styles.nodeLabel}
+                            name={"color"}
                         ></Input>
                         </InlineField>
                     </InlineFieldRow>

@@ -31,4 +31,5 @@ export interface Weathermap {
   NODES: Node[];
   LINKS: Link[];
   SCALE: {[propName: number]: string};
+  BG_COLOR: string;
 }

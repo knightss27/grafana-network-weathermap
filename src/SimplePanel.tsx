@@ -2,7 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import { PanelProps, getColorFromHexRgbOrName } from '@grafana/data';
 import { SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme } from '@grafana/ui';
+import { measureText, stylesFactory, useTheme } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import * as d3 from 'd3';
 import Draggable from 'react-draggable';
@@ -20,7 +20,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
     //     .map(series => console.log(series))
         // .map(field => field?.values.get(field.values.length - 1));
 
-    // console.log(nodeData);
     // Used to caclulate width of link text boxes.
     const averageTransitDataLength = 5;
 
@@ -30,7 +29,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
     // User defined constants.
     const width = parseInt(settings.WIDTH);
     const height = parseInt(settings.HEIGHT);
-    let backgroundColor: string = options.backgroundColor;
+    // let backgroundColor: string = options.backgroundColor;
+
+    useEffect(() => {
+        console.log(options.backgroundColor);
+        console.log(getColorFromHexRgbOrName(options.backgroundColor, theme.type))
+    }, [options])
 
     // const setBackgroundWhite = () => {
     //     onOptionsChange({
@@ -44,8 +48,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     /** COLOR SCALES */
     /** ----------------------------------------------------------------------------------- */
     const colors:any = {};
-    Object.keys(settings.SCALE.DEFAULT).forEach(pct => {
-        colors[parseInt(pct)] = (settings as any).SCALE.DEFAULT[pct][0] as string;
+    Object.keys(options.weathermap.SCALE).forEach((pct: string) => {
+        colors[parseInt(pct)] = options.weathermap.SCALE[parseInt(pct)];
     });
 
     function getScaleColor(current: number, max: number) {
@@ -77,8 +81,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     // Find the points that create the two other points of a triangle for the arrow's tip;
     function getArrowPolygon(_p1: any, _p2: any) {
         // let linkWidth = settings.LINK.DEFAULT.WIDTH; //TODO: Make arrow size actually have something to do with the link's specified width.
-        let h = 5 * Math.sqrt(3);
-        let w = 6;
+        let h = 5.5 * Math.sqrt(3);
+        let w = 4;
         let vec1 = {x: (_p2.x - _p1.x), y: (_p2.y - _p1.y)}
         let length = Math.sqrt(vec1.x*vec1.x + vec1.y*vec1.y);
         vec1.x = vec1.x/length;
@@ -142,7 +146,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     function calculateRectX(d: any) {
         // This allows for NSEW offsets.
-        let offset = (d.LABEL != undefined) ?  -(d.LABEL.length * (parseInt(settings.FONTDEFINE[2])))/2 : 0;
+        let offset = (d.LABEL != undefined) ? -(measureText(d.LABEL, 14).width/2 + 40/2) : 0;
         if (d.LABELOFFSET == "W" ) {
             return 2*offset + getImageRectOffset(d, d.LABELOFFSET);
         } else if (d.LABELOFFSET == "E") {
@@ -158,7 +162,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 return getImageRectOffset(d, d.LABELOFFSET);
             }
         }
-        return -4;
+        return -16/2;
     }
 
     function calculateTextX(d: any) {
@@ -251,7 +255,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       <svg
         className={cx(
             styles.svg,
-            css`background-color: ${getColorFromHexRgbOrName(backgroundColor, theme.type)}`
+            css`background-color: ${options.backgroundColor}`
         )}
         id="viz"
         width={width2}
@@ -274,8 +278,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       stroke={getScaleColor(.75, 1.5)}
                       x1={d.source.x}
                       y1={d.source.y}
-                      x2={getMiddlePoint(d.target, d.source, -distFromCenter).x}
-                      y2={getMiddlePoint(d.target, d.source, -distFromCenter).y}
+                      x2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).x}
+                      y2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).y}
                 ></line>
                 <polygon
                       points={`${getMiddlePoint(d.target, d.source, -distFromCenter + 5).x} 
@@ -291,8 +295,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       stroke={getScaleColor(.75, 1.5)}
                       x1={d.target.x}
                       y1={d.target.y}
-                      x2={getMiddlePoint(d.target, d.source, distFromCenter).x}
-                      y2={getMiddlePoint(d.target, d.source, distFromCenter).y}
+                      x2={getMiddlePoint(d.target, d.source, distFromCenter + 4).x}
+                      y2={getMiddlePoint(d.target, d.source, distFromCenter + 4).y}
                 ></line>
                 <polygon
                       points={`${getMiddlePoint(d.target, d.source, distFromCenter - 5).x} 
@@ -348,22 +352,22 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         <rect
                             x={calculateRectX(d)}
                             y={calculateRectY(d)}
-                            width={(d.LABEL != undefined) ? d.LABEL.length * (parseInt(settings.FONTDEFINE[2])) : 0}
-                            height={parseInt(settings.FONTDEFINE[2]) + 10}
-                            fill={"#fff"}
-                            stroke={"#000"}
-                            strokeWidth={1}
+                            width={(d.LABEL != undefined) ? measureText(d.LABEL, 14).width + 40 : 0}
+                            height={parseInt(settings.FONTDEFINE[2]) + 16}
+                            fill={"#E6E6E6"}
+                            rx={15}
+                            ry={20}
                         ></rect>
                         <text
                             x={calculateTextX(d)}
                             y={calculateTextY(d)}
                             textAnchor={"middle"}
-                            fontSize={settings.FONTDEFINE[2] + "px"}
+                            // fontSize={settings.FONTDEFINE[2] + "px"}
                             alignmentBaseline={"central"}
-                            color={"black"}
-                            stroke={"black"}
-                            strokeWidth={1}
-                            letterSpacing={".12em"}
+                            color={"#2B2B2B"}
+                            // stroke={"black"}
+                            // strokeWidth={1}
+                            // letterSpacing={".12em"}
                             className={styles.nodeText}
                         >
                             {(d.LABEL != undefined) ? d.LABEL : ""}

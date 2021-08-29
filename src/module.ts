@@ -20,6 +20,9 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       name: 'Background Color',
       description: 'Choose a background color.',
       defaultValue: '#fff',
+      settings: {
+        disableNamedColors: false
+      }
     })
     .addBooleanSwitch({
       path: 'enableNodeGrid',
