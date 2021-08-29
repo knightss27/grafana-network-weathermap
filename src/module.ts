@@ -2,6 +2,7 @@ import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './SimplePanel';
 import { NodeBuilder } from 'NodeBuilder';
+import { NewColorPicker } from './NewColorPicker';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions(builder => {
   return builder
@@ -15,14 +16,15 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
         placeholder: 'This is my placeholder.',
       },
     })
-    .addColorPicker({
+    .addCustomEditor({
+      id: 'backgroundColorEditor',
       path: 'backgroundColor',
       name: 'Background Color',
       description: 'Choose a background color.',
-      defaultValue: '#fff',
+      editor: NewColorPicker,
       settings: {
-        disableNamedColors: false
-      }
+        placeholder: 'This is my placeholder.',
+      },
     })
     .addBooleanSwitch({
       path: 'enableNodeGrid',
