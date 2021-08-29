@@ -146,7 +146,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     function calculateRectX(d: any) {
         // This allows for NSEW offsets.
-        let offset = (d.LABEL != undefined) ? -(measureText(d.LABEL, 14).width/2 + 40/2) : 0;
+        let offset = (d.LABEL != undefined) ? -(measureText(d.LABEL, 14).width/2 + 20/2) : 0;
         if (d.LABELOFFSET == "W" ) {
             return 2*offset + getImageRectOffset(d, d.LABELOFFSET);
         } else if (d.LABELOFFSET == "E") {
@@ -352,22 +352,18 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         <rect
                             x={calculateRectX(d)}
                             y={calculateRectY(d)}
-                            width={(d.LABEL != undefined) ? measureText(d.LABEL, 14).width + 40 : 0}
+                            width={(d.LABEL != undefined) ? measureText(d.LABEL, 14).width + 20 : 0}
                             height={parseInt(settings.FONTDEFINE[2]) + 16}
                             fill={"#E6E6E6"}
-                            rx={15}
-                            ry={20}
+                            rx={6}
+                            ry={7}
                         ></rect>
                         <text
                             x={calculateTextX(d)}
                             y={calculateTextY(d)}
                             textAnchor={"middle"}
-                            // fontSize={settings.FONTDEFINE[2] + "px"}
                             alignmentBaseline={"central"}
                             color={"#2B2B2B"}
-                            // stroke={"black"}
-                            // strokeWidth={1}
-                            // letterSpacing={".12em"}
                             className={styles.nodeText}
                         >
                             {(d.LABEL != undefined) ? d.LABEL : ""}
@@ -388,10 +384,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         y={-5}
                         width={averageTransitDataLength * (parseInt(settings.FONTDEFINE[2]))}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
-                        fill={"white"}
-                        stroke={"black"}
-                        strokeWidth={1}
-                        rx={4}
+                        fill={"#EFEFEF"}
+                        stroke={"#DCDCDC"}
+                        strokeWidth={2}
+                        rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
                       ></rect>
                       <text
                         x={0}
@@ -417,10 +413,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         y={-5}
                         width={averageTransitDataLength * (parseInt(settings.FONTDEFINE[2]))}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
-                        fill={"white"}
-                        stroke={"black"}
-                        strokeWidth={1}
-                        rx={4}
+                        fill={"#EFEFEF"}
+                        stroke={"#DCDCDC"}
+                        strokeWidth={2}
+                        rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
                       ></rect>
                       <text
                         x={0}
