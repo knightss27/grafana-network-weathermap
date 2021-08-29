@@ -147,14 +147,16 @@ const getStyles = stylesFactory(() => {
         margin: 0px 0px;
       `,
       addNew: css`
-        width: 100%;
-        justify-content: center;
-        margin: 10px 0px 0px;
-      `,
-      clearAll: css`
-        width: 100%;
+        width: calc(50% - 10px);
         justify-content: center;
         margin: 10px 0px;
+        margin-right: 5px;
+      `,
+      clearAll: css`
+        width: calc(50% - 10px);
+        justify-content: center;
+        margin: 10px 0px;
+        margin-left: 5px;
       `,
       nodeSelect: css`
         margin: 5px 0px;

@@ -1,9 +1,9 @@
 {
   "type": "panel",
-  "name": "d3-weathermap",
-  "id": "knightss-27-d-3-weathermap",
+  "name": "Network Weathermap",
+  "id": "knightss-27-network-weathermap",
   "info": {
-    "description": "Network weathermap",
+    "description": "A simple & sleek network weathermap, built completely with SVG components.",
     "author": {
       "name": "knightss@catlin.edu",
       "url": "https://seth.cx"
