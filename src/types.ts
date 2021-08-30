@@ -29,10 +29,12 @@ export interface Node {
 export interface Link {
   ID: string;
   NODES: [Node, Node];
-  bandwidth: number;
-  bandwidthQuery: string;
+  ASideBandwidth: number;
+  ZSideBandwidth: number;
+  ASideBandwidthQuery: string | undefined;
+  ZSideBandwidthQuery: string | undefined;
   ASideQuery: string | undefined;
-  BSideQuery: string | undefined;
+  ZSideQuery: string | undefined;
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
@@ -56,10 +58,12 @@ export interface DrawnNode {
 export interface DrawnLink {
   ID: string;
   NODES: [Node, Node];
-  bandwidth: number;
-  bandwidthQuery: string;
+  ASideBandwidth: number;
+  ZSideBandwidth: number;
+  ASideBandwidthQuery: string | undefined;
+  ZSideBandwidthQuery: string | undefined;
   ASideQuery: string | undefined;
-  BSideQuery: string | undefined;
+  ZSideQuery: string | undefined;
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
@@ -67,9 +71,9 @@ export interface DrawnLink {
   source: DrawnNode;
   target: DrawnNode,
   currentASideValue: number;
-  currentBSideValue: number;
+  currentZSideValue: number;
   currentASideValueText: string;
-  currentBSideValueText: string;
+  currentZSideValueText: string;
 }
 
 export interface Weathermap {
