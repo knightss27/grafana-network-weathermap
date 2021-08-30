@@ -94,9 +94,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
     /** ----------------------------------------------------------------------------------- */
 
-/** ICON AND TEXT OFFSET CALCULATIONS */
-/** ----------------------------------------------------------------------------------- */
-// TODO: Create functions that actually calculate width properly, for now they just assume square-ish icons.
+    /** ICON AND TEXT OFFSET CALCULATIONS */
+    /** ----------------------------------------------------------------------------------- */
+    // TODO: Create functions that actually calculate width properly, for now they just assume square-ish icons.
 
     function getImageRectOffset(d: any, dir: string) {
         if (dir == "N") {
@@ -216,8 +216,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
         toReturn.source = nodes.filter(n => n.ID == toReturn.NODES[0].ID)[0];
         toReturn.target =  nodes.filter(n => n.ID == toReturn.NODES[1].ID)[0];
 
-        let dataFrame = data.series
-                .filter(series => series.name == toReturn.bandwidthQuery && series.refId == "B")
+        if (toReturn.ASideBandwidthQuery) {
+            let dataFrame = data.series
+                .filter(series => series.name == toReturn.ASideBandwidthQuery)
                 .map(
                     frame => {
                         return (
@@ -227,17 +228,33 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     }
                 )
 
-        toReturn.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 50;
+            toReturn.ASideBandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+        }
+
+        if (toReturn.ZSideBandwidthQuery) {
+            let dataFrame = data.series
+                .filter(series => series.name == toReturn.ZSideBandwidthQuery)
+                .map(
+                    frame => {
+                        return (
+                            frame.fields[1].values.get(0)
+                            // Instant query
+                        )
+                    }
+                )
+
+            toReturn.ZSideBandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+        }
 
         toReturn.currentASideValue = 0;
-        toReturn.currentBSideValue = 0;
+        toReturn.currentZSideValue = 0;
         
-        if (toReturn.ASideQuery && toReturn.BSideQuery) {
+        if (toReturn.ASideQuery && toReturn.ZSideQuery) {
             let dataSourceA = toReturn.ASideQuery;
-            let dataSourceB = toReturn.BSideQuery;
+            let dataSourceZ = toReturn.ZSideQuery;
 
             let dataFrames = data.series
-                .filter(series => (series.name == dataSourceA || series.name == dataSourceB) && series.refId == "A");
+                .filter(series => (series.name == dataSourceA || series.name == dataSourceZ) && series.refId == "A");
             
             let dataValues = dataFrames.map(
                 frame => {
@@ -249,17 +266,17 @@ export const SimplePanel: React.FC<Props> = (props) => {
             )
 
             let aValues = dataValues.filter(s => s.name == dataSourceA);
-            let bValues = dataValues.filter(s => s.name == dataSourceB);
+            let zValues = dataValues.filter(s => s.name == dataSourceZ);
 
             toReturn.currentASideValue = aValues[0] ? aValues[0].value : 0; 
-            toReturn.currentBSideValue = bValues[0] ? bValues[0].value : 0;
+            toReturn.currentZSideValue = zValues[0] ? zValues[0].value : 0;
             
             let testFormat = scaledUnits(1000, ["b", "Kb", "Mb", "Gb", "Tb"]);
             let scaledASideValue = testFormat(toReturn.currentASideValue);
-            let scaledBSideValue = testFormat(toReturn.currentBSideValue)
+            let scaledZSideValue = testFormat(toReturn.currentZSideValue)
 
             toReturn.currentASideValueText = `${scaledASideValue.text} ${scaledASideValue.suffix}/s`; 
-            toReturn.currentBSideValueText = `${scaledBSideValue.text} ${scaledBSideValue.suffix}/s`;
+            toReturn.currentZSideValueText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
         }
 
         return toReturn;
@@ -332,7 +349,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               height={Math.abs(d.target.y - d.source.y)}
               >
                 <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(d.currentASideValue, d.bandwidth)}
+                      stroke={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
                       x1={d.source.x}
                       y1={d.source.y}
                       x2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).x}
@@ -346,10 +363,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.x}
                       ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.y}
                       `}
-                      fill={getScaleColor(d.currentASideValue, d.bandwidth)}
+                      fill={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
                 ></polygon>
                 <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(d.currentBSideValue, d.bandwidth)}
+                      stroke={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
                       x1={d.target.x}
                       y1={d.target.y}
                       x2={getMiddlePoint(d.target, d.source, distFromCenter + 4).x}
@@ -363,7 +380,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.x}
                       ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.y}
                       `}
-                      fill={getScaleColor(d.currentBSideValue, d.bandwidth)}
+                      fill={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
                 ></polygon>
             </g>))}
           </g>
@@ -405,9 +422,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     transform={`translate(${(d.target.x + d.source.x)/2 + (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 + (d.target.y - d.source.y)/4})`}
                   >
                       <rect
-                        x={-measureText(`${d.currentBSideValueText}`, 9).width/2 - 12/2}
+                        x={-measureText(`${d.currentZSideValueText}`, 9).width/2 - 12/2}
                         y={-5}
-                        width={measureText(`${d.currentBSideValueText}`, 9).width + 12}
+                        width={measureText(`${d.currentZSideValueText}`, 9).width + 12}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
@@ -421,7 +438,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         fontSize={"9px"}
                         // letterSpacing={".12em"}
                       >
-                          {`${d.currentBSideValueText}`}
+                          {`${d.currentZSideValueText}`}
                       </text>
                   </g>
               ))}

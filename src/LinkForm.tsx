@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { css } from 'emotion';
-import { Select, stylesFactory } from '@grafana/ui';
+import { Input, Select, stylesFactory } from '@grafana/ui';
 import { Button, InlineField, InlineFieldRow} from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,9 +20,17 @@ export const LinkForm = (props: Props) => {
 
     // const dataOptions: DataFrame[] | undefined = ;
 
-    const handleChange = (frame: string, i: number) => {
-        let weathermap: Weathermap = value; 
-        weathermap.LINKS[i].bandwidthQuery = frame;
+    const handleBandwidthChange = (amt: number, i: number, side: 'A' | 'Z') => {
+        let weathermap: Weathermap = value;
+        weathermap.LINKS[i][`${side}SideBandwidth`] = amt;
+        weathermap.LINKS[i][`${side}SideBandwidthQuery`] = undefined;
+        onChange(weathermap);
+    }
+
+    const handleBandwidthQueryChange = (frame: string, i: number, side: 'A' | 'Z') => {
+        let weathermap: Weathermap = value;
+        weathermap.LINKS[i][`${side}SideBandwidth`] = 0;
+        weathermap.LINKS[i][`${side}SideBandwidthQuery`] = frame;
         onChange(weathermap);
     }
 
@@ -42,7 +50,7 @@ export const LinkForm = (props: Props) => {
         if (name == 'node1') {
             weathermap.LINKS[i].ASideQuery = frameName;
         } else if (name == 'node2') {
-            weathermap.LINKS[i].BSideQuery = frameName;
+            weathermap.LINKS[i].ZSideQuery = frameName;
         }
         onChange(weathermap);
     }
@@ -52,7 +60,18 @@ export const LinkForm = (props: Props) => {
             throw new Error('There must be >= 1 Nodes to create a link.');
         }
         let weathermap: Weathermap = value;
-        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], bandwidth: 0, bandwidthQuery: "", ASideQuery: undefined, BSideQuery: undefined, units: undefined};
+        const link: Link = {
+            ID: uuidv4(), 
+            NODES: [value.NODES[0], 
+            value.NODES[0]], 
+            ZSideBandwidth: 0, 
+            ZSideBandwidthQuery: undefined, 
+            ASideBandwidth: 0, 
+            ASideBandwidthQuery: undefined, 
+            ASideQuery: undefined, 
+            ZSideQuery: undefined, 
+            units: undefined
+        };
         weathermap.LINKS.push(link);
         onChange(weathermap);
         setCurrentLink(link);
@@ -89,7 +108,7 @@ export const LinkForm = (props: Props) => {
                     return (
                         <React.Fragment>
                         <InlineFieldRow className={styles.row}>
-                            <InlineField label={"A Side"} labelWidth={"auto"}>
+                            <InlineField label={"A Side"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node1', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -101,20 +120,44 @@ export const LinkForm = (props: Props) => {
                                     defaultValue={link.NODES[0]}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"A Side Query"} labelWidth={"auto"}>
+                            <InlineField label={"A Side Query"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node1', i, v.name)}}
                                     value={link.ASideQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data.name}
-                                    className={styles.nodeSelect}
+                                    className={styles.querySelect}
                                     placeholder={"Select A Side Query"}
                                 ></Select>
                             </InlineField>
                         </InlineFieldRow>
                         <InlineFieldRow className={styles.row}>
-                            <InlineField label={"Z Side"} labelWidth={"auto"}>
+                            <InlineField label={"A Bandwidth #"}>
+                                <Input
+                                    value={link.ASideBandwidth}
+                                    onChange={e => handleBandwidthChange(e.currentTarget.valueAsNumber, i, 'A')}
+                                    placeholder={'Custom max bandwidth'}
+                                    type={"number"}
+                                    css={""}
+                                    className={styles.nodeLabel}
+                                    name={"bandwidth"}
+                                />
+                            </InlineField>
+                            <InlineField label={"A Bandwidth Query"} style={{"maxWidth": "100%"}}>
+                                <Select
+                                    onChange={(v) => {handleBandwidthQueryChange(v.name, i, 'A')}}
+                                    value={link.ASideBandwidthQuery}
+                                    options={context.data}
+                                    getOptionLabel={data => data?.name || 'No label'}
+                                    getOptionValue={data => data?.name}
+                                    className={styles.bandwidthSelect}
+                                    placeholder={"Select Bandwidth"}
+                                ></Select>
+                            </InlineField>
+                        </InlineFieldRow>
+                        <InlineFieldRow className={styles.row2}>
+                            <InlineField label={"Z Side"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node2', i)}}
                                     value={link.NODES[0]?.LABEL || 'No label'}
@@ -126,49 +169,41 @@ export const LinkForm = (props: Props) => {
                                     defaultValue={link.NODES[1]}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"Z Side Query"} labelWidth={"auto"}>
+                            <InlineField label={"Z Side Query"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node2', i, v.name)}}
-                                    value={link.BSideQuery}
+                                    value={link.ZSideQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data?.name}
-                                    className={styles.nodeSelect}
+                                    className={styles.querySelect}
                                     placeholder={"Select Z Side Query"}
                                 ></Select>
                             </InlineField>
                         </InlineFieldRow>
                         <InlineFieldRow className={styles.row}>
-                            <InlineField label={"Bandwidth"}>
-                                {/* <Input
-                                    value={link.BANDWIDTH}
-                                    onChange={e => handleChange(e, i)}
-                                    placeholder={'LINK MAX BANDWIDTH'}
+                            <InlineField label={"Z Bandwidth #"}>
+                                <Input
+                                    value={link.ZSideBandwidth}
+                                    onChange={e => handleBandwidthChange(e.currentTarget.valueAsNumber, i, 'Z')}
+                                    placeholder={'Custom max bandwidth'}
                                     type={"number"}
                                     css={""}
                                     className={styles.nodeLabel}
-                                    name={"BANDWIDTH"}
-                                /> */}
+                                    name={"zbandwidth"}
+                                />
+                            </InlineField>
+                            <InlineField label={"Z Bandwidth Query"} style={{"maxWidth": "100%"}}>
                                 <Select
-                                    onChange={(v) => {handleChange(v.name, i)}}
-                                    value={link.BANDWIDTH}
+                                    onChange={(v) => {handleBandwidthQueryChange(v.name, i, 'Z')}}
+                                    value={link.ZSideBandwidthQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data?.name}
-                                    className={styles.nodeSelect}
+                                    className={styles.bandwidthSelect}
                                     placeholder={"Select Bandwidth"}
                                 ></Select>
                             </InlineField>
-                            {/* <InlineField label="Units">
-                                <UnitPicker 
-                                    onChange={(val) => {
-                                        let wm: Weathermap = value;
-                                        wm.LINKS[i].units = val;
-                                        onChange(wm);
-                                    }}
-                                    value={link.units}
-                                />
-                            </InlineField> */}
                         </InlineFieldRow>
                         <InlineFieldRow className={styles.row}>
                             <Button
@@ -229,8 +264,25 @@ const getStyles = stylesFactory(() => {
       nodeSelect: css`
         margin: 0px 0px;
       `,
+      bandwidthSelect: css`
+        margin: 0px 0px;
+        max-width: calc(100% - 112px); 
+      `,
+      querySelect: css`
+        margin: 0px 0px;
+        max-width: calc(100% - 88px); 
+      `, // TODO: find a better way to do this calc above
       row: css`
+        margin-top: 10px;
+        max-width: 100%;
+        padding-top: 10px;
+        border-top: 1px solid var(--in-content-button-background);
+      `,
+      row2: css`
         margin-top: 5px;
+        max-width: 100%;
+        padding-top: 10px;
+        border-top: 1px solid var(--in-content-button-background);
       `
     };
   });
