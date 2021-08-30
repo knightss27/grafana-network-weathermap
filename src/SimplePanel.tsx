@@ -20,7 +20,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         // .map(field => field?.values.get(field.values.length - 1));
 
     // Used to caclulate width of link text boxes.
-    const averageTransitDataLength = 5;
+    // const averageTransitDataLength = 5;
 
     // Distance that the tips of arrows will be drawn from the center. (px)
     const distFromCenter = 6;
@@ -132,6 +132,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
         toReturn.index = i;
         toReturn.source = toReturn.NODES[0].ID;
         toReturn.target = toReturn.NODES[1].ID;
+        toReturn.currentASideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
+        toReturn.currentBSideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
         return toReturn;
     }));
 
@@ -207,6 +209,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     const mounted = useRef(false);
     useEffect(() => {
+        console.log(data);
         if (!mounted.current) {
             mounted.current = true;
         } else {
@@ -215,6 +218,45 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 toReturn.index = i;
                 toReturn.source = toReturn.NODES[0].ID;
                 toReturn.target = toReturn.NODES[1].ID;
+                
+                let dataFrame = data.series
+                        .filter(series => series.name == toReturn.BANDWIDTH && series.refId == "B")
+                        .map(
+                            frame => {
+                                return (
+                                    frame.fields[1].values.get(0)
+                                    // Instant query
+                                )
+                            }
+                        )
+
+                toReturn.BANDWIDTH = dataFrame.length > 0 ? dataFrame[0] : 50;
+
+                toReturn.currentASideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
+                toReturn.currentBSideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
+                
+                
+
+                console.log(d);
+                console.log(toReturn.ASideQuery, toReturn.BSideQuery)
+                if (toReturn.ASideQuery && toReturn.BSideQuery) {
+                    let dataSourceA = toReturn.ASideQuery;
+                    let dataSourceB = toReturn.BSideQuery;
+
+                    let dataFrames = data.series
+                        .filter(series => (series.name == dataSourceA || series.name == dataSourceB) && series.refId == "A");
+                    
+                    let dataValues = dataFrames.map(
+                        frame => {
+                            return (
+                                frame.fields[1].values.get(frame.fields[1].values.length - 1)
+                            )
+                        }
+                    )
+
+                    console.log(dataValues);
+                }
+
                 return toReturn;
             }))
             setNodes(options.weathermap.NODES.map((d, i) => {
@@ -276,7 +318,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               height={Math.abs(d.target.y - d.source.y)}
               >
                 <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(.75, 1.5)}
+                      stroke={getScaleColor(d.currentASideValue, d.BANDWIDTH)}
                       x1={d.source.x}
                       y1={d.source.y}
                       x2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).x}
@@ -290,10 +332,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.x}
                       ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.y}
                       `}
-                      fill={getScaleColor(.75, 1.5)}
+                      fill={getScaleColor(d.currentASideValue, d.BANDWIDTH)}
                 ></polygon>
                 <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(.75, 1.5)}
+                      stroke={getScaleColor(d.currentBSideValue, d.BANDWIDTH)}
                       x1={d.target.x}
                       y1={d.target.y}
                       x2={getMiddlePoint(d.target, d.source, distFromCenter + 4).x}
@@ -307,7 +349,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.x}
                       ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.y}
                       `}
-                      fill={getScaleColor(.75, 1.5)}
+                      fill={getScaleColor(d.currentBSideValue, d.BANDWIDTH)}
                 ></polygon>
             </g>))}
           </g>
@@ -316,13 +358,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
               {links.map((d, i) => ( //TODO: FIX THIS!! This is doubling the links and adding the second stat card. Make sure this takes different data.
                   <g
                     fontStyle={"italic"}
-                    fontWeight={"bold"}
+                    // fontWeight={"bold"}
                     transform={`translate(${(d.target.x + d.source.x)/2 - (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 - (d.target.y - d.source.y)/4})`}
                   >
                       <rect
-                        x={-averageTransitDataLength * parseInt(settings.FONTDEFINE[2])/2}
+                        x={-measureText(`${d.currentASideValue} ${d.units ? d.units : "?/s"}`, 9).width/2 - 12/2}
                         y={-5}
-                        width={averageTransitDataLength * (parseInt(settings.FONTDEFINE[2]))}
+                        width={measureText(`${d.currentASideValue} ${d.units ? d.units : "?/s"}`, 9).width + 12}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
@@ -333,10 +375,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         x={0}
                         y={parseInt(settings.FONTDEFINE[2]) - 2}
                         textAnchor={"middle"}
-                        fontSize={settings.FONTDEFINE[2] + "px"}
-                        letterSpacing={".12em"}
+                        fontSize={"9px"}
+                        // letterSpacing={".12em"}
                       >
-                          1.5M
+                          {`${d.currentASideValue} ${d.units ? d.units : "?/s"}`}
                       </text>
                   </g>
               ))}
@@ -345,13 +387,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
               {links.map((d, i) => (
                   <g
                     fontStyle={"italic"}
-                    fontWeight={"bold"}
+                    // fontWeight={"bold"}
                     transform={`translate(${(d.target.x + d.source.x)/2 + (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 + (d.target.y - d.source.y)/4})`}
                   >
                       <rect
-                        x={-averageTransitDataLength * parseInt(settings.FONTDEFINE[2])/2}
+                        x={-measureText(`${d.currentBSideValue} ${d.units ? d.units : "?/s"}`, 9).width/2 - 12/2}
                         y={-5}
-                        width={averageTransitDataLength * (parseInt(settings.FONTDEFINE[2]))}
+                        width={measureText(`${d.currentBSideValue} ${d.units ? d.units : "?/s"}`, 9).width + 12}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
@@ -362,10 +404,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         x={0}
                         y={parseInt(settings.FONTDEFINE[2]) - 2}
                         textAnchor={"middle"}
-                        fontSize={settings.FONTDEFINE[2] + "px"}
-                        letterSpacing={".12em"}
+                        fontSize={"9px"}
+                        // letterSpacing={".12em"}
                       >
-                          1.5M
+                          {`${d.currentBSideValue} ${d.units ? d.units : "?/s"}`}
                       </text>
                   </g>
               ))}

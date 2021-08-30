@@ -29,9 +29,10 @@ export interface Node {
 export interface Link {
   ID: string;
   NODES: [Node, Node];
-  BANDWIDTH: number;
-  TX: string | undefined;
-  RX: string | undefined;
+  BANDWIDTH: number | string;
+  ASideQuery: string | undefined;
+  BSideQuery: string | undefined;
+  units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
   [propName: string]: any;

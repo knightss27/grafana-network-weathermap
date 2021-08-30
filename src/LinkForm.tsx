@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import { css } from 'emotion';
-import { Select, stylesFactory } from '@grafana/ui';
-import { Button, Input, InlineField, InlineFieldRow} from '@grafana/ui';
-import { StandardEditorProps, DataFrame } from '@grafana/data';
+import { Select, stylesFactory, UnitPicker } from '@grafana/ui';
+import { Button, InlineField, InlineFieldRow} from '@grafana/ui';
+import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import {Weathermap, Node, Link} from 'types';
 
@@ -20,13 +20,9 @@ export const LinkForm = (props: Props) => {
 
     // const dataOptions: DataFrame[] | undefined = ;
 
-    const handleChange = (e: any, i: number, node1?: Node, node2?: Node) => {
+    const handleChange = (frame: string, i: number) => {
         let weathermap: Weathermap = value; 
-        if (e.currentTarget.name == 'BANDWIDTH') {
-            weathermap.LINKS[i].BANDWIDTH = parseInt(e.currentTarget.value)
-        } else {
-            weathermap.LINKS[i][e.currentTarget.name] = e.currentTarget.value;
-        }
+        weathermap.LINKS[i].BANDWIDTH = frame;
         onChange(weathermap);
     }
 
@@ -40,12 +36,13 @@ export const LinkForm = (props: Props) => {
         onChange(weathermap);
     }
 
-    const handleDataChange = (name: string, i: number, dataFrame: DataFrame) => {
+    const handleDataChange = (name: string, i: number, frameName: string) => {
         let weathermap: Weathermap = value;
+        // console.log(dataFrame);
         if (name == 'node1') {
-            weathermap.LINKS[i].TX = dataFrame.name;
+            weathermap.LINKS[i].ASideQuery = frameName;
         } else if (name == 'node2') {
-            weathermap.LINKS[i].RX = dataFrame.name;
+            weathermap.LINKS[i].BSideQuery = frameName;
         }
         onChange(weathermap);
     }
@@ -55,7 +52,7 @@ export const LinkForm = (props: Props) => {
             throw new Error('There must be >= 1 Nodes to create a link.');
         }
         let weathermap: Weathermap = value;
-        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], BANDWIDTH: 50, TX: undefined, RX: undefined};
+        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], BANDWIDTH: 50, ASideQuery: undefined, BSideQuery: undefined, units: undefined};
         weathermap.LINKS.push(link);
         onChange(weathermap);
         setCurrentLink(link);
@@ -90,7 +87,8 @@ export const LinkForm = (props: Props) => {
             {value.LINKS.map((link, i) => {
                 if (link.ID == currentLink.ID) {
                     return (
-                        <InlineFieldRow>
+                        <React.Fragment>
+                        <InlineFieldRow className={styles.row}>
                             <InlineField label={"A Side"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node1', i)}}
@@ -106,7 +104,7 @@ export const LinkForm = (props: Props) => {
                             <InlineField label={"A Side Query"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node1', i, v.name)}}
-                                    value={link.TX}
+                                    value={link.ASideQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data.name}
@@ -114,6 +112,8 @@ export const LinkForm = (props: Props) => {
                                     placeholder={"Select A Side Query"}
                                 ></Select>
                             </InlineField>
+                        </InlineFieldRow>
+                        <InlineFieldRow className={styles.row}>
                             <InlineField label={"Z Side"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node2', i)}}
@@ -129,7 +129,7 @@ export const LinkForm = (props: Props) => {
                             <InlineField label={"Z Side Query"} labelWidth={"auto"}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node2', i, v.name)}}
-                                    value={link.RX}
+                                    value={link.BSideQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data?.name}
@@ -137,8 +137,10 @@ export const LinkForm = (props: Props) => {
                                     placeholder={"Select Z Side Query"}
                                 ></Select>
                             </InlineField>
-                            <InlineField label={"BANDWIDTH"}>
-                                <Input
+                        </InlineFieldRow>
+                        <InlineFieldRow className={styles.row}>
+                            <InlineField label={"Bandwidth"}>
+                                {/* <Input
                                     value={link.BANDWIDTH}
                                     onChange={e => handleChange(e, i)}
                                     placeholder={'LINK MAX BANDWIDTH'}
@@ -146,9 +148,29 @@ export const LinkForm = (props: Props) => {
                                     css={""}
                                     className={styles.nodeLabel}
                                     name={"BANDWIDTH"}
+                                /> */}
+                                <Select
+                                    onChange={(v) => {handleChange(v.name, i)}}
+                                    value={link.BANDWIDTH}
+                                    options={context.data}
+                                    getOptionLabel={data => data?.name || 'No label'}
+                                    getOptionValue={data => data?.name}
+                                    className={styles.nodeSelect}
+                                    placeholder={"Select Bandwidth"}
+                                ></Select>
+                            </InlineField>
+                            <InlineField label="Units">
+                                <UnitPicker 
+                                    onChange={(val) => {
+                                        let wm: Weathermap = value;
+                                        wm.LINKS[i].units = val;
+                                        onChange(wm);
+                                    }}
+                                    value={link.units}
                                 />
                             </InlineField>
-                            <Button
+                        </InlineFieldRow>
+                        <Button
                                 variant="destructive"
                                 icon="trash-alt"
                                 size="md"
@@ -156,8 +178,8 @@ export const LinkForm = (props: Props) => {
                                 className={""}
                             >
                                 Remove Link
-                            </Button>
-                    </InlineFieldRow>
+                        </Button>
+                    </React.Fragment>
                     )
                 }
                 return;
@@ -203,7 +225,10 @@ const getStyles = stylesFactory(() => {
         margin-left: 5px;
       `,
       nodeSelect: css`
-        margin: 5px 0px;
+        margin: 0px 0px;
+      `,
+      row: css`
+        margin-top: 5px;
       `
     };
   });
