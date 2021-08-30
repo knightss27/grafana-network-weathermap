@@ -248,16 +248,24 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     
                     let dataValues = dataFrames.map(
                         frame => {
-                            return (
-                                frame.fields[1].values.get(frame.fields[1].values.length - 1)
-                            )
+                            return ({
+                                value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
+                                name: frame.name
+                            })
                         }
                     )
 
                     console.log(dataValues);
+                    console.log(dataValues.filter(s => s.name == dataSourceA));
+                    let aValues = dataValues.filter(s => s.name == dataSourceA);
+                    let bValues = dataValues.filter(s => s.name == dataSourceB);
+                    console.log(aValues[0], bValues[0]);
+                    toReturn.currentASideValue = aValues[0] ? aValues[0].value : 0; 
+                    toReturn.currentBSideValue = bValues[0] ? bValues[0].value : 0; 
                 }
 
                 return toReturn;
+                
             }))
             setNodes(options.weathermap.NODES.map((d, i) => {
                 let toReturn = Object.create(d)
