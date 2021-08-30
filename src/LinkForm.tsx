@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { css } from 'emotion';
-import { Select, stylesFactory, UnitPicker } from '@grafana/ui';
+import { Select, stylesFactory } from '@grafana/ui';
 import { Button, InlineField, InlineFieldRow} from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,7 +22,7 @@ export const LinkForm = (props: Props) => {
 
     const handleChange = (frame: string, i: number) => {
         let weathermap: Weathermap = value; 
-        weathermap.LINKS[i].BANDWIDTH = frame;
+        weathermap.LINKS[i].bandwidthQuery = frame;
         onChange(weathermap);
     }
 
@@ -52,7 +52,7 @@ export const LinkForm = (props: Props) => {
             throw new Error('There must be >= 1 Nodes to create a link.');
         }
         let weathermap: Weathermap = value;
-        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], BANDWIDTH: 50, ASideQuery: undefined, BSideQuery: undefined, units: undefined};
+        const link: Link = {ID: uuidv4(), NODES: [value.NODES[0], value.NODES[0]], bandwidth: 0, bandwidthQuery: "", ASideQuery: undefined, BSideQuery: undefined, units: undefined};
         weathermap.LINKS.push(link);
         onChange(weathermap);
         setCurrentLink(link);
@@ -159,7 +159,7 @@ export const LinkForm = (props: Props) => {
                                     placeholder={"Select Bandwidth"}
                                 ></Select>
                             </InlineField>
-                            <InlineField label="Units">
+                            {/* <InlineField label="Units">
                                 <UnitPicker 
                                     onChange={(val) => {
                                         let wm: Weathermap = value;
@@ -168,17 +168,19 @@ export const LinkForm = (props: Props) => {
                                     }}
                                     value={link.units}
                                 />
-                            </InlineField>
+                            </InlineField> */}
                         </InlineFieldRow>
-                        <Button
-                                variant="destructive"
-                                icon="trash-alt"
-                                size="md"
-                                onClick={() => removeLink(i)}
-                                className={""}
-                            >
-                                Remove Link
-                        </Button>
+                        <InlineFieldRow className={styles.row}>
+                            <Button
+                                    variant="destructive"
+                                    icon="trash-alt"
+                                    size="md"
+                                    onClick={() => removeLink(i)}
+                                    className={""}
+                                >
+                                    Remove Link
+                            </Button>
+                        </InlineFieldRow>
                     </React.Fragment>
                     )
                 }

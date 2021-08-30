@@ -1,10 +1,9 @@
 import React, {useEffect, useState, useRef} from 'react';
-import { PanelProps } from '@grafana/data';
-import { SimpleOptions, Weathermap } from 'types';
+import { PanelProps, scaledUnits } from '@grafana/data';
+import { DrawnLink, DrawnNode, Link, SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
-import * as d3 from 'd3';
 import Draggable from 'react-draggable';
 
 interface Props extends PanelProps<SimpleOptions> {}
@@ -127,25 +126,18 @@ export const SimplePanel: React.FC<Props> = (props) => {
         }
     }
 
-    const [links, setLinks] = useState(options.weathermap.LINKS.map((d, i) => {
-        let toReturn = Object.create(d)
-        toReturn.index = i;
-        toReturn.source = toReturn.NODES[0].ID;
-        toReturn.target = toReturn.NODES[1].ID;
-        toReturn.currentASideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
-        toReturn.currentBSideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
-        return toReturn;
-    }));
-
-    const [nodes, setNodes] = useState(options.weathermap.NODES.map((d, i) => {
-        let toReturn = Object.create(d)
+    const [nodes, setNodes] = useState(options.weathermap.NODES ? options.weathermap.NODES.map((d, i) => {
+        let toReturn: DrawnNode = Object.create(d)
         toReturn.name = d.ID;
         toReturn.index = i;
-        toReturn.x = parseInt(toReturn.POSITION[0]);
-        toReturn.y = parseInt(toReturn.POSITION[1]);
-        // toReturn.data = nodeData[0];
+        toReturn.x = toReturn.POSITION[0];
+        toReturn.y = toReturn.POSITION[1];
         return toReturn;
-    }));
+    }) : []);
+
+    const [links, setLinks] = useState(options.weathermap.LINKS ? options.weathermap.LINKS.map((d, i) => {
+        return generateDrawnLink(d, i, true);
+    }) : []);
 
     function calculateRectX(d: any) {
         // This allows for NSEW offsets.
@@ -191,8 +183,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
 
 
-    d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => (d as any).ID).strength(0))
+    // d3.forceSimulation(nodes)
+    //     .force("link", d3.forceLink(links).id(d => (d as any).ID).strength(0))
         
   
     function getScaleColorHeight(index: number) {
@@ -207,75 +199,89 @@ export const SimplePanel: React.FC<Props> = (props) => {
         return Math.ceil(i/j) * j;
     }
 
+    function generateDrawnLink(d: Link, i: number, isFirstPass: boolean): DrawnLink {
+        let toReturn: DrawnLink = Object.create(d);
+        toReturn.index = i;
+
+        // if (isFirstPass || !links || i >= links.length || links[i].NODES[0].ID !== toReturn.NODES[0].ID || links[i].NODES[1].ID !== toReturn.NODES[1].ID) {
+        //     toReturn.source = nodes.filter(n => n.ID == toReturn.NODES[0].ID)[0];
+        //     toReturn.target = nodes.filter(n => n.ID == toReturn.NODES[1].ID)[0];
+        // } else {
+        //     console.log(links[i].NODES[0].ID, toReturn.NODES[0].ID);
+        //     console.log(links[i].NODES[1].ID, toReturn.NODES[1].ID);
+        //     toReturn.source= links[i].source;
+        //     toReturn.target = links[i].target;
+        // }
+        
+        toReturn.source = nodes.filter(n => n.ID == toReturn.NODES[0].ID)[0];
+        toReturn.target =  nodes.filter(n => n.ID == toReturn.NODES[1].ID)[0];
+
+        let dataFrame = data.series
+                .filter(series => series.name == toReturn.bandwidthQuery && series.refId == "B")
+                .map(
+                    frame => {
+                        return (
+                            frame.fields[1].values.get(0)
+                            // Instant query
+                        )
+                    }
+                )
+
+        toReturn.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 50;
+
+        toReturn.currentASideValue = 0;
+        toReturn.currentBSideValue = 0;
+        
+        if (toReturn.ASideQuery && toReturn.BSideQuery) {
+            let dataSourceA = toReturn.ASideQuery;
+            let dataSourceB = toReturn.BSideQuery;
+
+            let dataFrames = data.series
+                .filter(series => (series.name == dataSourceA || series.name == dataSourceB) && series.refId == "A");
+            
+            let dataValues = dataFrames.map(
+                frame => {
+                    return ({
+                        value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
+                        name: frame.name
+                    })
+                }
+            )
+
+            let aValues = dataValues.filter(s => s.name == dataSourceA);
+            let bValues = dataValues.filter(s => s.name == dataSourceB);
+
+            toReturn.currentASideValue = aValues[0] ? aValues[0].value : 0; 
+            toReturn.currentBSideValue = bValues[0] ? bValues[0].value : 0;
+            
+            let testFormat = scaledUnits(1000, ["b", "Kb", "Mb", "Gb", "Tb"]);
+            let scaledASideValue = testFormat(toReturn.currentASideValue);
+            let scaledBSideValue = testFormat(toReturn.currentBSideValue)
+
+            toReturn.currentASideValueText = `${scaledASideValue.text} ${scaledASideValue.suffix}/s`; 
+            toReturn.currentBSideValueText = `${scaledBSideValue.text} ${scaledBSideValue.suffix}/s`;
+        }
+
+        return toReturn;
+    }
+
     const mounted = useRef(false);
     useEffect(() => {
-        console.log(data);
         if (!mounted.current) {
             mounted.current = true;
         } else {
-            setLinks(options.weathermap.LINKS.map((d, i) => {
-                let toReturn = Object.create(d)
-                toReturn.index = i;
-                toReturn.source = toReturn.NODES[0].ID;
-                toReturn.target = toReturn.NODES[1].ID;
-                
-                let dataFrame = data.series
-                        .filter(series => series.name == toReturn.BANDWIDTH && series.refId == "B")
-                        .map(
-                            frame => {
-                                return (
-                                    frame.fields[1].values.get(0)
-                                    // Instant query
-                                )
-                            }
-                        )
-
-                toReturn.BANDWIDTH = dataFrame.length > 0 ? dataFrame[0] : 50;
-
-                toReturn.currentASideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
-                toReturn.currentBSideValue = Math.round(Math.random() * toReturn.BANDWIDTH);
-                
-                
-
-                console.log(d);
-                console.log(toReturn.ASideQuery, toReturn.BSideQuery)
-                if (toReturn.ASideQuery && toReturn.BSideQuery) {
-                    let dataSourceA = toReturn.ASideQuery;
-                    let dataSourceB = toReturn.BSideQuery;
-
-                    let dataFrames = data.series
-                        .filter(series => (series.name == dataSourceA || series.name == dataSourceB) && series.refId == "A");
-                    
-                    let dataValues = dataFrames.map(
-                        frame => {
-                            return ({
-                                value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-                                name: frame.name
-                            })
-                        }
-                    )
-
-                    console.log(dataValues);
-                    console.log(dataValues.filter(s => s.name == dataSourceA));
-                    let aValues = dataValues.filter(s => s.name == dataSourceA);
-                    let bValues = dataValues.filter(s => s.name == dataSourceB);
-                    console.log(aValues[0], bValues[0]);
-                    toReturn.currentASideValue = aValues[0] ? aValues[0].value : 0; 
-                    toReturn.currentBSideValue = bValues[0] ? bValues[0].value : 0; 
-                }
-
-                return toReturn;
-                
-            }))
-            setNodes(options.weathermap.NODES.map((d, i) => {
-                let toReturn = Object.create(d)
+            setNodes(options.weathermap.NODES ? options.weathermap.NODES.map((d, i) => {
+                let toReturn: DrawnNode = Object.create(d)
                 toReturn.name = d.ID;
                 toReturn.index = i;
-                toReturn.x = parseInt(toReturn.POSITION[0]);
-                toReturn.y = parseInt(toReturn.POSITION[1]);
+                toReturn.x = toReturn.POSITION[0];
+                toReturn.y = toReturn.POSITION[1];
                 // toReturn.data = nodeData[0];
                 return toReturn;
-            }))
+            }): []);
+            setLinks(options.weathermap.LINKS ? options.weathermap.LINKS.map((d, i) => {
+                return generateDrawnLink(d, i, false);
+            }): []);
         }
         // console.log('simple panel updated')
     }, [props])
@@ -326,7 +332,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               height={Math.abs(d.target.y - d.source.y)}
               >
                 <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(d.currentASideValue, d.BANDWIDTH)}
+                      stroke={getScaleColor(d.currentASideValue, d.bandwidth)}
                       x1={d.source.x}
                       y1={d.source.y}
                       x2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).x}
@@ -340,10 +346,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.x}
                       ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.y}
                       `}
-                      fill={getScaleColor(d.currentASideValue, d.BANDWIDTH)}
+                      fill={getScaleColor(d.currentASideValue, d.bandwidth)}
                 ></polygon>
                 <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(d.currentBSideValue, d.BANDWIDTH)}
+                      stroke={getScaleColor(d.currentBSideValue, d.bandwidth)}
                       x1={d.target.x}
                       y1={d.target.y}
                       x2={getMiddlePoint(d.target, d.source, distFromCenter + 4).x}
@@ -357,7 +363,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.x}
                       ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.y}
                       `}
-                      fill={getScaleColor(d.currentBSideValue, d.BANDWIDTH)}
+                      fill={getScaleColor(d.currentBSideValue, d.bandwidth)}
                 ></polygon>
             </g>))}
           </g>
@@ -370,9 +376,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     transform={`translate(${(d.target.x + d.source.x)/2 - (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 - (d.target.y - d.source.y)/4})`}
                   >
                       <rect
-                        x={-measureText(`${d.currentASideValue} ${d.units ? d.units : "?/s"}`, 9).width/2 - 12/2}
+                        x={-measureText(`${d.currentASideValueText}`, 9).width/2 - 12/2}
                         y={-5}
-                        width={measureText(`${d.currentASideValue} ${d.units ? d.units : "?/s"}`, 9).width + 12}
+                        width={measureText(`${d.currentASideValueText}`, 9).width + 12}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
@@ -386,7 +392,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         fontSize={"9px"}
                         // letterSpacing={".12em"}
                       >
-                          {`${d.currentASideValue} ${d.units ? d.units : "?/s"}`}
+                          {`${d.currentASideValueText}`}
                       </text>
                   </g>
               ))}
@@ -399,9 +405,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     transform={`translate(${(d.target.x + d.source.x)/2 + (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 + (d.target.y - d.source.y)/4})`}
                   >
                       <rect
-                        x={-measureText(`${d.currentBSideValue} ${d.units ? d.units : "?/s"}`, 9).width/2 - 12/2}
+                        x={-measureText(`${d.currentBSideValueText}`, 9).width/2 - 12/2}
                         y={-5}
-                        width={measureText(`${d.currentBSideValue} ${d.units ? d.units : "?/s"}`, 9).width + 12}
+                        width={measureText(`${d.currentBSideValueText}`, 9).width + 12}
                         height={parseInt(settings.FONTDEFINE[2]) + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
@@ -415,7 +421,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         fontSize={"9px"}
                         // letterSpacing={".12em"}
                       >
-                          {`${d.currentBSideValue} ${d.units ? d.units : "?/s"}`}
+                          {`${d.currentBSideValueText}`}
                       </text>
                   </g>
               ))}
@@ -423,12 +429,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
           <g>
               {nodes.map((d, i) => (
                   <Draggable position={{x: d.x, y: d.y}} onDrag={(e, position) => {
+                      console.log("dragging");
                         setNodes(prevState => prevState.map((val, index) => {
                             if(index == i) {
                                 val.x = options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x;
                                 val.y = options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y;
                             }
                             return val;
+                        }))
+                        setLinks(options.weathermap.LINKS.map((d, i) => {
+                            return generateDrawnLink(d, i, false);
                         }))
                   }}
                   onStop={(e, position) => {
