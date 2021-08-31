@@ -67,14 +67,26 @@ export const SimplePanel: React.FC<Props> = (props) => {
     /** LINK AND ARROW RENDERING */
     /** ----------------------------------------------------------------------------------- */
     // Find the middle point of a link.
-    function getMiddlePoint(source: any, target: any, d: number) {
+
+    interface Position {
+        x: number,
+        y: number,
+    }
+
+    function getMiddlePoint(source: Position, target: Position, offset: number): Position {
         const x = (source.x + target.x) / 2;
         const y = (source.y + target.y) / 2;
         const a = target.x - source.x;
         const b = target.y - source.y;
         const dist = Math.sqrt(a*a + b*b);
-        const newX = x - (d*(target.x - source.x))/dist;
-        const newY = y - (d*(target.y - source.y))/dist;
+        const newX = x - (offset*(target.x - source.x))/dist;
+        const newY = y - (offset*(target.y - source.y))/dist;
+        return {x: newX, y: newY};
+    }
+
+    function getPercentPoint(source: Position, target: Position, percent: number): Position {
+        const newX = (target.x) + (source.x - target.x) * percent;
+        const newY = (target.y) + (source.y - target.y) * percent;
         return {x: newX, y: newY};
     }
 
@@ -183,9 +195,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
 
 
-    // d3.forceSimulation(nodes)
-    //     .force("link", d3.forceLink(links).id(d => (d as any).ID).strength(0))
-        
+    function getScaledMousePos(pos: {x: number, y: number}): {x: number, y: number} {
+        // TODO
+        return pos;
+    }
   
     function getScaleColorHeight(index: number) {
         const keys = Object.keys(colors);
@@ -341,87 +354,99 @@ export const SimplePanel: React.FC<Props> = (props) => {
         textRendering="geometricPrecision"
       >
           <g>
-              {links.map((d, i) => (
-            <g 
-              className="line" 
-              strokeOpacity={1}
-              width={Math.abs(d.target.x - d.source.x)}
-              height={Math.abs(d.target.y - d.source.y)}
-              >
-                <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
-                      x1={d.source.x}
-                      y1={d.source.y}
-                      x2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).x}
-                      y2={getMiddlePoint(d.target, d.source, -distFromCenter - 4).y}
-                ></line>
-                <polygon
-                      points={`${getMiddlePoint(d.target, d.source, -distFromCenter + 5).x} 
-                      ${getMiddlePoint(d.target, d.source, -distFromCenter + 5).y} 
-                      ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p1.x} 
-                      ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p1.y} 
-                      ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.x}
-                      ${getArrowPolygon(d.source, getMiddlePoint(d.target, d.source, -distFromCenter + 5)).p2.y}
-                      `}
-                      fill={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
-                ></polygon>
-                <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                      stroke={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
-                      x1={d.target.x}
-                      y1={d.target.y}
-                      x2={getMiddlePoint(d.target, d.source, distFromCenter + 4).x}
-                      y2={getMiddlePoint(d.target, d.source, distFromCenter + 4).y}
-                ></line>
-                <polygon
-                      points={`${getMiddlePoint(d.target, d.source, distFromCenter - 5).x} 
-                      ${getMiddlePoint(d.target, d.source, distFromCenter - 5).y} 
-                      ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p1.x} 
-                      ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p1.y} 
-                      ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.x}
-                      ${getArrowPolygon(d.target, getMiddlePoint(d.target, d.source, distFromCenter - 5)).p2.y}
-                      `}
-                      fill={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
-                ></polygon>
-            </g>))}
-          </g>
-          
-          <g>
-              {links.map((d, i) => ( //TODO: FIX THIS!! This is doubling the links and adding the second stat card. Make sure this takes different data.
-                  <g
-                    fontStyle={"italic"}
-                    // fontWeight={"bold"}
-                    transform={`translate(${(d.target.x + d.source.x)/2 - (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 - (d.target.y - d.source.y)/4})`}
-                  >
-                      <rect
-                        x={-measureText(`${d.currentASideValueText}`, 9).width/2 - 12/2}
-                        y={-5}
-                        width={measureText(`${d.currentASideValueText}`, 9).width + 12}
-                        height={parseInt(settings.FONTDEFINE[2]) + 8}
-                        fill={"#EFEFEF"}
-                        stroke={"#DCDCDC"}
-                        strokeWidth={2}
-                        rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
-                      ></rect>
-                      <text
-                        x={0}
-                        y={parseInt(settings.FONTDEFINE[2]) - 2}
-                        textAnchor={"middle"}
-                        fontSize={"9px"}
-                        // letterSpacing={".12em"}
-                      >
-                          {`${d.currentASideValueText}`}
-                      </text>
-                  </g>
-              ))}
+              {links.map((d, i) => {
+                  const lineEnd1 = getMiddlePoint(d.target, d.source, -distFromCenter - 4);
+                  const arrowCenter1 = getMiddlePoint(d.target, d.source, -distFromCenter + 5);
+                  const arrowPolygon1 = getArrowPolygon(d.source, arrowCenter1);
+
+                  const lineEnd2 = getMiddlePoint(d.target, d.source, distFromCenter + 4);
+                  const arrowCenter2 = getMiddlePoint(d.target, d.source, distFromCenter - 5);
+                  const arrowPolygon2 = getArrowPolygon(d.target, arrowCenter2);
+                  return (
+                    <g 
+                    className="line" 
+                    strokeOpacity={1}
+                    width={Math.abs(d.target.x - d.source.x)}
+                    height={Math.abs(d.target.y - d.source.y)}
+                    >
+                        <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
+                            stroke={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
+                            x1={d.source.x}
+                            y1={d.source.y}
+                            x2={lineEnd1.x}
+                            y2={lineEnd1.y}
+                        ></line>
+                        <polygon
+                            points={`
+                                ${arrowCenter1.x} 
+                                ${arrowCenter1.y} 
+                                ${arrowPolygon1.p1.x} 
+                                ${arrowPolygon1.p1.y}
+                                ${arrowPolygon1.p2.x}
+                                ${arrowPolygon1.p2.y}
+                            `}
+                            fill={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
+                        ></polygon>
+                        <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
+                            stroke={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
+                            x1={d.target.x}
+                            y1={d.target.y}
+                            x2={lineEnd2.x}
+                            y2={lineEnd2.y}
+                        ></line>
+                        <polygon
+                            points={`
+                                ${arrowCenter2.x} 
+                                ${arrowCenter2.y} 
+                                ${arrowPolygon2.p1.x} 
+                                ${arrowPolygon2.p1.y}
+                                ${arrowPolygon2.p2.x}
+                                ${arrowPolygon2.p2.y}
+                            `}
+                            fill={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
+                        ></polygon>
+                    </g>
+                )})}
           </g>
           <g>
-              {links.map((d, i) => (
-                  <g
+              {links.map((d, i) => {
+                  const transform = getPercentPoint(d.source, d.target, 0.75);
+                  return (
+                    <g
+                        fontStyle={"italic"}
+                        transform={`translate(${transform.x},${transform.y})`}
+                    >
+                        <rect
+                            x={-measureText(`${d.currentASideValueText}`, 9).width/2 - 12/2}
+                            y={-5}
+                            width={measureText(`${d.currentASideValueText}`, 9).width + 12}
+                            height={parseInt(settings.FONTDEFINE[2]) + 8}
+                            fill={"#EFEFEF"}
+                            stroke={"#DCDCDC"}
+                            strokeWidth={2}
+                            rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
+                        ></rect>
+                        <text
+                            x={0}
+                            y={parseInt(settings.FONTDEFINE[2]) - 2}
+                            textAnchor={"middle"}
+                            fontSize={"9px"}
+                        >
+                            {`${d.currentASideValueText}`}
+                        </text>
+                    </g>
+                  )
+              })}
+          </g>
+          <g>
+              {links.map((d, i) => {
+                const transform = getPercentPoint(d.source, d.target, 0.25);
+                return (
+                <g
                     fontStyle={"italic"}
-                    // fontWeight={"bold"}
-                    transform={`translate(${(d.target.x + d.source.x)/2 + (d.target.x - d.source.x)/4},${(d.target.y + d.source.y)/2 + (d.target.y - d.source.y)/4})`}
-                  >
-                      <rect
+                    transform={`translate(${transform.x},${transform.y})`}
+                >
+                    <rect
                         x={-measureText(`${d.currentZSideValueText}`, 9).width/2 - 12/2}
                         y={-5}
                         width={measureText(`${d.currentZSideValueText}`, 9).width + 12}
@@ -430,27 +455,27 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         stroke={"#DCDCDC"}
                         strokeWidth={2}
                         rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
-                      ></rect>
-                      <text
+                    ></rect>
+                    <text
                         x={0}
                         y={parseInt(settings.FONTDEFINE[2]) - 2}
                         textAnchor={"middle"}
                         fontSize={"9px"}
-                        // letterSpacing={".12em"}
-                      >
-                          {`${d.currentZSideValueText}`}
-                      </text>
-                  </g>
-              ))}
+                    >
+                        {`${d.currentZSideValueText}`}
+                    </text>
+                </g>
+                )
+              })}
           </g>
           <g>
               {nodes.map((d, i) => (
                   <Draggable position={{x: d.x, y: d.y}} onDrag={(e, position) => {
-                      console.log("dragging");
                         setNodes(prevState => prevState.map((val, index) => {
                             if(index == i) {
-                                val.x = options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x;
-                                val.y = options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y;
+                                const scaledPos = getScaledMousePos(position);
+                                val.x = options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x;
+                                val.y = options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y;
                             }
                             return val;
                         }))
@@ -459,13 +484,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         }))
                   }}
                   onStop={(e, position) => {
-                    let current: Weathermap = options.weathermap;
-                        current.NODES[i].POSITION = [options.enableNodeGrid ? nearestMultiple(position.x, options.gridSizePx) : position.x, options.enableNodeGrid ? nearestMultiple(position.y, options.gridSizePx) : position.y]
+                        let current: Weathermap = options.weathermap;
+                        const scaledPos = getScaledMousePos(position);
+                        current.NODES[i].POSITION = [options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x, options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y]
                         onOptionsChange({
                             ...options,
                             weathermap: current
                         })
-                        console.log('dragged')
                   }}
                   
                    //TODO: Implement this fully!
