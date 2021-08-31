@@ -410,7 +410,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           </g>
           <g>
               {links.map((d, i) => {
-                  const transform = getPercentPoint(d.source, d.target, 0.75);
+                  const transform = getPercentPoint(d.target, d.source, 0.5 * (d.ASideLabelOffset/100));
                   return (
                     <g
                         fontStyle={"italic"}
@@ -440,7 +440,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           </g>
           <g>
               {links.map((d, i) => {
-                const transform = getPercentPoint(d.source, d.target, 0.25);
+                const transform = getPercentPoint(d.source, d.target, 0.5 * (d.ZSideLabelOffset/100));
                 return (
                 <g
                     fontStyle={"italic"}

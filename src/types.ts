@@ -35,6 +35,8 @@ export interface Link {
   ZSideBandwidthQuery: string | undefined;
   ASideQuery: string | undefined;
   ZSideQuery: string | undefined;
+  ASideLabelOffset: number;
+  ZSideLabelOffset: number;
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
@@ -64,6 +66,8 @@ export interface DrawnLink {
   ZSideBandwidthQuery: string | undefined;
   ASideQuery: string | undefined;
   ZSideQuery: string | undefined;
+  ASideLabelOffset: number;
+  ZSideLabelOffset: number;
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;

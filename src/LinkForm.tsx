@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { css } from 'emotion';
-import { Input, Select, stylesFactory } from '@grafana/ui';
+import { Input, Select, Slider, stylesFactory } from '@grafana/ui';
 import { Button, InlineField, InlineFieldRow} from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -55,6 +55,12 @@ export const LinkForm = (props: Props) => {
         onChange(weathermap);
     }
 
+    const handleLabelOffsetChange = (val: number, i: number, side: 'A' | 'Z') => {
+        let weathermap: Weathermap = value;
+        weathermap.LINKS[i][`${side}SideLabelOffset`] = val;
+        onChange(weathermap);
+    }
+
     const addNewLink = () => {
         if (value.NODES.length == 0) {
             throw new Error('There must be >= 1 Nodes to create a link.');
@@ -69,7 +75,9 @@ export const LinkForm = (props: Props) => {
             ASideBandwidth: 0, 
             ASideBandwidthQuery: undefined, 
             ASideQuery: undefined, 
-            ZSideQuery: undefined, 
+            ZSideQuery: undefined,
+            ASideLabelOffset: 50,
+            ZSideLabelOffset: 50,
             units: undefined
         };
         weathermap.LINKS.push(link);
@@ -107,7 +115,7 @@ export const LinkForm = (props: Props) => {
                 if (link.ID == currentLink.ID) {
                     return (
                         <React.Fragment>
-                        <InlineFieldRow className={styles.row}>
+                        <InlineFieldRow className={styles.row} style={{"marginTop": "10px"}}>
                             <InlineField label={"A Side"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node1', i)}}
@@ -132,7 +140,7 @@ export const LinkForm = (props: Props) => {
                                 ></Select>
                             </InlineField>
                         </InlineFieldRow>
-                        <InlineFieldRow className={styles.row}>
+                        <InlineFieldRow className={styles.row2}>
                             <InlineField label={"A Bandwidth #"}>
                                 <Input
                                     value={link.ASideBandwidth}
@@ -157,6 +165,16 @@ export const LinkForm = (props: Props) => {
                             </InlineField>
                         </InlineFieldRow>
                         <InlineFieldRow className={styles.row2}>
+                            <InlineField label={"A Label Offset %"} style={{"width": "100%"}}>
+                                <Slider
+                                    min={0}
+                                    max={100}
+                                    value={link.ASideLabelOffset}
+                                    onChange={(v) => {handleLabelOffsetChange(v, i, 'A')}}
+                                />
+                            </InlineField>
+                        </InlineFieldRow>
+                        <InlineFieldRow className={styles.row}>
                             <InlineField label={"Z Side"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleNodeChange(v as Node, 'node2', i)}}
@@ -181,7 +199,7 @@ export const LinkForm = (props: Props) => {
                                 ></Select>
                             </InlineField>
                         </InlineFieldRow>
-                        <InlineFieldRow className={styles.row}>
+                        <InlineFieldRow className={styles.row2}>
                             <InlineField label={"Z Bandwidth #"}>
                                 <Input
                                     value={link.ZSideBandwidth}
@@ -203,6 +221,16 @@ export const LinkForm = (props: Props) => {
                                     className={styles.bandwidthSelect}
                                     placeholder={"Select Bandwidth"}
                                 ></Select>
+                            </InlineField>
+                        </InlineFieldRow>
+                        <InlineFieldRow className={styles.row2}>
+                            <InlineField label={"Z Label Offset %"} style={{"width": "100%"}}>
+                                <Slider
+                                    min={0}
+                                    max={100}
+                                    value={link.ZSideLabelOffset}
+                                    onChange={(v) => {handleLabelOffsetChange(v, i, 'Z')}}
+                                />
                             </InlineField>
                         </InlineFieldRow>
                         <InlineFieldRow className={styles.row}>
@@ -273,7 +301,7 @@ const getStyles = stylesFactory(() => {
         max-width: calc(100% - 88px); 
       `, // TODO: find a better way to do this calc above
       row: css`
-        margin-top: 10px;
+        margin-top: 5px;
         max-width: 100%;
         padding-top: 10px;
         border-top: 1px solid var(--in-content-button-background);
@@ -281,8 +309,6 @@ const getStyles = stylesFactory(() => {
       row2: css`
         margin-top: 5px;
         max-width: 100%;
-        padding-top: 10px;
-        border-top: 1px solid var(--in-content-button-background);
       `
     };
   });
