@@ -36,9 +36,12 @@ export const LinkForm = (props: Props) => {
 
     const handleNodeChange = (node: Node, name: string, i: number) => {
         let weathermap: Weathermap = value;
+        node.numLinks++;
         if (name == 'node1') {
+            weathermap.LINKS[i].NODES[0].numLinks--;
             weathermap.LINKS[i].NODES[0] = node;
         } else if (name == 'node2') {
+            weathermap.LINKS[i].NODES[1].numLinks--;
             weathermap.LINKS[i].NODES[1] = node;
         }
         onChange(weathermap);
@@ -46,7 +49,6 @@ export const LinkForm = (props: Props) => {
 
     const handleDataChange = (name: string, i: number, frameName: string) => {
         let weathermap: Weathermap = value;
-        // console.log(dataFrame);
         if (name == 'node1') {
             weathermap.LINKS[i].ASideQuery = frameName;
         } else if (name == 'node2') {
@@ -80,6 +82,7 @@ export const LinkForm = (props: Props) => {
             ZSideLabelOffset: 50,
             units: undefined
         };
+        value.NODES[0].numLinks += 2;
         weathermap.LINKS.push(link);
         onChange(weathermap);
         setCurrentLink(link);

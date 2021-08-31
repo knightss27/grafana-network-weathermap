@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { PanelProps, scaledUnits } from '@grafana/data';
-import { DrawnLink, DrawnNode, Link, SimpleOptions, Weathermap } from 'types';
+import { Node, DrawnLink, DrawnNode, Link, SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
@@ -144,8 +144,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
         toReturn.index = i;
         toReturn.x = toReturn.POSITION[0];
         toReturn.y = toReturn.POSITION[1];
+        toReturn.filledLinks = 0;
         return toReturn;
     }) : []);
+    
+    let tempNodes = nodes.slice();
 
     const [links, setLinks] = useState(options.weathermap.LINKS ? options.weathermap.LINKS.map((d, i) => {
         return generateDrawnLink(d, i, true);
@@ -210,6 +213,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     function nearestMultiple(i: number, j: number): number {
         return Math.ceil(i/j) * j;
+    }
+
+    function getMultiLinkPosition(d: Node, linkIndex: number): number {
+        const rectXOffset = calculateRectX(d);
+        let toReturn = d.x + rectXOffset + ((linkIndex+1) * ((Math.abs(rectXOffset)*2)/(d.numLinks+1)));
+        return toReturn;
     }
 
     function generateDrawnLink(d: Link, i: number, isFirstPass: boolean): DrawnLink {
@@ -292,10 +301,28 @@ export const SimplePanel: React.FC<Props> = (props) => {
             toReturn.currentZSideValueText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
         }
 
+        // TODO: optimize filledLink resetting
+        if (i == 0) {
+            tempNodes = tempNodes.map(n => {n.filledLinks = 0; return n;});
+        }
+        toReturn.lineStartA = {x: getMultiLinkPosition(toReturn.source, tempNodes[toReturn.source.index].filledLinks), y: toReturn.source.y};
+        tempNodes[toReturn.source.index].filledLinks++;
+        toReturn.lineStartZ = {x: getMultiLinkPosition(toReturn.target, tempNodes[toReturn.target.index].filledLinks), y: toReturn.target.y};
+        tempNodes[toReturn.target.index].filledLinks++;
+
+        toReturn.lineEndA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter - 4);
+        toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter + 5);
+        toReturn.arrowPolygonA = getArrowPolygon(toReturn.lineStartA, toReturn.arrowCenterA);
+
+        toReturn.lineEndZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, distFromCenter + 4);
+        toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, distFromCenter - 5);
+        toReturn.arrowPolygonZ = getArrowPolygon(toReturn.lineStartZ, toReturn.arrowCenterZ);
+
         return toReturn;
     }
 
     const mounted = useRef(false);
+
     useEffect(() => {
         if (!mounted.current) {
             mounted.current = true;
@@ -306,12 +333,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 toReturn.index = i;
                 toReturn.x = toReturn.POSITION[0];
                 toReturn.y = toReturn.POSITION[1];
-                // toReturn.data = nodeData[0];
+                toReturn.filledLinks = 0;
                 return toReturn;
             }): []);
             setLinks(options.weathermap.LINKS ? options.weathermap.LINKS.map((d, i) => {
                 return generateDrawnLink(d, i, false);
             }): []);
+            // tempNodes = [...nodes]; 
         }
         // console.log('simple panel updated')
     }, [props])
@@ -355,82 +383,75 @@ export const SimplePanel: React.FC<Props> = (props) => {
       >
           <g>
               {links.map((d, i) => {
-                  const lineEnd1 = getMiddlePoint(d.target, d.source, -distFromCenter - 4);
-                  const arrowCenter1 = getMiddlePoint(d.target, d.source, -distFromCenter + 5);
-                  const arrowPolygon1 = getArrowPolygon(d.source, arrowCenter1);
-
-                  const lineEnd2 = getMiddlePoint(d.target, d.source, distFromCenter + 4);
-                  const arrowCenter2 = getMiddlePoint(d.target, d.source, distFromCenter - 5);
-                  const arrowPolygon2 = getArrowPolygon(d.target, arrowCenter2);
-                  return (
-                    <g 
-                    className="line" 
-                    strokeOpacity={1}
-                    width={Math.abs(d.target.x - d.source.x)}
-                    height={Math.abs(d.target.y - d.source.y)}
-                    >
-                        <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                            stroke={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
-                            x1={d.source.x}
-                            y1={d.source.y}
-                            x2={lineEnd1.x}
-                            y2={lineEnd1.y}
-                        ></line>
-                        <polygon
-                            points={`
-                                ${arrowCenter1.x} 
-                                ${arrowCenter1.y} 
-                                ${arrowPolygon1.p1.x} 
-                                ${arrowPolygon1.p1.y}
-                                ${arrowPolygon1.p2.x}
-                                ${arrowPolygon1.p2.y}
-                            `}
-                            fill={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
-                        ></polygon>
-                        <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                            stroke={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
-                            x1={d.target.x}
-                            y1={d.target.y}
-                            x2={lineEnd2.x}
-                            y2={lineEnd2.y}
-                        ></line>
-                        <polygon
-                            points={`
-                                ${arrowCenter2.x} 
-                                ${arrowCenter2.y} 
-                                ${arrowPolygon2.p1.x} 
-                                ${arrowPolygon2.p1.y}
-                                ${arrowPolygon2.p2.x}
-                                ${arrowPolygon2.p2.y}
-                            `}
-                            fill={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
-                        ></polygon>
-                    </g>
-                )})}
+                    return (
+                        <g 
+                        className="line" 
+                        strokeOpacity={1}
+                        width={Math.abs(d.target.x - d.source.x)}
+                        height={Math.abs(d.target.y - d.source.y)}
+                        >
+                            <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
+                                stroke={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
+                                x1={d.lineStartA.x}
+                                y1={d.source.y}
+                                x2={d.lineEndA.x}
+                                y2={d.lineEndA.y}
+                            ></line>
+                            <polygon
+                                points={`
+                                    ${d.arrowCenterA.x} 
+                                    ${d.arrowCenterA.y} 
+                                    ${d.arrowPolygonA.p1.x} 
+                                    ${d.arrowPolygonA.p1.y}
+                                    ${d.arrowPolygonA.p2.x}
+                                    ${d.arrowPolygonA.p2.y}
+                                `}
+                                fill={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
+                            ></polygon>
+                            <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
+                                stroke={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
+                                x1={d.lineStartZ.x}
+                                y1={d.target.y}
+                                x2={d.lineEndZ.x}
+                                y2={d.lineEndZ.y}
+                            ></line>
+                            <polygon
+                                points={`
+                                    ${d.arrowCenterZ.x} 
+                                    ${d.arrowCenterZ.y} 
+                                    ${d.arrowPolygonZ.p1.x} 
+                                    ${d.arrowPolygonZ.p1.y}
+                                    ${d.arrowPolygonZ.p2.x}
+                                    ${d.arrowPolygonZ.p2.y}
+                                `}
+                                fill={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
+                            ></polygon>
+                        </g>
+                  )})}
           </g>
           <g>
               {links.map((d, i) => {
-                  const transform = getPercentPoint(d.target, d.source, 0.5 * (d.ASideLabelOffset/100));
+                  const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.ASideLabelOffset/100));
                   return (
                     <g
                         fontStyle={"italic"}
                         transform={`translate(${transform.x},${transform.y})`}
                     >
                         <rect
-                            x={-measureText(`${d.currentASideValueText}`, 9).width/2 - 12/2}
+                            x={-measureText(`${d.currentASideValueText}`, 7).width/2 - 12/2}
                             y={-5}
-                            width={measureText(`${d.currentASideValueText}`, 9).width + 12}
-                            height={parseInt(settings.FONTDEFINE[2]) + 8}
+                            width={measureText(`${d.currentASideValueText}`, 7).width + 12}
+                            height={7 + 8}
                             fill={"#EFEFEF"}
                             stroke={"#DCDCDC"}
                             strokeWidth={2}
-                            rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
+                            rx={(7 + 8)/2}
                         ></rect>
                         <text
                             x={0}
-                            y={parseInt(settings.FONTDEFINE[2]) - 2}
+                            y={7 - 2}
                             textAnchor={"middle"}
-                            fontSize={"9px"}
+                            fontSize={"7px"}
                         >
                             {`${d.currentASideValueText}`}
                         </text>
@@ -440,27 +461,27 @@ export const SimplePanel: React.FC<Props> = (props) => {
           </g>
           <g>
               {links.map((d, i) => {
-                const transform = getPercentPoint(d.source, d.target, 0.5 * (d.ZSideLabelOffset/100));
+                const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.ZSideLabelOffset/100));
                 return (
                 <g
                     fontStyle={"italic"}
                     transform={`translate(${transform.x},${transform.y})`}
                 >
                     <rect
-                        x={-measureText(`${d.currentZSideValueText}`, 9).width/2 - 12/2}
+                        x={-measureText(`${d.currentZSideValueText}`, 7).width/2 - 12/2}
                         y={-5}
-                        width={measureText(`${d.currentZSideValueText}`, 9).width + 12}
-                        height={parseInt(settings.FONTDEFINE[2]) + 8}
+                        width={measureText(`${d.currentZSideValueText}`, 7).width + 12}
+                        height={7 + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
                         strokeWidth={2}
-                        rx={(parseInt(settings.FONTDEFINE[2]) + 8)/2}
+                        rx={(7 + 8)/2}
                     ></rect>
                     <text
                         x={0}
-                        y={parseInt(settings.FONTDEFINE[2]) - 2}
+                        y={7 - 2}
                         textAnchor={"middle"}
-                        fontSize={"9px"}
+                        fontSize={"7px"}
                     >
                         {`${d.currentZSideValueText}`}
                     </text>

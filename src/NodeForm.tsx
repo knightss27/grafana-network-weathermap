@@ -34,7 +34,12 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
     const addNewNode = () => {
         let weathermap: Weathermap = value;
-        const node: Node = {ID: uuidv4(), POSITION: [400, 400], LABEL: 'Test Label'};
+        const node: Node = {
+            ID: uuidv4(), 
+            POSITION: [400, 400], 
+            LABEL: 'Test Label',
+            numLinks: 0
+        };
         weathermap.NODES.push(node);
         onChange(weathermap);
         setCurrentNode(node);
@@ -69,6 +74,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
             {value.NODES.map((node, i) => {
                 if (node.ID == currentNode.ID) {
+                    console.log(node.numLinks);
                     return (
                         <InlineFieldRow>
                             <InlineField label={"X"}>

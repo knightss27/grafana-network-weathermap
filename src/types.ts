@@ -17,8 +17,10 @@ export interface PanelSize {
 
 export interface Node {
   ID: string;
-  LABEL?: string;
   POSITION: [number, number];
+  // links: Link[];
+  numLinks: number;
+  LABEL?: string;
   INFOURL?: string;
   ICON?: string;
   ICONHEIGHT?: string;
@@ -47,6 +49,8 @@ export interface DrawnNode {
   ID: string;
   LABEL?: string;
   POSITION: [number, number];
+  numLinks: number;
+  filledLinks: number;
   INFOURL?: string;
   ICON?: string;
   ICONHEIGHT?: string;
@@ -57,6 +61,10 @@ export interface DrawnNode {
   y: number;
 }
 
+export interface Position {
+  x: number;
+  y: number;
+}
 export interface DrawnLink {
   ID: string;
   NODES: [Node, Node];
@@ -78,6 +86,14 @@ export interface DrawnLink {
   currentZSideValue: number;
   currentASideValueText: string;
   currentZSideValueText: string;
+  lineStartA: Position;
+  lineEndA: Position;
+  arrowCenterA: Position;
+  arrowPolygonA: any;
+  lineStartZ: Position;
+  lineEndZ: Position;
+  arrowCenterZ: Position;
+  arrowPolygonZ: any;
 }
 
 export interface Weathermap {
