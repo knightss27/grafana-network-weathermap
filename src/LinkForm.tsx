@@ -22,15 +22,15 @@ export const LinkForm = (props: Props) => {
 
     const handleBandwidthChange = (amt: number, i: number, side: 'A' | 'Z') => {
         let weathermap: Weathermap = value;
-        weathermap.LINKS[i][`${side}SideBandwidth`] = amt;
-        weathermap.LINKS[i][`${side}SideBandwidthQuery`] = undefined;
+        weathermap.LINKS[i].sides[side].bandwidth = amt;
+        weathermap.LINKS[i].sides[side].bandwidthQuery = undefined;
         onChange(weathermap);
     }
 
     const handleBandwidthQueryChange = (frame: string, i: number, side: 'A' | 'Z') => {
         let weathermap: Weathermap = value;
-        weathermap.LINKS[i][`${side}SideBandwidth`] = 0;
-        weathermap.LINKS[i][`${side}SideBandwidthQuery`] = frame;
+        weathermap.LINKS[i].sides[side].bandwidth = 0;
+        weathermap.LINKS[i].sides[side].bandwidthQuery = frame;
         onChange(weathermap);
     }
 
@@ -50,16 +50,16 @@ export const LinkForm = (props: Props) => {
     const handleDataChange = (name: string, i: number, frameName: string) => {
         let weathermap: Weathermap = value;
         if (name == 'node1') {
-            weathermap.LINKS[i].ASideQuery = frameName;
+            weathermap.LINKS[i].sides.A.query = frameName;
         } else if (name == 'node2') {
-            weathermap.LINKS[i].ZSideQuery = frameName;
+            weathermap.LINKS[i].sides.Z.query = frameName;
         }
         onChange(weathermap);
     }
 
     const handleLabelOffsetChange = (val: number, i: number, side: 'A' | 'Z') => {
         let weathermap: Weathermap = value;
-        weathermap.LINKS[i][`${side}SideLabelOffset`] = val;
+        weathermap.LINKS[i].sides[side].labelOffset = val;
         onChange(weathermap);
     }
 
@@ -70,16 +70,21 @@ export const LinkForm = (props: Props) => {
         let weathermap: Weathermap = value;
         const link: Link = {
             ID: uuidv4(), 
-            NODES: [value.NODES[0], 
-            value.NODES[0]], 
-            ZSideBandwidth: 0, 
-            ZSideBandwidthQuery: undefined, 
-            ASideBandwidth: 0, 
-            ASideBandwidthQuery: undefined, 
-            ASideQuery: undefined, 
-            ZSideQuery: undefined,
-            ASideLabelOffset: 50,
-            ZSideLabelOffset: 50,
+            NODES: [value.NODES[0], value.NODES[0]], 
+            sides: {
+                A: {
+                    bandwidth: 0,
+                    bandwidthQuery: undefined,
+                    query: undefined,
+                    labelOffset: 50
+                },
+                Z: {
+                    bandwidth: 0,
+                    bandwidthQuery: undefined,
+                    query: undefined,
+                    labelOffset: 50
+                }
+            },
             units: undefined
         };
         value.NODES[0].numLinks += 2;
@@ -114,7 +119,7 @@ export const LinkForm = (props: Props) => {
                 placeholder={"Select a link"}
             ></Select>
 
-            {value.LINKS.map((link, i) => {
+            {value.LINKS.map((link: Link, i) => {
                 if (link.ID == currentLink.ID) {
                     return (
                         <React.Fragment>
@@ -134,7 +139,7 @@ export const LinkForm = (props: Props) => {
                             <InlineField label={"A Side Query"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node1', i, v.name)}}
-                                    value={link.ASideQuery}
+                                    value={link.sides.A.query}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data.name}
@@ -146,7 +151,7 @@ export const LinkForm = (props: Props) => {
                         <InlineFieldRow className={styles.row2}>
                             <InlineField label={"A Bandwidth #"}>
                                 <Input
-                                    value={link.ASideBandwidth}
+                                    value={link.sides.A.bandwidth}
                                     onChange={e => handleBandwidthChange(e.currentTarget.valueAsNumber, i, 'A')}
                                     placeholder={'Custom max bandwidth'}
                                     type={"number"}
@@ -158,7 +163,7 @@ export const LinkForm = (props: Props) => {
                             <InlineField label={"A Bandwidth Query"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleBandwidthQueryChange(v.name, i, 'A')}}
-                                    value={link.ASideBandwidthQuery}
+                                    value={link.sides.A.bandwidthQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data?.name}
@@ -172,7 +177,7 @@ export const LinkForm = (props: Props) => {
                                 <Slider
                                     min={0}
                                     max={100}
-                                    value={link.ASideLabelOffset}
+                                    value={link.sides.A.labelOffset}
                                     onChange={(v) => {handleLabelOffsetChange(v, i, 'A')}}
                                 />
                             </InlineField>
@@ -193,7 +198,7 @@ export const LinkForm = (props: Props) => {
                             <InlineField label={"Z Side Query"} labelWidth={"auto"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleDataChange('node2', i, v.name)}}
-                                    value={link.ZSideQuery}
+                                    value={link.sides.Z.query}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data?.name}
@@ -205,7 +210,7 @@ export const LinkForm = (props: Props) => {
                         <InlineFieldRow className={styles.row2}>
                             <InlineField label={"Z Bandwidth #"}>
                                 <Input
-                                    value={link.ZSideBandwidth}
+                                    value={link.sides.Z.bandwidth}
                                     onChange={e => handleBandwidthChange(e.currentTarget.valueAsNumber, i, 'Z')}
                                     placeholder={'Custom max bandwidth'}
                                     type={"number"}
@@ -217,7 +222,7 @@ export const LinkForm = (props: Props) => {
                             <InlineField label={"Z Bandwidth Query"} style={{"maxWidth": "100%"}}>
                                 <Select
                                     onChange={(v) => {handleBandwidthQueryChange(v.name, i, 'Z')}}
-                                    value={link.ZSideBandwidthQuery}
+                                    value={link.sides.Z.bandwidthQuery}
                                     options={context.data}
                                     getOptionLabel={data => data?.name || 'No label'}
                                     getOptionValue={data => data?.name}
@@ -231,7 +236,7 @@ export const LinkForm = (props: Props) => {
                                 <Slider
                                     min={0}
                                     max={100}
-                                    value={link.ZSideLabelOffset}
+                                    value={link.sides.Z.labelOffset}
                                     onChange={(v) => {handleLabelOffsetChange(v, i, 'Z')}}
                                 />
                             </InlineField>

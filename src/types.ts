@@ -28,17 +28,20 @@ export interface Node {
   [propName: string]: any;
 }
 
+export interface LinkSide {
+  bandwidth: number;
+  bandwidthQuery: string | undefined;
+  query: string | undefined;
+  labelOffset: number;
+}
+
 export interface Link {
   ID: string;
   NODES: [Node, Node];
-  ASideBandwidth: number;
-  ZSideBandwidth: number;
-  ASideBandwidthQuery: string | undefined;
-  ZSideBandwidthQuery: string | undefined;
-  ASideQuery: string | undefined;
-  ZSideQuery: string | undefined;
-  ASideLabelOffset: number;
-  ZSideLabelOffset: number;
+  sides: {
+    A: LinkSide;
+    Z: LinkSide;
+  }
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
@@ -59,33 +62,32 @@ export interface DrawnNode {
   index: number;
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 export interface Position {
   x: number;
   y: number;
 }
+
+export interface DrawnLinkSide extends LinkSide {
+  currentValue: number;
+  currentText: string;
+}
 export interface DrawnLink {
   ID: string;
   NODES: [Node, Node];
-  ASideBandwidth: number;
-  ZSideBandwidth: number;
-  ASideBandwidthQuery: string | undefined;
-  ZSideBandwidthQuery: string | undefined;
-  ASideQuery: string | undefined;
-  ZSideQuery: string | undefined;
-  ASideLabelOffset: number;
-  ZSideLabelOffset: number;
+  sides: {
+    A: DrawnLinkSide;
+    Z: DrawnLinkSide;
+  }
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
   index: number;
   source: DrawnNode;
   target: DrawnNode,
-  currentASideValue: number;
-  currentZSideValue: number;
-  currentASideValueText: string;
-  currentZSideValueText: string;
   lineStartA: Position;
   lineEndA: Position;
   arrowCenterA: Position;

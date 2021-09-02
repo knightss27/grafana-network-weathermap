@@ -221,6 +221,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         return toReturn;
     }
 
+    // Calculate link positions / text / colors / etc.
     function generateDrawnLink(d: Link, i: number, isFirstPass: boolean): DrawnLink {
         let toReturn: DrawnLink = Object.create(d);
         toReturn.index = i;
@@ -235,45 +236,37 @@ export const SimplePanel: React.FC<Props> = (props) => {
         //     toReturn.target = links[i].target;
         // }
         
+        // Set the link's source and target Node
         toReturn.source = nodes.filter(n => n.ID == toReturn.NODES[0].ID)[0];
         toReturn.target =  nodes.filter(n => n.ID == toReturn.NODES[1].ID)[0];
 
-        if (toReturn.ASideBandwidthQuery) {
+        // Check if we have a query to run for the A Side
+        if (toReturn.sides.A.bandwidthQuery) {
             let dataFrame = data.series
-                .filter(series => series.name == toReturn.ASideBandwidthQuery)
-                .map(
-                    frame => {
-                        return (
-                            frame.fields[1].values.get(0)
-                            // Instant query
-                        )
-                    }
-                )
+                .filter(series => series.name == toReturn.sides.A.bandwidthQuery)
+                .map(frame => frame.fields[1].values.get(0));
 
-            toReturn.ASideBandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+            toReturn.sides.A.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
         }
 
-        if (toReturn.ZSideBandwidthQuery) {
+        // Check if we have a query to run for the B Side
+        if (toReturn.sides.Z.bandwidthQuery) {
             let dataFrame = data.series
-                .filter(series => series.name == toReturn.ZSideBandwidthQuery)
-                .map(
-                    frame => {
-                        return (
-                            frame.fields[1].values.get(0)
-                            // Instant query
-                        )
-                    }
-                )
+                .filter(series => series.name == toReturn.sides.Z.bandwidthQuery)
+                .map(frame => frame.fields[1].values.get(0));
 
-            toReturn.ZSideBandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+            toReturn.sides.A.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
         }
 
-        toReturn.currentASideValue = 0;
-        toReturn.currentZSideValue = 0;
+        // Set the display value to zero, just in case nothing exists
+        toReturn.sides.A.currentValue = 0;
+        toReturn.sides.Z.currentValue = 0;
+        toReturn.sides.A.currentText = "n/a"; 
+        toReturn.sides.Z.currentText = "n/a"; 
         
-        if (toReturn.ASideQuery && toReturn.ZSideQuery) {
-            let dataSourceA = toReturn.ASideQuery;
-            let dataSourceZ = toReturn.ZSideQuery;
+        if (toReturn.sides.A.query && toReturn.sides.Z.query) {
+            let dataSourceA = toReturn.sides.A.query;
+            let dataSourceZ = toReturn.sides.Z.query;
 
             let dataFrames = data.series
                 .filter(series => (series.name == dataSourceA || series.name == dataSourceZ) && series.refId == "A");
@@ -290,15 +283,15 @@ export const SimplePanel: React.FC<Props> = (props) => {
             let aValues = dataValues.filter(s => s.name == dataSourceA);
             let zValues = dataValues.filter(s => s.name == dataSourceZ);
 
-            toReturn.currentASideValue = aValues[0] ? aValues[0].value : 0; 
-            toReturn.currentZSideValue = zValues[0] ? zValues[0].value : 0;
+            toReturn.sides.A.currentValue = aValues[0] ? aValues[0].value : 0; 
+            toReturn.sides.Z.currentValue = zValues[0] ? zValues[0].value : 0;
             
             let testFormat = scaledUnits(1000, ["b", "Kb", "Mb", "Gb", "Tb"]);
-            let scaledASideValue = testFormat(toReturn.currentASideValue);
-            let scaledZSideValue = testFormat(toReturn.currentZSideValue)
+            let scaledASideValue = testFormat(toReturn.sides.A.currentValue);
+            let scaledZSideValue = testFormat(toReturn.sides.Z.currentValue)
 
-            toReturn.currentASideValueText = `${scaledASideValue.text} ${scaledASideValue.suffix}/s`; 
-            toReturn.currentZSideValueText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
+            toReturn.sides.A.currentText = `${scaledASideValue.text} ${scaledASideValue.suffix}/s`; 
+            toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
         }
 
         // TODO: optimize filledLink resetting
@@ -391,7 +384,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         height={Math.abs(d.target.y - d.source.y)}
                         >
                             <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                                stroke={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
+                                stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                                 x1={d.lineStartA.x}
                                 y1={d.source.y}
                                 x2={d.lineEndA.x}
@@ -406,10 +399,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                                     ${d.arrowPolygonA.p2.x}
                                     ${d.arrowPolygonA.p2.y}
                                 `}
-                                fill={getScaleColor(d.currentASideValue, d.ASideBandwidth)}
+                                fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                             ></polygon>
                             <line strokeWidth={settings.LINK.DEFAULT.WIDTH + "px"}
-                                stroke={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
+                                stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
                                 x1={d.lineStartZ.x}
                                 y1={d.target.y}
                                 x2={d.lineEndZ.x}
@@ -424,23 +417,23 @@ export const SimplePanel: React.FC<Props> = (props) => {
                                     ${d.arrowPolygonZ.p2.x}
                                     ${d.arrowPolygonZ.p2.y}
                                 `}
-                                fill={getScaleColor(d.currentZSideValue, d.ZSideBandwidth)}
+                                fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
                             ></polygon>
                         </g>
                   )})}
           </g>
           <g>
               {links.map((d, i) => {
-                  const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.ASideLabelOffset/100));
+                  const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset/100));
                   return (
                     <g
                         fontStyle={"italic"}
                         transform={`translate(${transform.x},${transform.y})`}
                     >
                         <rect
-                            x={-measureText(`${d.currentASideValueText}`, 7).width/2 - 12/2}
+                            x={-measureText(`${d.sides.A.currentText}`, 7).width/2 - 12/2}
                             y={-5}
-                            width={measureText(`${d.currentASideValueText}`, 7).width + 12}
+                            width={measureText(`${d.sides.A.currentText}`, 7).width + 12}
                             height={7 + 8}
                             fill={"#EFEFEF"}
                             stroke={"#DCDCDC"}
@@ -453,7 +446,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                             textAnchor={"middle"}
                             fontSize={"7px"}
                         >
-                            {`${d.currentASideValueText}`}
+                            {`${d.sides.A.currentText}`}
                         </text>
                     </g>
                   )
@@ -461,16 +454,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
           </g>
           <g>
               {links.map((d, i) => {
-                const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.ZSideLabelOffset/100));
+                const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset/100));
                 return (
                 <g
                     fontStyle={"italic"}
                     transform={`translate(${transform.x},${transform.y})`}
                 >
                     <rect
-                        x={-measureText(`${d.currentZSideValueText}`, 7).width/2 - 12/2}
+                        x={-measureText(`${d.sides.Z.currentText}`, 7).width/2 - 12/2}
                         y={-5}
-                        width={measureText(`${d.currentZSideValueText}`, 7).width + 12}
+                        width={measureText(`${d.sides.Z.currentText}`, 7).width + 12}
                         height={7 + 8}
                         fill={"#EFEFEF"}
                         stroke={"#DCDCDC"}
@@ -483,7 +476,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         textAnchor={"middle"}
                         fontSize={"7px"}
                     >
-                        {`${d.currentZSideValueText}`}
+                        {`${d.sides.Z.currentText}`}
                     </text>
                 </g>
                 )
