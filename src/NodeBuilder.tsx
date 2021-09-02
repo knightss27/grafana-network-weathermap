@@ -1,33 +1,32 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { StandardEditorProps } from '@grafana/data';
-import {Weathermap} from 'types';
-import {NodeForm} from './NodeForm'
-import {LinkForm} from './LinkForm'
-import {ColorForm} from './ColorForm'
+import { Weathermap } from 'types';
+import { NodeForm } from './NodeForm';
+import { LinkForm } from './LinkForm';
+import { ColorForm } from './ColorForm';
 
 interface Settings {
-    placeholder: string;
+  placeholder: string;
 }
 
-interface Props extends StandardEditorProps<Weathermap, Settings> {};
+interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const NodeBuilder = (props: Props) => {
+  // const theme = useTheme();
+  // const styles = getStyles();
 
-    // const theme = useTheme();
-    // const styles = getStyles();
+  useEffect(() => {
+    // props.onChange({NODES: [], LINKS: [], SCALE: []})
+  }, []);
 
-    useEffect(() => {
-        // props.onChange({NODES: [], LINKS: [], SCALE: []})
-    }, [])
-
-    return(
-        <React.Fragment>
-            <NodeForm {...props}></NodeForm>
-            <LinkForm {...props}></LinkForm>
-            <ColorForm {...props}></ColorForm>
-        </React.Fragment>
-    )
-}
+  return (
+    <React.Fragment>
+      <NodeForm {...props}></NodeForm>
+      <LinkForm {...props}></LinkForm>
+      <ColorForm {...props}></ColorForm>
+    </React.Fragment>
+  );
+};
 
 // const getStyles = stylesFactory(() => {
 //     return {

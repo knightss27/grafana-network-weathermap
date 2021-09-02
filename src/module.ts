@@ -4,7 +4,7 @@ import { SimplePanel } from './SimplePanel';
 import { NodeBuilder } from 'NodeBuilder';
 import { NewColorPicker } from './NewColorPicker';
 
-export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions(builder => {
+export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
     .addCustomEditor({
       id: 'weathermapEditor',
@@ -26,7 +26,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
     .addBooleanSwitch({
       path: 'enableNodeGrid',
       name: 'Node Grid Snapping',
-      description: "Turn on or off a snappable grid for dragging.",
+      description: 'Turn on or off a snappable grid for dragging.',
       defaultValue: false,
     })
     .addNumberInput({
@@ -34,6 +34,6 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       name: 'Grid Size (px)',
       description: "Set the nodes' snappable grid size.",
       defaultValue: 10,
-      showIf: config => config.enableNodeGrid,
-    })
+      showIf: (config) => config.enableNodeGrid,
+    });
 });

@@ -17,8 +17,8 @@ export const NewColorPicker = ({ value, onChange }: Props) => {
 
   return (
     <React.Fragment>
-      <InlineLabel width="auto" style={{"marginBottom": "4px"}}>
-          Background Color:
+      <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+        Background Color:
         <ColorPicker color={value.backgroundColor} onChange={handleColorChange} />
       </InlineLabel>
 
@@ -31,9 +31,9 @@ export const NewColorPicker = ({ value, onChange }: Props) => {
             css={''}
             name={'panelWidth'}
             onChange={(e) => {
-                let options = value;
-                options.panelSize.width = parseInt(e.currentTarget.value);
-                onChange(options);
+              let options = value;
+              options.panelSize.width = parseInt(e.currentTarget.value);
+              onChange(options);
             }}
           ></Input>
         </InlineField>
@@ -45,9 +45,9 @@ export const NewColorPicker = ({ value, onChange }: Props) => {
             css={''}
             name={'panelHeight'}
             onChange={(e) => {
-                let options = value;
-                options.panelSize.height = parseInt(e.currentTarget.value);
-                onChange(options);
+              let options = value;
+              options.panelSize.height = parseInt(e.currentTarget.value);
+              onChange(options);
             }}
           ></Input>
         </InlineField>

@@ -8,11 +8,7 @@
       "name": "knightss@catlin.edu",
       "url": "https://seth.cx"
     },
-    "keywords": [
-      "network",
-      "weathermap",
-      "network weathermap"
-    ],
+    "keywords": ["network", "weathermap", "network weathermap"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

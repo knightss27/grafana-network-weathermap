@@ -11,8 +11,8 @@ export interface PanelOptions {
 }
 
 export interface PanelSize {
-  width: number,
-  height: number,
+  width: number;
+  height: number;
 }
 
 export interface Node {
@@ -41,7 +41,7 @@ export interface Link {
   sides: {
     A: LinkSide;
     Z: LinkSide;
-  }
+  };
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
@@ -81,13 +81,13 @@ export interface DrawnLink {
   sides: {
     A: DrawnLinkSide;
     Z: DrawnLinkSide;
-  }
+  };
   units: string | undefined;
   TARGET?: string;
   WIDTH?: string;
   index: number;
   source: DrawnNode;
-  target: DrawnNode,
+  target: DrawnNode;
   lineStartA: Position;
   lineEndA: Position;
   arrowCenterA: Position;
@@ -101,7 +101,6 @@ export interface DrawnLink {
 export interface Weathermap {
   NODES: Node[];
   LINKS: Link[];
-  SCALE: {[propName: number]: string};
+  SCALE: { [propName: number]: string };
   BG_COLOR: string;
 }
-

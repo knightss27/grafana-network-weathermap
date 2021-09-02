@@ -24,7 +24,7 @@
     "emotion": "10.0.27"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=14"
   },
   "dependencies": {
     "d3": "^6.5.0",

@@ -35,7 +35,7 @@ jobs:
       - restore_cache:
           name: restore node_modules
           keys:
-          - build-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: |
@@ -59,9 +59,9 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-          - ci/jobs/package
-          - ci/packages
-          - ci/dist
-          - ci/grafana-test-env
+            - ci/jobs/package
+            - ci/packages
+            - ci/dist
+            - ci/grafana-test-env
       - store_artifacts:
           path: ci
