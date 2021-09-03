@@ -29,26 +29,33 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const height = parseInt(settings.HEIGHT);
   // let backgroundColor: string = options.backgroundColor;
 
-  // const setBackgroundWhite = () => {
-  //     onOptionsChange({
-  //         ...options,
-  //         panelOptions: {
-  //             backgroundColor: "#fff",
-  //             panelSize: { width: 500, height: 500 }
-  //         }
-  //     })
-  // }
+  if (!options || !options.panelOptions || !options.weathermap) {
+    console.log('Initializing weathermap plugin.');
 
-  // useEffect(() => {
-  //     setBackgroundWhite();
-  // }, [])
+    onOptionsChange({
+      panelOptions: {
+        backgroundColor: "#ffffff",
+        panelSize: {
+          width: 600,
+          height: 600
+        }
+      },
+      weathermap: {
+        NODES: [],
+        LINKS: [],
+        SCALE: {},
+      },
+      enableNodeGrid: false,
+      gridSizePx: 10
+    })
+  }
 
   /** ----------------------------------------------------------------------------------- */
 
   /** COLOR SCALES */
   /** ----------------------------------------------------------------------------------- */
   const colors: any = {};
-  Object.keys(options.weathermap.SCALE).forEach((pct: string) => {
+  Object.keys(options.weathermap ? options.weathermap.SCALE : {}).forEach((pct: string) => {
     colors[parseInt(pct)] = options.weathermap.SCALE[parseInt(pct)];
   });
 
@@ -139,7 +146,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }
 
   const [nodes, setNodes] = useState(
-    options.weathermap.NODES
+    options.weathermap
       ? options.weathermap.NODES.map((d, i) => {
           let toReturn: DrawnNode = Object.create(d);
           toReturn.name = d.ID;
@@ -155,7 +162,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   let tempNodes = nodes.slice();
 
   const [links, setLinks] = useState(
-    options.weathermap.LINKS
+    options.weathermap
       ? options.weathermap.LINKS.map((d, i) => {
           return generateDrawnLink(d, i, true);
         })
@@ -360,228 +367,235 @@ export const SimplePanel: React.FC<Props> = (props) => {
     // console.log('simple panel updated')
   }, [props]);
 
-  return (
-    <div
-      className={cx(
-        styles.wrapper,
-        css`
-          width: ${width}px;
-          height: ${height}px;
-        `
-      )}
-    >
-      <div className={styles.colorScaleContainer}>
-        <div className={styles.colorBoxTitle}>Traffic Load</div>
-        {Object.keys(colors).map((percent, i) => (
-          <div className={styles.colorScaleItem}>
-            <span
-              className={cx(
-                styles.colorBox,
-                css`
-                  background: ${colors[percent]};
-                  height: ${getScaleColorHeight(i)};
-                `
-              )}
-            ></span>
-            <span className={styles.colorLabel}>
-              {percent +
-                '%' +
-                (Object.keys(colors)[i + 1] == undefined ? '' : ' - ' + Object.keys(colors)[i + 1] + '%')}
-            </span>
-          </div>
-        ))}
-      </div>
-      <svg
+  if (options.weathermap && options.panelOptions) {
+    return (
+      <div
         className={cx(
-          styles.svg,
+          styles.wrapper,
           css`
-            background-color: ${options.panelOptions.backgroundColor};
+            width: ${width}px;
+            height: ${height}px;
           `
         )}
-        id="viz"
-        width={width2}
-        height={height2}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        viewBox={`0 0 ${options.panelOptions.panelSize.width} ${options.panelOptions.panelSize.height}`}
-        shapeRendering="crispEdges"
-        textRendering="geometricPrecision"
       >
-        <g>
-          {links.map((d, i) => {
-            return (
-              <g
-                className="line"
-                strokeOpacity={1}
-                width={Math.abs(d.target.x - d.source.x)}
-                height={Math.abs(d.target.y - d.source.y)}
-              >
-                <line
-                  strokeWidth={settings.LINK.DEFAULT.WIDTH + 'px'}
-                  stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                  x1={d.lineStartA.x}
-                  y1={d.source.y}
-                  x2={d.lineEndA.x}
-                  y2={d.lineEndA.y}
-                ></line>
-                <polygon
-                  points={`
-                                    ${d.arrowCenterA.x} 
-                                    ${d.arrowCenterA.y} 
-                                    ${d.arrowPolygonA.p1.x} 
-                                    ${d.arrowPolygonA.p1.y}
-                                    ${d.arrowPolygonA.p2.x}
-                                    ${d.arrowPolygonA.p2.y}
-                                `}
-                  fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                ></polygon>
-                <line
-                  strokeWidth={settings.LINK.DEFAULT.WIDTH + 'px'}
-                  stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                  x1={d.lineStartZ.x}
-                  y1={d.target.y}
-                  x2={d.lineEndZ.x}
-                  y2={d.lineEndZ.y}
-                ></line>
-                <polygon
-                  points={`
-                                    ${d.arrowCenterZ.x} 
-                                    ${d.arrowCenterZ.y} 
-                                    ${d.arrowPolygonZ.p1.x} 
-                                    ${d.arrowPolygonZ.p1.y}
-                                    ${d.arrowPolygonZ.p2.x}
-                                    ${d.arrowPolygonZ.p2.y}
-                                `}
-                  fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                ></polygon>
-              </g>
-            );
-          })}
-        </g>
-        <g>
-          {links.map((d, i) => {
-            const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
-            return (
-              <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
-                <rect
-                  x={-measureText(`${d.sides.A.currentText}`, 7).width / 2 - 12 / 2}
-                  y={-5}
-                  width={measureText(`${d.sides.A.currentText}`, 7).width + 12}
-                  height={7 + 8}
-                  fill={'#EFEFEF'}
-                  stroke={'#DCDCDC'}
-                  strokeWidth={2}
-                  rx={(7 + 8) / 2}
-                ></rect>
-                <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
-                  {`${d.sides.A.currentText}`}
-                </text>
-              </g>
-            );
-          })}
-        </g>
-        <g>
-          {links.map((d, i) => {
-            const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
-            return (
-              <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
-                <rect
-                  x={-measureText(`${d.sides.Z.currentText}`, 7).width / 2 - 12 / 2}
-                  y={-5}
-                  width={measureText(`${d.sides.Z.currentText}`, 7).width + 12}
-                  height={7 + 8}
-                  fill={'#EFEFEF'}
-                  stroke={'#DCDCDC'}
-                  strokeWidth={2}
-                  rx={(7 + 8) / 2}
-                ></rect>
-                <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
-                  {`${d.sides.Z.currentText}`}
-                </text>
-              </g>
-            );
-          })}
-        </g>
-        <g>
-          {nodes.map((d, i) => (
-            <Draggable
-              position={{ x: d.x, y: d.y }}
-              onDrag={(e, position) => {
-                setNodes((prevState) =>
-                  prevState.map((val, index) => {
-                    if (index == i) {
-                      const scaledPos = getScaledMousePos(position);
-                      val.x = options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x;
-                      val.y = options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y;
-                    }
-                    return val;
-                  })
-                );
-                setLinks(
-                  options.weathermap.LINKS.map((d, i) => {
-                    return generateDrawnLink(d, i, false);
-                  })
-                );
-              }}
-              onStop={(e, position) => {
-                let current: Weathermap = options.weathermap;
-                const scaledPos = getScaledMousePos(position);
-                current.NODES[i].POSITION = [
-                  options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x,
-                  options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y,
-                ];
-                onOptionsChange({
-                  ...options,
-                  weathermap: current,
-                });
-              }}
-
-              //TODO: Implement this fully!
-            >
-              <g
-                display={d.LABEL != undefined ? 'inline' : 'none'}
-                cursor={'move'}
-                onDoubleClick={() => {
-                  console.log('double clicked');
-                }}
-                transform={`translate(${d.x},${d.y})`}
-              >
-                {d.ICON !== undefined ? (
-                  <image
-                    xlinkHref={d.ICON}
-                    height={d.ICONHEIGHT !== undefined ? d.ICONHEIGHT : 0}
-                    x={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT) / 2 : 0}
-                    y={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT) / 2 : 0}
-                  ></image>
-                ) : null}
-                <rect
-                  x={calculateRectX(d)}
-                  y={calculateRectY(d)}
-                  width={d.LABEL != undefined ? measureText(d.LABEL, 10).width + 20 : 0}
-                  height={parseInt(settings.FONTDEFINE[2]) + 8}
-                  fill={'#EFEFEF'}
-                  stroke={'#DCDCDC'}
-                  strokeWidth={2}
-                  rx={6}
-                  ry={7}
-                ></rect>
-                <text
-                  x={calculateTextX(d)}
-                  y={calculateTextY(d)}
-                  textAnchor={'middle'}
-                  alignmentBaseline={'central'}
-                  color={'#2B2B2B'}
-                  className={styles.nodeText}
-                >
-                  {d.LABEL != undefined ? d.LABEL : ''}
-                </text>
-              </g>
-            </Draggable>
+        <div className={styles.colorScaleContainer}>
+          <div className={styles.colorBoxTitle}>Traffic Load</div>
+          {Object.keys(colors).map((percent, i) => (
+            <div className={styles.colorScaleItem}>
+              <span
+                className={cx(
+                  styles.colorBox,
+                  css`
+                    background: ${colors[percent]};
+                    height: ${getScaleColorHeight(i)};
+                  `
+                )}
+              ></span>
+              <span className={styles.colorLabel}>
+                {percent +
+                  '%' +
+                  (Object.keys(colors)[i + 1] == undefined ? '' : ' - ' + Object.keys(colors)[i + 1] + '%')}
+              </span>
+            </div>
           ))}
-        </g>
-      </svg>
-    </div>
-  );
+        </div>
+        <svg
+          className={cx(
+            styles.svg,
+            css`
+              background-color: ${options.panelOptions.backgroundColor};
+            `
+          )}
+          id="viz"
+          width={width2}
+          height={height2}
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          viewBox={`0 0 ${options.panelOptions.panelSize.width} ${options.panelOptions.panelSize.height}`}
+          shapeRendering="crispEdges"
+          textRendering="geometricPrecision"
+        >
+          <g>
+            {links.map((d, i) => {
+              return (
+                <g
+                  className="line"
+                  strokeOpacity={1}
+                  width={Math.abs(d.target.x - d.source.x)}
+                  height={Math.abs(d.target.y - d.source.y)}
+                >
+                  <line
+                    strokeWidth={settings.LINK.DEFAULT.WIDTH + 'px'}
+                    stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                    x1={d.lineStartA.x}
+                    y1={d.source.y}
+                    x2={d.lineEndA.x}
+                    y2={d.lineEndA.y}
+                  ></line>
+                  <polygon
+                    points={`
+                                      ${d.arrowCenterA.x} 
+                                      ${d.arrowCenterA.y} 
+                                      ${d.arrowPolygonA.p1.x} 
+                                      ${d.arrowPolygonA.p1.y}
+                                      ${d.arrowPolygonA.p2.x}
+                                      ${d.arrowPolygonA.p2.y}
+                                  `}
+                    fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                  ></polygon>
+                  <line
+                    strokeWidth={settings.LINK.DEFAULT.WIDTH + 'px'}
+                    stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
+                    x1={d.lineStartZ.x}
+                    y1={d.target.y}
+                    x2={d.lineEndZ.x}
+                    y2={d.lineEndZ.y}
+                  ></line>
+                  <polygon
+                    points={`
+                                      ${d.arrowCenterZ.x} 
+                                      ${d.arrowCenterZ.y} 
+                                      ${d.arrowPolygonZ.p1.x} 
+                                      ${d.arrowPolygonZ.p1.y}
+                                      ${d.arrowPolygonZ.p2.x}
+                                      ${d.arrowPolygonZ.p2.y}
+                                  `}
+                    fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
+                  ></polygon>
+                </g>
+              );
+            })}
+          </g>
+          <g>
+            {links.map((d, i) => {
+              const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
+              return (
+                <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                  <rect
+                    x={-measureText(`${d.sides.A.currentText}`, 7).width / 2 - 12 / 2}
+                    y={-5}
+                    width={measureText(`${d.sides.A.currentText}`, 7).width + 12}
+                    height={7 + 8}
+                    fill={'#EFEFEF'}
+                    stroke={'#DCDCDC'}
+                    strokeWidth={2}
+                    rx={(7 + 8) / 2}
+                  ></rect>
+                  <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
+                    {`${d.sides.A.currentText}`}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+          <g>
+            {links.map((d, i) => {
+              const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
+              return (
+                <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                  <rect
+                    x={-measureText(`${d.sides.Z.currentText}`, 7).width / 2 - 12 / 2}
+                    y={-5}
+                    width={measureText(`${d.sides.Z.currentText}`, 7).width + 12}
+                    height={7 + 8}
+                    fill={'#EFEFEF'}
+                    stroke={'#DCDCDC'}
+                    strokeWidth={2}
+                    rx={(7 + 8) / 2}
+                  ></rect>
+                  <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
+                    {`${d.sides.Z.currentText}`}
+                  </text>
+                </g>
+              );
+            })}
+          </g>
+          <g>
+            {nodes.map((d, i) => (
+              <Draggable
+                position={{ x: d.x, y: d.y }}
+                onDrag={(e, position) => {
+                  setNodes((prevState) =>
+                    prevState.map((val, index) => {
+                      if (index == i) {
+                        const scaledPos = getScaledMousePos(position);
+                        val.x = options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x;
+                        val.y = options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y;
+                      }
+                      return val;
+                    })
+                  );
+                  setLinks(
+                    options.weathermap.LINKS.map((d, i) => {
+                      return generateDrawnLink(d, i, false);
+                    })
+                  );
+                }}
+                onStop={(e, position) => {
+                  let current: Weathermap = options.weathermap;
+                  const scaledPos = getScaledMousePos(position);
+                  current.NODES[i].POSITION = [
+                    options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x,
+                    options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y,
+                  ];
+                  onOptionsChange({
+                    ...options,
+                    weathermap: current,
+                  });
+                }}
+  
+                //TODO: Implement this fully!
+              >
+                <g
+                  display={d.LABEL != undefined ? 'inline' : 'none'}
+                  cursor={'move'}
+                  onDoubleClick={() => {
+                    console.log('double clicked');
+                  }}
+                  transform={`translate(${d.x},${d.y})`}
+                >
+                  {d.ICON !== undefined ? (
+                    <image
+                      xlinkHref={d.ICON}
+                      height={d.ICONHEIGHT !== undefined ? d.ICONHEIGHT : 0}
+                      x={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT) / 2 : 0}
+                      y={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT) / 2 : 0}
+                    ></image>
+                  ) : null}
+                  <rect
+                    x={calculateRectX(d)}
+                    y={calculateRectY(d)}
+                    width={d.LABEL != undefined ? measureText(d.LABEL, 10).width + 20 : 0}
+                    height={parseInt(settings.FONTDEFINE[2]) + 8}
+                    fill={'#EFEFEF'}
+                    stroke={'#DCDCDC'}
+                    strokeWidth={2}
+                    rx={6}
+                    ry={7}
+                  ></rect>
+                  <text
+                    x={calculateTextX(d)}
+                    y={calculateTextY(d)}
+                    textAnchor={'middle'}
+                    alignmentBaseline={'central'}
+                    color={'#2B2B2B'}
+                    className={styles.nodeText}
+                  >
+                    {d.LABEL != undefined ? d.LABEL : ''}
+                  </text>
+                </g>
+              </Draggable>
+            ))}
+          </g>
+        </svg>
+      </div>
+    );
+  } else {
+    return (
+      <React.Fragment />
+    )
+  }
+  
 };
 
 const getStyles = stylesFactory(() => {

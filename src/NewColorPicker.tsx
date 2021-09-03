@@ -15,43 +15,50 @@ export const NewColorPicker = ({ value, onChange }: Props) => {
     onChange(options);
   };
 
-  return (
-    <React.Fragment>
-      <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
-        Background Color:
-        <ColorPicker color={value.backgroundColor} onChange={handleColorChange} />
-      </InlineLabel>
-
-      <InlineFieldRow>
-        <InlineField label="Viewbox Width (px)">
-          <Input
-            value={value.panelSize.width}
-            placeholder={'Panel Width'}
-            type={'number'}
-            css={''}
-            name={'panelWidth'}
-            onChange={(e) => {
-              let options = value;
-              options.panelSize.width = parseInt(e.currentTarget.value);
-              onChange(options);
-            }}
-          ></Input>
-        </InlineField>
-        <InlineField label="Viewbox Height (px)">
-          <Input
-            value={value.panelSize.height}
-            placeholder={'Panel Height'}
-            type={'number'}
-            css={''}
-            name={'panelHeight'}
-            onChange={(e) => {
-              let options = value;
-              options.panelSize.height = parseInt(e.currentTarget.value);
-              onChange(options);
-            }}
-          ></Input>
-        </InlineField>
-      </InlineFieldRow>
-    </React.Fragment>
-  );
+  if (value) {
+    return (
+      <React.Fragment>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Background Color:
+          <ColorPicker color={value.backgroundColor} onChange={handleColorChange} />
+        </InlineLabel>
+  
+        <InlineFieldRow>
+          <InlineField label="Viewbox Width (px)">
+            <Input
+              value={value.panelSize.width}
+              placeholder={'Panel Width'}
+              type={'number'}
+              css={''}
+              name={'panelWidth'}
+              onChange={(e) => {
+                let options = value;
+                options.panelSize.width = parseInt(e.currentTarget.value);
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+          <InlineField label="Viewbox Height (px)">
+            <Input
+              value={value.panelSize.height}
+              placeholder={'Panel Height'}
+              type={'number'}
+              css={''}
+              name={'panelHeight'}
+              onChange={(e) => {
+                let options = value;
+                options.panelSize.height = parseInt(e.currentTarget.value);
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+        </InlineFieldRow>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment />
+    )
+  }
+  
 };
