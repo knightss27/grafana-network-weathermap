@@ -34,11 +34,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     onOptionsChange({
       panelOptions: {
-        backgroundColor: "#ffffff",
+        backgroundColor: '#ffffff',
         panelSize: {
           width: 600,
-          height: 600
-        }
+          height: 600,
+        },
       },
       weathermap: {
         NODES: [],
@@ -46,8 +46,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
         SCALE: {},
       },
       enableNodeGrid: false,
-      gridSizePx: 10
-    })
+      gridSizePx: 10,
+    });
   }
 
   /** ----------------------------------------------------------------------------------- */
@@ -543,7 +543,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     weathermap: current,
                   });
                 }}
-  
+
                 //TODO: Implement this fully!
               >
                 <g
@@ -591,11 +591,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
       </div>
     );
   } else {
-    return (
-      <React.Fragment />
-    )
+    return <React.Fragment />;
   }
-  
 };
 
 const getStyles = stylesFactory(() => {

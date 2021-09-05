@@ -12,7 +12,6 @@ interface Settings {
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const NodeBuilder = (props: Props) => {
-
   if (props.value) {
     return (
       <React.Fragment>
@@ -22,9 +21,6 @@ export const NodeBuilder = (props: Props) => {
       </React.Fragment>
     );
   } else {
-    return (
-      <React.Fragment />
-    )
+    return <React.Fragment />;
   }
-  
 };
