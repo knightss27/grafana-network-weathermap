@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PanelProps, scaledUnits } from '@grafana/data';
-import { Node, DrawnLink, DrawnNode, Link, SimpleOptions, Weathermap } from 'types';
+import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
@@ -41,9 +41,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
         },
       },
       weathermap: {
-        NODES: [],
-        LINKS: [],
-        SCALE: {},
+        nodes: [],
+        links: [],
+        scale: {},
       },
       enableNodeGrid: false,
       gridSizePx: 10,
@@ -55,8 +55,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   /** COLOR SCALES */
   /** ----------------------------------------------------------------------------------- */
   const colors: any = {};
-  Object.keys(options.weathermap ? options.weathermap.SCALE : {}).forEach((pct: string) => {
-    colors[parseInt(pct)] = options.weathermap.SCALE[parseInt(pct)];
+  Object.keys(options.weathermap ? options.weathermap.scale : {}).forEach((pct: string) => {
+    colors[parseInt(pct)] = options.weathermap.scale[parseInt(pct)];
   });
 
   function getScaleColor(current: number, max: number) {
@@ -118,52 +118,31 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // TODO: Create functions that actually calculate width properly, for now they just assume square-ish icons.
 
   function getImageRectOffset(d: any, dir: string) {
-    if (dir == 'N') {
-      return -parseInt(d.ICONHEIGHT) / 2 - parseInt(settings.FONTDEFINE[2]) - 10;
-    } else if (dir == 'S') {
-      return parseInt(d.ICONHEIGHT) / 2;
-    } else if (dir == 'E') {
-      return parseInt(d.ICONHEIGHT) / 2 + 4;
-    } else if (dir == 'W') {
-      return -parseInt(d.ICONHEIGHT) / 2 - 4;
-    } else {
-      return 0;
-    }
+    return 0;
   }
 
   function getImageTextOffset(d: any, dir: string) {
-    if (dir == 'N') {
-      return -parseInt(d.ICONHEIGHT) / 2 - parseInt(settings.FONTDEFINE[2]) / 2;
-    } else if (dir == 'S') {
-      return parseInt(d.ICONHEIGHT) / 2 + parseInt(settings.FONTDEFINE[2]) + 4;
-    } else if (dir == 'E') {
-      return parseInt(d.ICONHEIGHT) / 2 + 4;
-    } else if (dir == 'W') {
-      return -parseInt(d.ICONHEIGHT) / 2 - 4;
-    } else {
-      return 0;
-    }
+    return 0;
   }
 
   const [nodes, setNodes] = useState(
     options.weathermap
-      ? options.weathermap.NODES.map((d, i) => {
+      ? options.weathermap.nodes.map((d, i) => {
           let toReturn: DrawnNode = Object.create(d);
-          toReturn.name = d.ID;
           toReturn.index = i;
           toReturn.x = toReturn.POSITION[0];
           toReturn.y = toReturn.POSITION[1];
-          toReturn.filledLinks = 0;
+          toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
           return toReturn;
         })
       : []
   );
 
-  let tempNodes = nodes.slice();
+  // let tempNodes = nodes.slice();
 
   const [links, setLinks] = useState(
     options.weathermap
-      ? options.weathermap.LINKS.map((d, i) => {
+      ? options.weathermap.links.map((d, i) => {
           return generateDrawnLink(d, i, true);
         })
       : []
@@ -171,32 +150,32 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function calculateRectX(d: any) {
     // This allows for NSEW offsets.
-    let offset = d.LABEL != undefined ? -(measureText(d.LABEL, 10).width / 2 + 20 / 2) : 0;
-    if (d.LABELOFFSET == 'W') {
-      return 2 * offset + getImageRectOffset(d, d.LABELOFFSET);
-    } else if (d.LABELOFFSET == 'E') {
-      return getImageRectOffset(d, d.LABELOFFSET);
+    let offset = d.label != undefined ? -(measureText(d.label, 10).width / 2 + 20 / 2) : 0;
+    if (d.labelOFFSET == 'W') {
+      return 2 * offset + getImageRectOffset(d, d.labelOFFSET);
+    } else if (d.labelOFFSET == 'E') {
+      return getImageRectOffset(d, d.labelOFFSET);
     }
     return offset;
   }
 
   function calculateRectY(d: any) {
     // This allows for NSEW offsets.
-    if (d.ICON !== undefined && d.LABELOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.LABELOFFSET == 'S' || d.LABELOFFSET == 'N') {
-        return getImageRectOffset(d, d.LABELOFFSET);
+    if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
+      if (d.labelOFFSET == 'S' || d.labelOFFSET == 'N') {
+        return getImageRectOffset(d, d.labelOFFSET);
       }
     }
     return -8 / 2;
   }
 
   function calculateTextX(d: any) {
-    let offset = d.LABEL != undefined ? -(d.LABEL.length * parseInt(settings.FONTDEFINE[2])) / 2 : 0;
-    if (d.ICON !== undefined && d.LABELOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.LABELOFFSET == 'W') {
-        return offset + getImageRectOffset(d, d.LABELOFFSET);
-      } else if (d.LABELOFFSET == 'E') {
-        return -offset + getImageRectOffset(d, d.LABELOFFSET);
+    let offset = d.label != undefined ? -(d.label.length * parseInt(settings.FONTDEFINE[2])) / 2 : 0;
+    if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
+      if (d.labelOFFSET == 'W') {
+        return offset + getImageRectOffset(d, d.labelOFFSET);
+      } else if (d.labelOFFSET == 'E') {
+        return -offset + getImageRectOffset(d, d.labelOFFSET);
       }
     }
     return 0;
@@ -204,9 +183,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function calculateTextY(d: any) {
     // This allows for NSEW offsets.
-    if (d.ICON !== undefined && d.LABELOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.LABELOFFSET == 'S' || d.LABELOFFSET == 'N') {
-        return getImageTextOffset(d, d.LABELOFFSET);
+    if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
+      if (d.labelOFFSET == 'S' || d.labelOFFSET == 'N') {
+        return getImageTextOffset(d, d.labelOFFSET);
       }
     }
     return parseInt(settings.FONTDEFINE[2]);
@@ -229,10 +208,17 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return Math.ceil(i / j) * j;
   }
 
-  function getMultiLinkPosition(d: Node, linkIndex: number): number {
-    const rectXOffset = calculateRectX(d);
-    let toReturn = d.x + rectXOffset + (linkIndex + 1) * ((Math.abs(rectXOffset) * 2) / (d.numLinks + 1));
-    return toReturn;
+  function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
+    // const rectXOffset = calculateRectX(d);
+    // let toReturn = d.x + rectXOffset + (linkIndex + 1) * ((Math.abs(rectXOffset) * 2) / (d.numLinks + 1));
+    let x = d.x;
+    let y = d.y;
+    if (side.anchor === Anchor.Left) {
+      x -= d.labelWidth/2;
+    } else if (side.anchor === Anchor.Right) {
+      x += d.labelWidth/2;
+    }
+    return {x, y};
   }
 
   // Calculate link positions / text / colors / etc.
@@ -240,19 +226,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
 
-    // if (isFirstPass || !links || i >= links.length || links[i].NODES[0].ID !== toReturn.NODES[0].ID || links[i].NODES[1].ID !== toReturn.NODES[1].ID) {
-    //     toReturn.source = nodes.filter(n => n.ID == toReturn.NODES[0].ID)[0];
-    //     toReturn.target = nodes.filter(n => n.ID == toReturn.NODES[1].ID)[0];
-    // } else {
-    //     console.log(links[i].NODES[0].ID, toReturn.NODES[0].ID);
-    //     console.log(links[i].NODES[1].ID, toReturn.NODES[1].ID);
-    //     toReturn.source= links[i].source;
-    //     toReturn.target = links[i].target;
-    // }
-
     // Set the link's source and target Node
-    toReturn.source = nodes.filter((n) => n.ID == toReturn.NODES[0].ID)[0];
-    toReturn.target = nodes.filter((n) => n.ID == toReturn.NODES[1].ID)[0];
+    toReturn.source = nodes.filter((n) => n.id == toReturn.nodes[0].id)[0];
+    toReturn.target = nodes.filter((n) => n.id == toReturn.nodes[1].id)[0];
 
     // Check if we have a query to run for the A Side
     if (toReturn.sides.A.bandwidthQuery) {
@@ -307,23 +283,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
       toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
     }
 
-    // TODO: optimize filledLink resetting
-    if (i == 0) {
-      tempNodes = tempNodes.map((n) => {
-        n.filledLinks = 0;
-        return n;
-      });
-    }
-    toReturn.lineStartA = {
-      x: getMultiLinkPosition(toReturn.source, tempNodes[toReturn.source.index].filledLinks),
-      y: toReturn.source.y,
-    };
-    tempNodes[toReturn.source.index].filledLinks++;
-    toReturn.lineStartZ = {
-      x: getMultiLinkPosition(toReturn.target, tempNodes[toReturn.target.index].filledLinks),
-      y: toReturn.target.y,
-    };
-    tempNodes[toReturn.target.index].filledLinks++;
+    // console.log(toReturn);
+    toReturn.lineStartA = getMultiLinkPosition(toReturn.source, toReturn.sides.A);
+    // tempNodes[toReturn.source.index].filledLinks++;
+    toReturn.lineStartZ = getMultiLinkPosition(toReturn.target, toReturn.sides.Z);
+    // tempNodes[toReturn.target.index].filledLinks++;
 
     toReturn.lineEndA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter - 4);
     toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter + 5);
@@ -342,22 +306,22 @@ export const SimplePanel: React.FC<Props> = (props) => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
+      console.log(options.weathermap.links);
       setNodes(
-        options.weathermap.NODES
-          ? options.weathermap.NODES.map((d, i) => {
+        options.weathermap.nodes
+          ? options.weathermap.nodes.map((d, i) => {
               let toReturn: DrawnNode = Object.create(d);
-              toReturn.name = d.ID;
               toReturn.index = i;
               toReturn.x = toReturn.POSITION[0];
               toReturn.y = toReturn.POSITION[1];
-              toReturn.filledLinks = 0;
+              toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
               return toReturn;
             })
           : []
       );
       setLinks(
-        options.weathermap.LINKS
-          ? options.weathermap.LINKS.map((d, i) => {
+        options.weathermap.links
+          ? options.weathermap.links.map((d, i) => {
               return generateDrawnLink(d, i, false);
             })
           : []
@@ -526,7 +490,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     })
                   );
                   setLinks(
-                    options.weathermap.LINKS.map((d, i) => {
+                    options.weathermap.links.map((d, i) => {
                       return generateDrawnLink(d, i, false);
                     })
                   );
@@ -534,7 +498,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 onStop={(e, position) => {
                   let current: Weathermap = options.weathermap;
                   const scaledPos = getScaledMousePos(position);
-                  current.NODES[i].POSITION = [
+                  current.nodes[i].POSITION = [
                     options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x,
                     options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y,
                   ];
@@ -547,25 +511,17 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 //TODO: Implement this fully!
               >
                 <g
-                  display={d.LABEL != undefined ? 'inline' : 'none'}
+                  display={d.label != undefined ? 'inline' : 'none'}
                   cursor={'move'}
                   onDoubleClick={() => {
                     console.log('double clicked');
                   }}
                   transform={`translate(${d.x},${d.y})`}
                 >
-                  {d.ICON !== undefined ? (
-                    <image
-                      xlinkHref={d.ICON}
-                      height={d.ICONHEIGHT !== undefined ? d.ICONHEIGHT : 0}
-                      x={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT) / 2 : 0}
-                      y={d.ICONHEIGHT !== undefined ? -parseInt(d.ICONHEIGHT) / 2 : 0}
-                    ></image>
-                  ) : null}
                   <rect
                     x={calculateRectX(d)}
                     y={calculateRectY(d)}
-                    width={d.LABEL != undefined ? measureText(d.LABEL, 10).width + 20 : 0}
+                    width={d.label != undefined ? d.labelWidth + 20 : 0}
                     height={parseInt(settings.FONTDEFINE[2]) + 8}
                     fill={'#EFEFEF'}
                     stroke={'#DCDCDC'}
@@ -581,7 +537,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     color={'#2B2B2B'}
                     className={styles.nodeText}
                   >
-                    {d.LABEL != undefined ? d.LABEL : ''}
+                    {d.label != undefined ? d.label : ''}
                   </text>
                 </g>
               </Draggable>

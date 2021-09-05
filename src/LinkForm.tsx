@@ -4,7 +4,7 @@ import { Input, Select, Slider, stylesFactory } from '@grafana/ui';
 import { Button, InlineField, InlineFieldRow } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
-import { Weathermap, Node, Link } from 'types';
+import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
 
 interface Settings {
   placeholder: string;
@@ -21,86 +21,87 @@ export const LinkForm = (props: Props) => {
 
   const handleBandwidthChange = (amt: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
-    weathermap.LINKS[i].sides[side].bandwidth = amt;
-    weathermap.LINKS[i].sides[side].bandwidthQuery = undefined;
+    weathermap.links[i].sides[side].bandwidth = amt;
+    weathermap.links[i].sides[side].bandwidthQuery = undefined;
     onChange(weathermap);
   };
 
   const handleBandwidthQueryChange = (frame: string, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
-    weathermap.LINKS[i].sides[side].bandwidth = 0;
-    weathermap.LINKS[i].sides[side].bandwidthQuery = frame;
+    weathermap.links[i].sides[side].bandwidth = 0;
+    weathermap.links[i].sides[side].bandwidthQuery = frame;
     onChange(weathermap);
   };
 
-  const handleNodeChange = (node: Node, name: string, i: number) => {
+  const handleAnchorChange = (anchor: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
-    node.numLinks++;
-    if (name == 'node1') {
-      weathermap.LINKS[i].NODES[0].numLinks--;
-      weathermap.LINKS[i].NODES[0] = node;
-    } else if (name == 'node2') {
-      weathermap.LINKS[i].NODES[1].numLinks--;
-      weathermap.LINKS[i].NODES[1] = node;
+    weathermap.links[i].sides[side].anchor = anchor;
+    onChange(weathermap);
+  };
+
+  const handleNodeChange = (node: Node, side: 'A' | 'Z', i: number) => {
+    let weathermap: Weathermap = value;
+    console.log('changing to node: ', node);
+    if (side === 'A') {
+      weathermap.links[i].nodes[0] = node;
+    } else if (side === 'Z') {
+      weathermap.links[i].nodes[1] = node;
     }
     onChange(weathermap);
   };
 
-  const handleDataChange = (name: string, i: number, frameName: string) => {
+  const handleDataChange = (side: 'A' | 'Z', i: number, frameName: string) => {
     let weathermap: Weathermap = value;
-    if (name == 'node1') {
-      weathermap.LINKS[i].sides.A.query = frameName;
-    } else if (name == 'node2') {
-      weathermap.LINKS[i].sides.Z.query = frameName;
-    }
+    weathermap.links[i].sides[side].query = frameName;
     onChange(weathermap);
   };
 
   const handleLabelOffsetChange = (val: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
-    weathermap.LINKS[i].sides[side].labelOffset = val;
+    weathermap.links[i].sides[side].labelOffset = val;
     onChange(weathermap);
   };
 
   const addNewLink = () => {
-    if (value.NODES.length == 0) {
+    if (value.nodes.length == 0) {
       throw new Error('There must be >= 1 Nodes to create a link.');
     }
     let weathermap: Weathermap = value;
     const link: Link = {
-      ID: uuidv4(),
-      NODES: [value.NODES[0], value.NODES[0]],
+      id: uuidv4(),
+      nodes: [value.nodes[0], value.nodes[0]],
       sides: {
         A: {
           bandwidth: 0,
           bandwidthQuery: undefined,
           query: undefined,
           labelOffset: 50,
+          anchor: Anchor.Center,
         },
         Z: {
           bandwidth: 0,
           bandwidthQuery: undefined,
           query: undefined,
           labelOffset: 50,
+          anchor: Anchor.Center,
         },
       },
       units: undefined,
     };
-    value.NODES[0].numLinks += 2;
-    weathermap.LINKS.push(link);
+    weathermap.links.push(link);
     onChange(weathermap);
     setCurrentLink(link);
   };
 
   const removeLink = (i: number) => {
     let weathermap: Weathermap = value;
-    weathermap.LINKS.splice(i, 1);
+    weathermap.links.splice(i, 1);
     onChange(weathermap);
   };
 
   const clearLinks = () => {
     let weathermap: Weathermap = value;
-    weathermap.LINKS = [];
+    weathermap.links = [];
     props.onChange(weathermap);
   };
 
@@ -113,151 +114,101 @@ export const LinkForm = (props: Props) => {
           setCurrentLink(v as Link);
         }}
         value={currentLink}
-        options={value.LINKS}
-        getOptionLabel={(link) => (link.NODES.length > 0 ? `${link.NODES[0]?.LABEL} <> ${link.NODES[1]?.LABEL}` : '')}
-        getOptionValue={(link) => link.ID}
+        options={value.links}
+        getOptionLabel={(link) => (link.nodes.length > 0 ? `${link.nodes[0]?.label} <> ${link.nodes[1]?.label}` : '')}
+        getOptionValue={(link) => link.id}
         className={styles.nodeSelect}
         placeholder={'Select a link'}
       ></Select>
 
-      {value.LINKS.map((link: Link, i) => {
-        if (link.ID == currentLink.ID) {
+      {value.links.map((link: Link, i) => {
+        if (link.id == currentLink.id) {
           return (
             <React.Fragment>
-              <InlineFieldRow className={styles.row} style={{ marginTop: '10px' }}>
-                <InlineField label={'A Side'} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
-                  <Select
-                    onChange={(v) => {
-                      handleNodeChange(v as Node, 'node1', i);
-                    }}
-                    value={link.NODES[0]?.LABEL || 'No label'}
-                    options={value.NODES}
-                    getOptionLabel={(node) => node?.LABEL || 'No label'}
-                    getOptionValue={(node) => node.ID}
-                    className={styles.nodeSelect}
-                    placeholder={'Select A Side'}
-                    defaultValue={link.NODES[0]}
-                  ></Select>
-                </InlineField>
-                <InlineField label={'A Side Query'} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
-                  <Select
-                    onChange={(v) => {
-                      handleDataChange('node1', i, v.name);
-                    }}
-                    value={link.sides.A.query}
-                    options={context.data}
-                    getOptionLabel={(data) => data?.name || 'No label'}
-                    getOptionValue={(data) => data.name}
-                    className={styles.querySelect}
-                    placeholder={'Select A Side Query'}
-                  ></Select>
-                </InlineField>
-              </InlineFieldRow>
-              <InlineFieldRow className={styles.row2}>
-                <InlineField label={'A Bandwidth #'}>
-                  <Input
-                    value={link.sides.A.bandwidth}
-                    onChange={(e) => handleBandwidthChange(e.currentTarget.valueAsNumber, i, 'A')}
-                    placeholder={'Custom max bandwidth'}
-                    type={'number'}
-                    css={''}
-                    className={styles.nodeLabel}
-                    name={'bandwidth'}
-                  />
-                </InlineField>
-                <InlineField label={'A Bandwidth Query'} style={{ maxWidth: '100%' }}>
-                  <Select
-                    onChange={(v) => {
-                      handleBandwidthQueryChange(v.name, i, 'A');
-                    }}
-                    value={link.sides.A.bandwidthQuery}
-                    options={context.data}
-                    getOptionLabel={(data) => data?.name || 'No label'}
-                    getOptionValue={(data) => data?.name}
-                    className={styles.bandwidthSelect}
-                    placeholder={'Select Bandwidth'}
-                  ></Select>
-                </InlineField>
-              </InlineFieldRow>
-              <InlineFieldRow className={styles.row2}>
-                <InlineField label={'A Label Offset %'} style={{ width: '100%' }}>
-                  <Slider
-                    min={0}
-                    max={100}
-                    value={link.sides.A.labelOffset}
-                    onChange={(v) => {
-                      handleLabelOffsetChange(v, i, 'A');
-                    }}
-                  />
-                </InlineField>
-              </InlineFieldRow>
-              <InlineFieldRow className={styles.row}>
-                <InlineField label={'Z Side'} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
-                  <Select
-                    onChange={(v) => {
-                      handleNodeChange(v as Node, 'node2', i);
-                    }}
-                    value={link.NODES[0]?.LABEL || 'No label'}
-                    options={value.NODES}
-                    getOptionLabel={(node) => node?.LABEL || 'No label'}
-                    getOptionValue={(node) => node.ID}
-                    className={styles.nodeSelect}
-                    placeholder={'Select Z Side'}
-                    defaultValue={link.NODES[1]}
-                  ></Select>
-                </InlineField>
-                <InlineField label={'Z Side Query'} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
-                  <Select
-                    onChange={(v) => {
-                      handleDataChange('node2', i, v.name);
-                    }}
-                    value={link.sides.Z.query}
-                    options={context.data}
-                    getOptionLabel={(data) => data?.name || 'No label'}
-                    getOptionValue={(data) => data?.name}
-                    className={styles.querySelect}
-                    placeholder={'Select Z Side Query'}
-                  ></Select>
-                </InlineField>
-              </InlineFieldRow>
-              <InlineFieldRow className={styles.row2}>
-                <InlineField label={'Z Bandwidth #'}>
-                  <Input
-                    value={link.sides.Z.bandwidth}
-                    onChange={(e) => handleBandwidthChange(e.currentTarget.valueAsNumber, i, 'Z')}
-                    placeholder={'Custom max bandwidth'}
-                    type={'number'}
-                    css={''}
-                    className={styles.nodeLabel}
-                    name={'zbandwidth'}
-                  />
-                </InlineField>
-                <InlineField label={'Z Bandwidth Query'} style={{ maxWidth: '100%' }}>
-                  <Select
-                    onChange={(v) => {
-                      handleBandwidthQueryChange(v.name, i, 'Z');
-                    }}
-                    value={link.sides.Z.bandwidthQuery}
-                    options={context.data}
-                    getOptionLabel={(data) => data?.name || 'No label'}
-                    getOptionValue={(data) => data?.name}
-                    className={styles.bandwidthSelect}
-                    placeholder={'Select Bandwidth'}
-                  ></Select>
-                </InlineField>
-              </InlineFieldRow>
-              <InlineFieldRow className={styles.row2}>
-                <InlineField label={'Z Label Offset %'} style={{ width: '100%' }}>
-                  <Slider
-                    min={0}
-                    max={100}
-                    value={link.sides.Z.labelOffset}
-                    onChange={(v) => {
-                      handleLabelOffsetChange(v, i, 'Z');
-                    }}
-                  />
-                </InlineField>
-              </InlineFieldRow>
+              {Object.values(link.sides).map((side: LinkSide, sideIndex) => {
+                const sName: 'A' | 'Z' = sideIndex == 0 ? 'A' : 'Z';
+                return (
+                <React.Fragment>
+                  <InlineFieldRow className={styles.row}>
+                    <InlineField label={`${sName} Side`} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
+                      <Select
+                        onChange={(v) => {
+                          handleNodeChange(v as Node, sName, i);
+                        }}
+                        value={link.nodes[sideIndex]?.label || 'No label'}
+                        options={value.nodes}
+                        getOptionLabel={(node) => node?.label || 'No label'}
+                        getOptionValue={(node) => node.id}
+                        className={styles.nodeSelect}
+                        placeholder={`Select ${sName} Side`}
+                        defaultValue={link.nodes[sideIndex]}
+                      ></Select>
+                    </InlineField>
+                    <InlineField label={`${sName} Side Query`} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
+                      <Select
+                        onChange={(v) => {
+                          handleDataChange(sName, i, v.name);
+                        }}
+                        value={side.query}
+                        options={context.data}
+                        getOptionLabel={(data) => data?.name || 'No label'}
+                        getOptionValue={(data) => data?.name}
+                        className={styles.querySelect}
+                        placeholder={`Select ${side} Side Query`}
+                      ></Select>
+                    </InlineField>
+                  </InlineFieldRow>
+                  <InlineFieldRow className={styles.row2}>
+                    <InlineField label={`${sName} Bandwidth #`}>
+                      <Input
+                        value={side.bandwidth}
+                        onChange={(e) => handleBandwidthChange(e.currentTarget.valueAsNumber, i, sName)}
+                        placeholder={'Custom max bandwidth'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={`${sName}bandwidth`}
+                      />
+                    </InlineField>
+                    <InlineField label={`${sName} Bandwidth Query`} style={{ maxWidth: '100%' }}>
+                      <Select
+                        onChange={(v) => {
+                          handleBandwidthQueryChange(v.name, i, sName);
+                        }}
+                        value={side.bandwidthQuery}
+                        options={context.data}
+                        getOptionLabel={(data) => data?.name || 'No label'}
+                        getOptionValue={(data) => data?.name}
+                        className={styles.bandwidthSelect}
+                        placeholder={'Select Bandwidth'}
+                      ></Select>
+                    </InlineField>
+                  </InlineFieldRow>
+                  <InlineFieldRow className={styles.row2}>
+                    <InlineField label={`${sName} Label Offset %`} style={{ width: '100%' }}>
+                      <Slider
+                        min={0}
+                        max={100}
+                        value={side.labelOffset}
+                        onChange={(v) => {
+                          handleLabelOffsetChange(v, i, sName);
+                        }}
+                      />
+                    </InlineField>
+                  </InlineFieldRow>
+                  <InlineFieldRow className={styles.row2}>
+                    <Select
+                      onChange={(v) => {
+                        handleAnchorChange(v.value ? v.value : 0, i, sName);
+                      }}
+                      value={{ label: Anchor[side.anchor], value: side.anchor}}
+                      options={Object.keys(Anchor).slice(5).map((nt, i) => { return {label: Anchor[i], value: i }})}
+                      className={styles.bandwidthSelect}
+                      placeholder={'Select Anchor'}
+                    ></Select>
+                  </InlineFieldRow>
+                </React.Fragment>
+              )})}
               <InlineFieldRow className={styles.row}>
                 <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeLink(i)} className={''}>
                   Remove Link

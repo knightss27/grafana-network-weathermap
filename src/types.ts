@@ -15,17 +15,30 @@ export interface PanelSize {
   height: number;
 }
 
-export interface Node {
-  ID: string;
-  POSITION: [number, number];
-  // links: Link[];
+export enum Anchor {
+  Center = 0,
+  Top,
+  Bottom,
+  Left,
+  Right
+}
+
+export interface NodeAnchor {
   numLinks: number;
-  LABEL?: string;
-  INFOURL?: string;
-  ICON?: string;
-  ICONHEIGHT?: string;
-  LABELOFFSET?: 'N' | 'S' | 'E' | 'W';
-  [propName: string]: any;
+  numFilledLinks: number;
+}
+
+export interface Node {
+  id: string;
+  POSITION: [number, number];
+  label?: string;
+  anchors: {
+    [Anchor.Center]: NodeAnchor,
+    [Anchor.Top]: NodeAnchor,
+    [Anchor.Bottom]: NodeAnchor,
+    [Anchor.Left]: NodeAnchor,
+    [Anchor.Right]: NodeAnchor,
+  };
 }
 
 export interface LinkSide {
@@ -33,37 +46,28 @@ export interface LinkSide {
   bandwidthQuery: string | undefined;
   query: string | undefined;
   labelOffset: number;
+  anchor: Anchor;
 }
 
 export interface Link {
-  ID: string;
-  NODES: [Node, Node];
+  id: string;
+  nodes: [Node, Node];
   sides: {
     A: LinkSide;
     Z: LinkSide;
   };
   units: string | undefined;
-  TARGET?: string;
-  WIDTH?: string;
-  [propName: string]: any;
 }
 
-export interface DrawnNode {
-  ID: string;
-  LABEL?: string;
-  POSITION: [number, number];
-  numLinks: number;
+export interface DrawnNode extends Node {
   filledLinks: number;
-  INFOURL?: string;
-  ICON?: string;
-  ICONHEIGHT?: string;
-  LABELOFFSET?: 'N' | 'S' | 'E' | 'W';
-  name: string;
+  // name: string;
   index: number;
   x: number;
   y: number;
   width: number;
   height: number;
+  labelWidth: number;
 }
 
 export interface Position {
@@ -75,16 +79,11 @@ export interface DrawnLinkSide extends LinkSide {
   currentValue: number;
   currentText: string;
 }
-export interface DrawnLink {
-  ID: string;
-  NODES: [Node, Node];
+export interface DrawnLink extends Link {
   sides: {
     A: DrawnLinkSide;
     Z: DrawnLinkSide;
   };
-  units: string | undefined;
-  TARGET?: string;
-  WIDTH?: string;
   index: number;
   source: DrawnNode;
   target: DrawnNode;
@@ -99,7 +98,7 @@ export interface DrawnLink {
 }
 
 export interface Weathermap {
-  NODES: Node[];
-  LINKS: Link[];
-  SCALE: { [propName: number]: string };
+  nodes: Node[];
+  links: Link[];
+  scale: { [propName: number]: string };
 }

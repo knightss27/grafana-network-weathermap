@@ -22,11 +22,11 @@ export const NodeForm = ({ value, onChange }: Props) => {
   const handleChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
     if (e.currentTarget.name == 'X') {
-      weathermap.NODES[i].POSITION[0] = parseInt(e.currentTarget.value);
+      weathermap.nodes[i].POSITION[0] = parseInt(e.currentTarget.value);
     } else if (e.currentTarget.name == 'Y') {
-      weathermap.NODES[i].POSITION[1] = parseInt(e.currentTarget.value);
+      weathermap.nodes[i].POSITION[1] = parseInt(e.currentTarget.value);
     } else {
-      weathermap.NODES[i][e.currentTarget.name] = e.currentTarget.value;
+      weathermap.nodes[i][e.currentTarget.name] = e.currentTarget.value;
     }
     onChange(weathermap);
   };
@@ -34,26 +34,28 @@ export const NodeForm = ({ value, onChange }: Props) => {
   const addNewNode = () => {
     let weathermap: Weathermap = value;
     const node: Node = {
-      ID: uuidv4(),
+      id: uuidv4(),
       POSITION: [400, 400],
-      LABEL: 'Test Label',
-      numLinks: 0,
+      label: 'Test Label',
+      anchors: {
+        0: {}, 1: {}, 2: {}, 3: {}, 4: {}
+      }
     };
-    weathermap.NODES.push(node);
+    weathermap.nodes.push(node);
     onChange(weathermap);
     setCurrentNode(node);
   };
 
   const removeNode = (i: number) => {
     let weathermap: Weathermap = value;
-    weathermap.NODES.splice(i, 1);
+    weathermap.nodes.splice(i, 1);
     onChange(weathermap);
   };
 
   const clearNodes = () => {
     let weathermap: Weathermap = value;
-    weathermap.NODES = [];
-    weathermap.LINKS = [];
+    weathermap.nodes = [];
+    weathermap.links = [];
     onChange(weathermap);
   };
 
@@ -66,16 +68,15 @@ export const NodeForm = ({ value, onChange }: Props) => {
           setCurrentNode(v);
         }}
         value={currentNode}
-        options={value.NODES}
-        getOptionLabel={(node) => node.LABEL}
-        getOptionValue={(node) => node.ID}
+        options={value.nodes}
+        getOptionLabel={(node) => node.label}
+        getOptionValue={(node) => node.id}
         className={styles.nodeSelect}
         placeholder={'Select a node'}
       ></Select>
 
-      {value.NODES.map((node, i) => {
-        if (node.ID == currentNode.ID) {
-          console.log(node.numLinks);
+      {value.nodes.map((node, i) => {
+        if (node.id == currentNode.id) {
           return (
             <InlineFieldRow>
               <InlineField label={'X'}>
@@ -100,15 +101,15 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   name={'Y'}
                 />
               </InlineField>
-              <InlineField label={'LABEL'}>
+              <InlineField label={'label'}>
                 <Input
-                  value={node.LABEL}
+                  value={node.label}
                   onChange={(e) => handleChange(e, i)}
-                  placeholder={'NODE LABEL'}
+                  placeholder={'NODE label'}
                   type={'text'}
                   css={''}
                   className={styles.nodeLabel}
-                  name={'LABEL'}
+                  name={'label'}
                 />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>

@@ -18,32 +18,32 @@ export const ColorForm = ({ value, onChange }: Props) => {
 
   const handleNumberChange = (e: any, key: number) => {
     let weathermap: Weathermap = value;
-    let prev: string = weathermap.SCALE[key];
-    delete weathermap.SCALE[key];
-    weathermap.SCALE[parseInt(e.currentTarget.value)] = prev;
+    let prev: string = weathermap.scale[key];
+    delete weathermap.scale[key];
+    weathermap.scale[parseInt(e.currentTarget.value)] = prev;
     onChange(weathermap);
   };
 
   const handleColorChange = (e: any, key: number) => {
     let weathermap: Weathermap = value;
-    weathermap.SCALE[key] = e.currentTarget.value;
+    weathermap.scale[key] = e.currentTarget.value;
     onChange(weathermap);
   };
 
   const addNewValue = () => {
     let weathermap: Weathermap = value;
-    if (Object.keys(value.SCALE).length == 0) {
-      weathermap.SCALE[0] = '#ffffff';
+    if (Object.keys(value.scale).length == 0) {
+      weathermap.scale[0] = '#ffffff';
     } else {
-      weathermap.SCALE[parseInt(Object.keys(value.SCALE)[Object.keys(value.SCALE).length - 1]) + 1] = '#ffffff';
+      weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1]) + 1] = '#ffffff';
     }
-    console.log(weathermap.SCALE);
+    console.log(weathermap.scale);
     onChange(weathermap);
   };
 
   const clearValues = () => {
     let weathermap: Weathermap = value;
-    weathermap.SCALE = {};
+    weathermap.scale = {};
     onChange(weathermap);
   };
 
@@ -51,7 +51,7 @@ export const ColorForm = ({ value, onChange }: Props) => {
 
   return (
     <React.Fragment>
-      {Object.keys(value.SCALE).map((percent) => (
+      {Object.keys(value.scale).map((percent) => (
         <InlineFieldRow>
           <InlineField label="%">
             <Input
@@ -66,7 +66,7 @@ export const ColorForm = ({ value, onChange }: Props) => {
           </InlineField>
           <InlineField label="Color">
             <Input
-              value={value.SCALE[parseInt(percent)]}
+              value={value.scale[parseInt(percent)]}
               onChange={(e) => handleColorChange(e, parseInt(percent))}
               placeholder={'Percent Color'}
               type={'string'}

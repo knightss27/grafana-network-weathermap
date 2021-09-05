@@ -30,7 +30,7 @@
       "WIDTH": ["8"]
     },
     "sync-core": {
-      "NODES": ["sync", "core"],
+      "nodes": ["sync", "core"],
       "TARGET": ["data/sync_traffic_in_259.rrd"],
       "OVERLIBGRAPH": [
         "http://support.mynet.net/cacti/graph_image.php?local_graph_id=256&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
@@ -38,7 +38,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=256"]
     },
     "sync-site1a": {
-      "NODES": ["sync:N", "site1:W"],
+      "nodes": ["sync:N", "site1:W"],
       "WIDTH": ["3"],
       "TARGET": ["data/sync_traffic_in_257.rrd"],
       "BANDWIDTH": ["2M"],
@@ -48,7 +48,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=126"]
     },
     "sync-site1b": {
-      "NODES": ["sync:E", "site1:SE"],
+      "nodes": ["sync:E", "site1:SE"],
       "WIDTH": ["3"],
       "OVERLIBGRAPH": [
         "http://support.mynet.net/cacti/graph_image.php?local_graph_id=255&rra_id=0&graph_nolegend=true&graph_height=100&graph_width="
@@ -58,7 +58,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=56"]
     },
     "sync-site2a": {
-      "NODES": ["sync", "site2"],
+      "nodes": ["sync", "site2"],
       "WIDTH": ["3"],
       "VIA": ["650", "380"],
       "TARGET": ["data/sync_traffic_in_251.rrd"],
@@ -69,7 +69,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=252"]
     },
     "sync-site2b": {
-      "NODES": ["sync", "site2"],
+      "nodes": ["sync", "site2"],
       "WIDTH": ["3"],
       "VIA": ["650", "420"],
       "TARGET": ["data/sync_traffic_in_252.rrd"],
@@ -80,7 +80,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=561"]
     },
     "transit-isp1": {
-      "NODES": ["transit", "isp1"],
+      "nodes": ["transit", "isp1"],
       "TARGET": ["data/trans1_traffic_in_352.rrd", "data/trans1_traffic_in_378.rrd", "data/trans1_traffic_in_420.rrd"],
       "BANDWIDTH": ["10M"],
       "OVERLIBGRAPH": [
@@ -89,7 +89,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=633"]
     },
     "transit-isp2": {
-      "NODES": ["transit", "isp2"],
+      "nodes": ["transit", "isp2"],
       "TARGET": ["data/trans1_traffic_in_438.rrd"],
       "BANDWIDTH": ["34M"],
       "OVERLIBGRAPH": [
@@ -98,7 +98,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=265"]
     },
     "core-transit": {
-      "NODES": ["transit", "core"],
+      "nodes": ["transit", "core"],
       "TARGET": ["data/trans1_traffic_in_350.rrd"],
       "ARROWSTYLE": ["compact"],
       "WIDTH": ["4"],
@@ -108,7 +108,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=122"]
     },
     "cust1-core": {
-      "NODES": ["customer1", "core"],
+      "nodes": ["customer1", "core"],
       "TARGET": ["data/extreme_traffic_in_299.rrd"],
       "OVERLIBGRAPH": [
         "http://support.mynet.net/cacti/graph_image.php?local_graph_id=296&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
@@ -116,7 +116,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=237"]
     },
     "cust2-core": {
-      "NODES": ["customer2", "core"],
+      "nodes": ["customer2", "core"],
       "TARGET": ["data/extreme_traffic_in_286.rrd"],
       "OVERLIBGRAPH": [
         "http://support.mynet.net/cacti/graph_image.php?local_graph_id=283&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
@@ -124,7 +124,7 @@
       "INFOURL": ["http://support.mynet.net/cacti/graph.php?rra_id=all&local_graph_id=222"]
     },
     "infra-core": {
-      "NODES": ["infra", "core"],
+      "nodes": ["infra", "core"],
       "TARGET": ["data/extreme_traffic_in_294.rrd"],
       "OVERLIBGRAPH": [
         "http://support.mynet.net/cacti/graph_image.php?local_graph_id=291&rra_id=0&graph_nolegend=true&graph_height=100&graph_width=300"
