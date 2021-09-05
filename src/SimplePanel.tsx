@@ -1,13 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PanelProps, scaledUnits } from '@grafana/data';
-import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, SimpleOptions, Weathermap } from 'types';
+import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, Node, SimpleOptions, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import Draggable from 'react-draggable';
 
 interface Props extends PanelProps<SimpleOptions> {}
+/* 
+  Notes to self about problems:
+  It appears that somehow the generateDrawnLinks function is being called before the nodes state can be updated?
+  At the very least, when running the program, waiting an then resizing the window after choosing an anchor point will make the calculation run correctly.
+  I can't see any reason the nodes state wouldn't be updated before genearteDrawnLinks is being called, however clearly when generateDrawnLinks is called,
+  the node's numLinks for the updated anchor field is not updated.
 
+  Also, choosing the same option a second time also fixes the problem.
+*/
 export const SimplePanel: React.FC<Props> = (props) => {
   // @ts-ignore
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
@@ -128,17 +136,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const [nodes, setNodes] = useState(
     options.weathermap
       ? options.weathermap.nodes.map((d, i) => {
-          let toReturn: DrawnNode = Object.create(d);
-          toReturn.index = i;
-          toReturn.x = toReturn.POSITION[0];
-          toReturn.y = toReturn.POSITION[1];
-          toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
-          return toReturn;
+          return generateDrawnNode(d, i);
         })
       : []
   );
 
-  // let tempNodes = nodes.slice();
+  let tempNodes = nodes.slice();
 
   const [links, setLinks] = useState(
     options.weathermap
@@ -217,12 +220,20 @@ export const SimplePanel: React.FC<Props> = (props) => {
       x -= d.labelWidth/2;
     } else if (side.anchor === Anchor.Right) {
       x += d.labelWidth/2;
+    } else if (side.anchor !== Anchor.Center) {
+      console.log('T/B Link Calc, anchor: ', side.anchor);
+      console.table(nodes[d.index].anchors[side.anchor]);
+      // console.log(d.anchors[side.anchor]);
+      x = d.x + -d.labelWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((d.labelWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
+      // console.log(x);
+      d.anchors[side.anchor].numFilledLinks++;
     }
     return {x, y};
   }
 
   // Calculate link positions / text / colors / etc.
   function generateDrawnLink(d: Link, i: number, isFirstPass: boolean): DrawnLink {
+    console.log('generate called')
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
 
@@ -284,9 +295,22 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
 
     // console.log(toReturn);
-    toReturn.lineStartA = getMultiLinkPosition(toReturn.source, toReturn.sides.A);
+    if (i == 0) {
+      console.log('remapping')
+      tempNodes = tempNodes.map(n => {
+        n.anchors = {
+          0: { numLinks: n.anchors[0].numLinks, numFilledLinks: 0 },
+          1: { numLinks: n.anchors[1].numLinks, numFilledLinks: 0 },
+          2: { numLinks: n.anchors[2].numLinks, numFilledLinks: 0 },
+          3: { numLinks: n.anchors[3].numLinks, numFilledLinks: 0 },
+          4: { numLinks: n.anchors[4].numLinks, numFilledLinks: 0 }
+        }
+        return n;
+      });
+    }
+    toReturn.lineStartA = getMultiLinkPosition(tempNodes[toReturn.source.index], toReturn.sides.A);
     // tempNodes[toReturn.source.index].filledLinks++;
-    toReturn.lineStartZ = getMultiLinkPosition(toReturn.target, toReturn.sides.Z);
+    toReturn.lineStartZ = getMultiLinkPosition(tempNodes[toReturn.target.index], toReturn.sides.Z);
     // tempNodes[toReturn.target.index].filledLinks++;
 
     toReturn.lineEndA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter - 4);
@@ -300,25 +324,39 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return toReturn;
   }
 
+  function generateDrawnNode(d: Node, i: number): DrawnNode {
+    let toReturn: DrawnNode = Object.create(d);
+    toReturn.index = i;
+    toReturn.x = toReturn.POSITION[0];
+    toReturn.y = toReturn.POSITION[1];
+    toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
+    // console.log('proto', toReturn)
+    toReturn.anchors = {
+      0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
+      1: { numLinks: toReturn.anchors[1].numLinks, numFilledLinks: 0 },
+      2: { numLinks: toReturn.anchors[2].numLinks, numFilledLinks: 0 },
+      3: { numLinks: toReturn.anchors[3].numLinks, numFilledLinks: 0 },
+      4: { numLinks: toReturn.anchors[4].numLinks, numFilledLinks: 0 }
+    }
+    return toReturn;
+}
+
   const mounted = useRef(false);
 
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
-      console.log(options.weathermap.links);
+      console.log('NODES');
+      console.table(options.weathermap.nodes);
       setNodes(
         options.weathermap.nodes
           ? options.weathermap.nodes.map((d, i) => {
-              let toReturn: DrawnNode = Object.create(d);
-              toReturn.index = i;
-              toReturn.x = toReturn.POSITION[0];
-              toReturn.y = toReturn.POSITION[1];
-              toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
-              return toReturn;
+              return generateDrawnNode(d, i);
             })
           : []
       );
+      tempNodes = nodes.slice();
       setLinks(
         options.weathermap.links
           ? options.weathermap.links.map((d, i) => {
@@ -489,6 +527,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       return val;
                     })
                   );
+                  tempNodes = nodes.slice();
                   setLinks(
                     options.weathermap.links.map((d, i) => {
                       return generateDrawnLink(d, i, false);

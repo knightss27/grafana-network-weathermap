@@ -38,7 +38,11 @@ export const NodeForm = ({ value, onChange }: Props) => {
       POSITION: [400, 400],
       label: 'Test Label',
       anchors: {
-        0: {}, 1: {}, 2: {}, 3: {}, 4: {}
+        0: { numLinks: 0, numFilledLinks: 0 },
+        1: { numLinks: 0, numFilledLinks: 0 },
+        2: { numLinks: 0, numFilledLinks: 0 },
+        3: { numLinks: 0, numFilledLinks: 0 },
+        4: { numLinks: 0, numFilledLinks: 0 }
       }
     };
     weathermap.nodes.push(node);
