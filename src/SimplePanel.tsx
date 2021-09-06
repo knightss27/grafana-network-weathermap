@@ -263,7 +263,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       let dataSourceZ = toReturn.sides.Z.query;
 
       let dataFrames = data.series.filter(
-        (series) => (series.name == dataSourceA || series.name == dataSourceZ) && series.refId == 'A'
+        (series) => (series.name == dataSourceA || series.name == dataSourceZ)
       );
 
       let dataValues = dataFrames.map((frame) => {
@@ -351,7 +351,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   useEffect(() => {
       tempNodes = nodes.slice();
       setLinks(
-        options.weathermap.links
+        options.weathermap
           ? options.weathermap.links.map((d, i) => {
               return generateDrawnLink(d, i, false);
             })
