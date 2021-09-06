@@ -35,29 +35,22 @@ export const LinkForm = (props: Props) => {
 
   const handleAnchorChange = (anchor: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
-    console.log(weathermap.links[i].nodes[side === 'A' ? 0 : 1]);
     // remove from old
     weathermap.links[i].nodes[side === 'A' ? 0 : 1].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
     weathermap.links[i].sides[side].anchor = anchor;
     // add to new
     weathermap.links[i].nodes[side === 'A' ? 0 : 1].anchors[weathermap.links[i].sides[side].anchor].numLinks++;
-    console.log(weathermap.links[i].nodes[side === 'A' ? 0 : 1]);
-    console.log(weathermap.nodes);
-    // NOTE: the weathermap successfully contains nodes whose anchor maps are updated
     onChange(weathermap);
   };
 
   const handleNodeChange = (node: Node, side: 'A' | 'Z', i: number) => {
     let weathermap: Weathermap = value;
     node.anchors[weathermap.links[i].sides[side].anchor].numLinks++;
-    console.log('numLinks new', node.anchors[weathermap.links[i].sides[side].anchor].numLinks);
     if (side === 'A') {
       weathermap.links[i].nodes[0].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
-      console.log('numLinks old', weathermap.links[i].nodes[0].anchors[weathermap.links[i].sides[side].anchor].numLinks);
       weathermap.links[i].nodes[0] = node;
     } else if (side === 'Z') {
       weathermap.links[i].nodes[1].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
-      console.log('numLinks old', weathermap.links[i].nodes[1].anchors[weathermap.links[i].sides[side].anchor].numLinks);
       weathermap.links[i].nodes[1] = node;
     }
     onChange(weathermap);

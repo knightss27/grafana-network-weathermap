@@ -17,17 +17,11 @@ interface Props extends PanelProps<SimpleOptions> {}
   Also, choosing the same option a second time also fixes the problem.
 */
 export const SimplePanel: React.FC<Props> = (props) => {
-  // @ts-ignore
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
   const styles = getStyles();
+
   /** FIELDS */
   /** ----------------------------------------------------------------------------------- */
-  // data.series
-  //     .map(series => console.log(series))
-  // .map(field => field?.values.get(field.values.length - 1));
-
-  // Used to caclulate width of link text boxes.
-  // const averageTransitDataLength = 5;
 
   // Distance that the tips of arrows will be drawn from the center. (px)
   const distFromCenter = 6;
@@ -68,6 +62,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
   });
 
   function getScaleColor(current: number, max: number) {
+    if (max === 0) {
+      return "#ddd"
+    }
+
     const percent = Math.round((current / max) * 100);
     let actual: string = '';
     Object.keys(colors).forEach((amount: string) => {
@@ -221,11 +219,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     } else if (side.anchor === Anchor.Right) {
       x += d.labelWidth/2;
     } else if (side.anchor !== Anchor.Center) {
-      console.log('T/B Link Calc, anchor: ', side.anchor);
-      console.table(nodes[d.index].anchors[side.anchor]);
-      // console.log(d.anchors[side.anchor]);
       x = d.x + -d.labelWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((d.labelWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
-      // console.log(x);
       d.anchors[side.anchor].numFilledLinks++;
     }
     return {x, y};
@@ -233,7 +227,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Calculate link positions / text / colors / etc.
   function generateDrawnLink(d: Link, i: number, isFirstPass: boolean): DrawnLink {
-    console.log('generate called')
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
 
@@ -296,7 +289,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     // console.log(toReturn);
     if (i == 0) {
-      console.log('remapping')
       tempNodes = tempNodes.map(n => {
         n.anchors = {
           0: { numLinks: n.anchors[0].numLinks, numFilledLinks: 0 },
@@ -330,7 +322,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.x = toReturn.POSITION[0];
     toReturn.y = toReturn.POSITION[1];
     toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
-    // console.log('proto', toReturn)
     toReturn.anchors = {
       0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
       1: { numLinks: toReturn.anchors[1].numLinks, numFilledLinks: 0 },
@@ -347,8 +338,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
-      console.log('NODES');
-      console.table(options.weathermap.nodes);
       setNodes(
         options.weathermap.nodes
           ? options.weathermap.nodes.map((d, i) => {
@@ -356,6 +345,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
             })
           : []
       );
+    }
+  }, [props]);
+
+  useEffect(() => {
       tempNodes = nodes.slice();
       setLinks(
         options.weathermap.links
@@ -364,10 +357,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
             })
           : []
       );
-      // tempNodes = [...nodes];
-    }
-    // console.log('simple panel updated')
-  }, [props]);
+  }, [nodes]);
 
   if (options.weathermap && options.panelOptions) {
     return (
