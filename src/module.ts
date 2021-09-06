@@ -3,6 +3,7 @@ import { SimpleOptions } from './types';
 import { SimplePanel } from './SimplePanel';
 import { NodeBuilder } from 'NodeBuilder';
 import { NewColorPicker } from './NewColorPicker';
+import { ExportSVG } from './ExportSVG';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
@@ -35,5 +36,12 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       description: "Set the nodes' snappable grid size.",
       defaultValue: 10,
       showIf: (config) => config.enableNodeGrid,
+    })
+    .addCustomEditor({
+      id: 'exportSVG',
+      path: 'weathermap',
+      name: 'Export SVG',
+      description: 'Export an SVG snapshot of the weathermap.',
+      editor: ExportSVG,
     });
 });

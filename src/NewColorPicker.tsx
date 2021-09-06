@@ -22,7 +22,6 @@ export const NewColorPicker = ({ value, onChange }: Props) => {
           Background Color:
           <ColorPicker color={value.backgroundColor} onChange={handleColorChange} />
         </InlineLabel>
-
         <InlineFieldRow>
           <InlineField label="Viewbox Width (px)">
             <Input

@@ -98,6 +98,7 @@ export interface DrawnLink extends Link {
 }
 
 export interface Weathermap {
+  id: string;
   nodes: Node[];
   links: Link[];
   scale: { [propName: number]: string };

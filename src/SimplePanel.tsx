@@ -5,17 +5,10 @@ import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import Draggable from 'react-draggable';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props extends PanelProps<SimpleOptions> {}
-/* 
-  Notes to self about problems:
-  It appears that somehow the generateDrawnLinks function is being called before the nodes state can be updated?
-  At the very least, when running the program, waiting an then resizing the window after choosing an anchor point will make the calculation run correctly.
-  I can't see any reason the nodes state wouldn't be updated before genearteDrawnLinks is being called, however clearly when generateDrawnLinks is called,
-  the node's numLinks for the updated anchor field is not updated.
 
-  Also, choosing the same option a second time also fixes the problem.
-*/
 export const SimplePanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
   const styles = getStyles();
@@ -43,6 +36,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         },
       },
       weathermap: {
+        id: uuidv4(),
         nodes: [],
         links: [],
         scale: {},
@@ -398,7 +392,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               background-color: ${options.panelOptions.backgroundColor};
             `
           )}
-          id="viz"
+          id={`nw-${options.weathermap.id}`}
           width={width2}
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
@@ -406,6 +400,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           viewBox={`0 0 ${options.panelOptions.panelSize.width} ${options.panelOptions.panelSize.height}`}
           shapeRendering="crispEdges"
           textRendering="geometricPrecision"
+          fontFamily="sans-serif"
         >
           <g>
             {links.map((d, i) => {
@@ -565,6 +560,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     alignmentBaseline={'central'}
                     color={'#2B2B2B'}
                     className={styles.nodeText}
+                    fontSize="10px"
                   >
                     {d.label != undefined ? d.label : ''}
                   </text>
@@ -585,6 +581,7 @@ const getStyles = stylesFactory(() => {
     wrapper: css`
       position: relative;
       font-size: 10px;
+      font-family: sans-serif;
     `,
     svg: css`
       position: absolute;
