@@ -181,13 +181,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }
 
   function calculateTextY(d: any) {
-    // This allows for NSEW offsets.
-    if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.labelOFFSET == 'S' || d.labelOFFSET == 'N') {
-        return getImageTextOffset(d, d.labelOFFSET);
-      }
-    }
-    return parseInt(settings.FONTDEFINE[2]);
+    // fontSize
+    return 10/2;
   }
 
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
@@ -558,7 +553,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     x={calculateRectX(d)}
                     y={calculateRectY(d)}
                     width={d.label != undefined ? d.labelWidth + 20 : 0}
-                    height={parseInt(settings.FONTDEFINE[2]) + 8}
+                    height={10 + 8}
                     fill={'#EFEFEF'}
                     stroke={'#DCDCDC'}
                     strokeWidth={2}
@@ -570,6 +565,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     y={calculateTextY(d)}
                     textAnchor={'middle'}
                     alignmentBaseline={'central'}
+                    dominantBaseline={'central'}
                     color={'#2B2B2B'}
                     className={styles.nodeText}
                     fontSize="10px"
