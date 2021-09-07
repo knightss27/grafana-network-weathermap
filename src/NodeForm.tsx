@@ -67,6 +67,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   return (
     <React.Fragment>
+      <h6 style={{padding: "10px 0px 5px 5px", marginTop: "10px", borderTop: "1px solid var(--in-content-button-background)"}}>
+        Nodes
+      </h6>
       <Select
         onChange={(v) => {
           setCurrentNode(v);

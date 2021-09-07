@@ -51,6 +51,9 @@ export const ColorForm = ({ value, onChange }: Props) => {
 
   return (
     <React.Fragment>
+      <h6 style={{padding: "10px 0px 5px 5px", marginTop: "10px", borderTop: "1px solid var(--in-content-button-background)"}}>
+        Color Scale
+      </h6>
       {Object.keys(value.scale).map((percent) => (
         <InlineFieldRow>
           <InlineField label="%">

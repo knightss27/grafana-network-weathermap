@@ -116,6 +116,9 @@ export const LinkForm = (props: Props) => {
 
   return (
     <React.Fragment>
+      <h6 style={{padding: "10px 0px 5px 5px", marginTop: "10px", borderTop: "1px solid var(--in-content-button-background)"}}>
+        Links
+      </h6>
       <Select
         onChange={(v) => {
           setCurrentLink(v as Link);
@@ -204,15 +207,17 @@ export const LinkForm = (props: Props) => {
                     </InlineField>
                   </InlineFieldRow>
                   <InlineFieldRow className={styles.row2}>
-                    <Select
-                      onChange={(v) => {
-                        handleAnchorChange(v.value ? v.value : 0, i, sName);
-                      }}
-                      value={{ label: Anchor[side.anchor], value: side.anchor}}
-                      options={Object.keys(Anchor).slice(5).map((nt, i) => { return {label: Anchor[i], value: i }})}
-                      className={styles.bandwidthSelect}
-                      placeholder={'Select Anchor'}
-                    ></Select>
+                    <InlineField label={`${sName} Side Anchor Point`} style={{ width: '100%' }}>
+                      <Select
+                        onChange={(v) => {
+                          handleAnchorChange(v.value ? v.value : 0, i, sName);
+                        }}
+                        value={{ label: Anchor[side.anchor], value: side.anchor}}
+                        options={Object.keys(Anchor).slice(5).map((nt, i) => { return {label: Anchor[i], value: i }})}
+                        className={styles.bandwidthSelect}
+                        placeholder={'Select Anchor'}
+                      ></Select>
+                    </InlineField>
                   </InlineFieldRow>
                 </React.Fragment>
               )})}

@@ -538,8 +538,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     weathermap: current,
                   });
                 }}
-
-                //TODO: Implement this fully!
               >
                 <g
                   display={d.label != undefined ? 'inline' : 'none'}
