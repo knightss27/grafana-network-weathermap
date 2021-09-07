@@ -19,6 +19,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // Distance that the tips of arrows will be drawn from the center. (px)
   const distFromCenter = 6;
 
+  // Quick definition to be moved
+  const linkSpacing = 15;
+  const linkStrokeWidth = 8;
+
   // User defined constants.
   const width = parseInt(settings.WIDTH);
   const height = parseInt(settings.HEIGHT);
@@ -213,7 +217,15 @@ export const SimplePanel: React.FC<Props> = (props) => {
     } else if (side.anchor === Anchor.Right) {
       x += d.labelWidth/2;
     } else if (side.anchor !== Anchor.Center) {
-      x = d.x + -d.labelWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((d.labelWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
+
+      // To be used with constant-spacing
+      const maxWidth = linkStrokeWidth * (d.anchors[side.anchor].numLinks) + linkSpacing * (d.anchors[side.anchor].numLinks)
+      // console.log(maxWidth, side.anchor, d.anchors[side.anchor].numLinks)
+      x = d.x - maxWidth/2 + (d.anchors[side.anchor].numFilledLinks) * (linkStrokeWidth + linkSpacing);
+
+      // To be used with auto-spacing
+      // x = d.x + -d.labelWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((d.labelWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
+      
       d.anchors[side.anchor].numFilledLinks++;
     }
     return {x, y};
@@ -412,7 +424,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   height={Math.abs(d.target.y - d.source.y)}
                 >
                   <line
-                    strokeWidth={settings.LINK.DEFAULT.WIDTH + 'px'}
+                    strokeWidth={linkStrokeWidth}
                     stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                     x1={d.lineStartA.x}
                     y1={d.source.y}
