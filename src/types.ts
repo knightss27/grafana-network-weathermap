@@ -39,6 +39,7 @@ export interface Node {
     [Anchor.Left]: NodeAnchor,
     [Anchor.Right]: NodeAnchor,
   };
+  useConstantSpacing: boolean;
 }
 
 export interface LinkSide {
@@ -97,9 +98,15 @@ export interface DrawnLink extends Link {
   arrowPolygonZ: any;
 }
 
+export interface WeathermapSettings {
+  linkSpacing: number;
+  linkStrokeWidth: number;
+}
+
 export interface Weathermap {
   id: string;
   nodes: Node[];
   links: Link[];
   scale: { [propName: number]: string };
+  settings: WeathermapSettings
 }

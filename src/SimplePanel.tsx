@@ -13,6 +13,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
   const styles = getStyles();
 
+  // Better variables
+  const wm = options.weathermap;
+
   /** FIELDS */
   /** ----------------------------------------------------------------------------------- */
 
@@ -20,8 +23,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const distFromCenter = 6;
 
   // Quick definition to be moved
-  const linkSpacing = 15;
-  const linkStrokeWidth = 8;
+  // const linkSpacing = 15;
+  // const linkStrokeWidth = 8;
 
   // User defined constants.
   const width = parseInt(settings.WIDTH);
@@ -44,6 +47,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
         nodes: [],
         links: [],
         scale: {},
+        settings: {
+          linkSpacing: 10,
+          linkStrokeWidth: 8
+        }
       },
       enableNodeGrid: false,
       gridSizePx: 10,
@@ -214,9 +221,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     } else if (side.anchor !== Anchor.Center) {
 
       // To be used with constant-spacing
-      const maxWidth = linkStrokeWidth * (d.anchors[side.anchor].numLinks) + linkSpacing * (d.anchors[side.anchor].numLinks)
+      const maxWidth = wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks) + wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks)
       // console.log(maxWidth, side.anchor, d.anchors[side.anchor].numLinks)
-      x = d.x - maxWidth/2 + (d.anchors[side.anchor].numFilledLinks) * (linkStrokeWidth + linkSpacing);
+      x = d.x - maxWidth/2 + (d.anchors[side.anchor].numFilledLinks) * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
 
       // To be used with auto-spacing
       // x = d.x + -d.labelWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((d.labelWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
@@ -419,7 +426,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   height={Math.abs(d.target.y - d.source.y)}
                 >
                   <line
-                    strokeWidth={linkStrokeWidth}
+                    strokeWidth={wm.settings.linkStrokeWidth}
                     stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                     x1={d.lineStartA.x}
                     y1={d.source.y}

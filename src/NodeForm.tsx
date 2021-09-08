@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { css } from 'emotion';
-import { Select, stylesFactory } from '@grafana/ui';
+import { InlineSwitch, Select, stylesFactory } from '@grafana/ui';
 import { Button, Input, InlineField, InlineFieldRow } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,6 +31,12 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
+  const handleSpacingChange = (e: any, i: number) => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].useConstantSpacing = e.currentTarget.checked;
+    onChange(weathermap);
+  }
+
   const addNewNode = () => {
     let weathermap: Weathermap = value;
     const node: Node = {
@@ -43,7 +49,8 @@ export const NodeForm = ({ value, onChange }: Props) => {
         2: { numLinks: 0, numFilledLinks: 0 },
         3: { numLinks: 0, numFilledLinks: 0 },
         4: { numLinks: 0, numFilledLinks: 0 }
-      }
+      },
+      useConstantSpacing: false
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -117,6 +124,12 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   css={''}
                   className={styles.nodeLabel}
                   name={'label'}
+                />
+              </InlineField>
+              <InlineField label={'Constant Spacing'}>
+                <InlineSwitch
+                  value={node.useConstantSpacing}
+                  onChange={(e) => handleSpacingChange(e, i)}
                 />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
