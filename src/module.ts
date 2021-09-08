@@ -2,7 +2,6 @@ import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './SimplePanel';
 import { NodeBuilder } from 'NodeBuilder';
-import { NewColorPicker } from './PanelForm';
 import { ExportSVG } from './ExportSVG';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
