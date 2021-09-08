@@ -1,8 +1,5 @@
 export interface SimpleOptions {
-  panelOptions: PanelOptions;
   weathermap: Weathermap;
-  enableNodeGrid: boolean;
-  gridSizePx: number;
 }
 
 export interface PanelOptions {
@@ -101,6 +98,9 @@ export interface DrawnLink extends Link {
 export interface WeathermapSettings {
   linkSpacing: number;
   linkStrokeWidth: number;
+  panel: PanelOptions;
+  enableNodeGrid: boolean;
+  gridSizePx: number;
 }
 
 export interface Weathermap {

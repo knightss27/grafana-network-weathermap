@@ -5,7 +5,7 @@ import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import Draggable from 'react-draggable';
-import { v4 as uuidv4 } from 'uuid';
+
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -13,8 +13,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
   const styles = getStyles();
 
+
+
   // Better variables
   const wm = options.weathermap;
+
 
   /** FIELDS */
   /** ----------------------------------------------------------------------------------- */
@@ -31,31 +34,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const height = parseInt(settings.HEIGHT);
   // let backgroundColor: string = options.backgroundColor;
 
-  if (!options || !options.panelOptions || !options.weathermap) {
-    console.log('Initializing weathermap plugin.');
 
-    onOptionsChange({
-      panelOptions: {
-        backgroundColor: '#ffffff',
-        panelSize: {
-          width: 600,
-          height: 600,
-        },
-      },
-      weathermap: {
-        id: uuidv4(),
-        nodes: [],
-        links: [],
-        scale: {},
-        settings: {
-          linkSpacing: 10,
-          linkStrokeWidth: 8
-        }
-      },
-      enableNodeGrid: false,
-      gridSizePx: 10,
-    });
-  }
 
   /** ----------------------------------------------------------------------------------- */
 
@@ -367,7 +346,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       );
   }, [nodes]);
 
-  if (options.weathermap && options.panelOptions) {
+  if (options.weathermap) {
     return (
       <div
         className={cx(
@@ -403,7 +382,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           className={cx(
             styles.svg,
             css`
-              background-color: ${options.panelOptions.backgroundColor};
+              background-color: ${options.weathermap.settings.panel.backgroundColor};
             `
           )}
           id={`nw-${options.weathermap.id}`}
@@ -411,7 +390,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox={`0 0 ${options.panelOptions.panelSize.width} ${options.panelOptions.panelSize.height}`}
+          viewBox={`0 0 ${options.weathermap.settings.panel.panelSize.width} ${options.weathermap.settings.panel.panelSize.height}`}
           shapeRendering="crispEdges"
           textRendering="geometricPrecision"
           fontFamily="sans-serif"
@@ -520,8 +499,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     prevState.map((val, index) => {
                       if (index == i) {
                         const scaledPos = getScaledMousePos(position);
-                        val.x = options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x;
-                        val.y = options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y;
+                        val.x = options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx) : scaledPos.x;
+                        val.y = options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx) : scaledPos.y;
                       }
                       return val;
                     })
@@ -537,8 +516,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   let current: Weathermap = options.weathermap;
                   const scaledPos = getScaledMousePos(position);
                   current.nodes[i].POSITION = [
-                    options.enableNodeGrid ? nearestMultiple(scaledPos.x, options.gridSizePx) : scaledPos.x,
-                    options.enableNodeGrid ? nearestMultiple(scaledPos.y, options.gridSizePx) : scaledPos.y,
+                    options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx) : scaledPos.x,
+                    options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx) : scaledPos.y,
                   ];
                   onOptionsChange({
                     ...options,
