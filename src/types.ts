@@ -27,7 +27,7 @@ export interface NodeAnchor {
 
 export interface Node {
   id: string;
-  POSITION: [number, number];
+  position: [number, number];
   label?: string;
   anchors: {
     [Anchor.Center]: NodeAnchor,
@@ -59,7 +59,6 @@ export interface Link {
 
 export interface DrawnNode extends Node {
   filledLinks: number;
-  // name: string;
   index: number;
   x: number;
   y: number;

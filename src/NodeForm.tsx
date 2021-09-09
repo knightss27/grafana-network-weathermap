@@ -22,9 +22,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
   const handleChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
     if (e.currentTarget.name == 'X') {
-      weathermap.nodes[i].POSITION[0] = parseInt(e.currentTarget.value);
+      weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value);
     } else if (e.currentTarget.name == 'Y') {
-      weathermap.nodes[i].POSITION[1] = parseInt(e.currentTarget.value);
+      weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value);
     } else {
       weathermap.nodes[i][e.currentTarget.name] = e.currentTarget.value;
     }
@@ -41,7 +41,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     let weathermap: Weathermap = value;
     const node: Node = {
       id: uuidv4(),
-      POSITION: [400, 400],
+      position: [400, 400],
       label: 'Test Label',
       anchors: {
         0: { numLinks: 0, numFilledLinks: 0 },
@@ -95,9 +95,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
             <InlineFieldRow>
               <InlineField label={'X'}>
                 <Input
-                  value={node.POSITION[0]}
+                  value={node.position[0]}
                   onChange={(e) => handleChange(e, i)}
-                  placeholder={'POSITION X'}
+                  placeholder={'position X'}
                   type={'number'}
                   css={''}
                   className={styles.nodeLabel}
@@ -106,9 +106,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
               </InlineField>
               <InlineField label={'Y'}>
                 <Input
-                  value={node.POSITION[1]}
+                  value={node.position[1]}
                   onChange={(e) => handleChange(e, i)}
-                  placeholder={'POSITION Y'}
+                  placeholder={'position Y'}
                   type={'number'}
                   css={''}
                   className={styles.nodeLabel}

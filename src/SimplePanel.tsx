@@ -310,8 +310,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function generateDrawnNode(d: Node, i: number): DrawnNode {
     let toReturn: DrawnNode = Object.create(d);
     toReturn.index = i;
-    toReturn.x = toReturn.POSITION[0];
-    toReturn.y = toReturn.POSITION[1];
+    toReturn.x = toReturn.position[0];
+    toReturn.y = toReturn.position[1];
     toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
     toReturn.anchors = {
       0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
@@ -519,7 +519,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 onStop={(e, position) => {
                   let current: Weathermap = options.weathermap;
                   const scaledPos = getScaledMousePos(position);
-                  current.nodes[i].POSITION = [
+                  current.nodes[i].position = [
                     options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx) : scaledPos.x,
                     options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx) : scaledPos.y,
                   ];
