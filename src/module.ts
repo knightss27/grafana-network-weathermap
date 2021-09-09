@@ -16,20 +16,6 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
         placeholder: 'This is my placeholder.',
       },
     })
-    // TODO: add these inputs to the custom editor
-    // .addBooleanSwitch({
-    //   path: 'weathermap.enableNodeGrid',
-    //   name: 'Node Grid Snapping',
-    //   description: 'Turn on or off a snappable grid for dragging.',
-    //   defaultValue: false,
-    // })
-    // .addNumberInput({
-    //   path: 'weathermap.gridSizePx',
-    //   name: 'Grid Size (px)',
-    //   description: "Set the nodes' snappable grid size.",
-    //   defaultValue: 10,
-    //   showIf: (config) => config.weathermap.settings.enableNodeGrid,
-    // })
     .addCustomEditor({
       id: 'exportSVG',
       path: 'weathermap',

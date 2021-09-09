@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColorPicker, InlineField, InlineFieldRow, InlineLabel, Input } from '@grafana/ui';
+import { ColorPicker, Field, FieldSet, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input, Switch } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 
@@ -81,6 +81,40 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             ></Input>
           </InlineField>
+        </InlineFieldRow>
+        <InlineFieldRow>
+          <InlineField 
+            label="Enable Node Grid Snapping"
+          >
+            <InlineSwitch
+              value={value.settings.enableNodeGrid}
+              css={''}
+              onChange={(e) => {
+                let wm = value;
+                wm.settings.enableNodeGrid = e.currentTarget.checked;
+                onChange(wm);
+              }}
+            />
+          </InlineField>
+          {value.settings.enableNodeGrid ? 
+            <InlineField
+              label="Grid Size (px)"
+            >
+              <Input
+                value={value.settings.gridSizePx}
+                placeholder={'Grid Size (px)'}
+                type={'number'}
+                css={''}
+                name={'gridSize'}
+                onChange={(e) => {
+                  let options = value;
+                  options.settings.gridSizePx = parseInt(e.currentTarget.value);
+                  onChange(options);
+                }}
+              ></Input>
+            </InlineField>
+              : ""
+          }
         </InlineFieldRow>
       </React.Fragment>
     );
