@@ -105,9 +105,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return 0;
   }
 
-  function getImageTextOffset(d: any, dir: string) {
-    return 0;
-  }
+  // function getImageTextOffset(d: any, dir: string) {
+  //   return 0;
+  // }
 
   const [nodes, setNodes] = useState(
     options.weathermap
