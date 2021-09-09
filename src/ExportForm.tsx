@@ -7,7 +7,19 @@ interface Settings {}
 
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
-export const ExportSVG = ({ value, onChange }: Props) => {
+export const ExportForm = ({ value, onChange }: Props) => {
+  const generateDownloadLink = (href: string, download: string) => {
+    let downloadLink = document.createElement("a");
+    downloadLink.href = href;
+    downloadLink.download = download;
+    downloadLink.target = "_blank"
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
+
   const handleSVGExport = () => {
     const svg = document.getElementById(`nw-${value.id}`);
 
@@ -16,15 +28,15 @@ export const ExportSVG = ({ value, onChange }: Props) => {
     const svgBlob = new Blob([preface, data], {type:"image/svg+xml;charset=utf-8"});
     const svgUrl = URL.createObjectURL(svgBlob);
     console.log(svgUrl)
-    let downloadLink = document.createElement("a");
-    downloadLink.href = svgUrl;
-    downloadLink.download = "network-weathermap.svg";
-    downloadLink.target = "_blank"
-
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+    
+    generateDownloadLink(svgUrl, `network-weathermap-${new Date().toISOString()}.svg`);
   };
+
+  const handleJSONExport = () => {
+    const data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(value));
+
+    generateDownloadLink(data, "network-weathermap.json");
+  }
 
   if (value) {
     return (
@@ -32,8 +44,14 @@ export const ExportSVG = ({ value, onChange }: Props) => {
         <InlineFieldRow>
             <Button
                 onClick={handleSVGExport}
+                style={{marginRight: "10px"}}
             >
                 Export SVG
+            </Button>
+            <Button
+                onClick={handleJSONExport}
+            >
+                Export JSON
             </Button>
         </InlineFieldRow>
       </React.Fragment>

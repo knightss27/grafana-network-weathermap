@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColorPicker, Field, FieldSet, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input, Switch } from '@grafana/ui';
+import { ColorPicker, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 

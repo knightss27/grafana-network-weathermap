@@ -2,7 +2,7 @@ import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './SimplePanel';
 import { NodeBuilder } from 'NodeBuilder';
-import { ExportSVG } from './ExportSVG';
+import { ExportForm } from './ExportForm';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
@@ -17,10 +17,10 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       },
     })
     .addCustomEditor({
-      id: 'exportSVG',
+      id: 'exportForm',
       path: 'weathermap',
-      name: 'Export SVG',
-      description: 'Export an SVG snapshot of the weathermap.',
-      editor: ExportSVG,
+      name: 'Export Weathermap',
+      description: 'Export an SVG snapshot or JSON definition of the weathermap.',
+      editor: ExportForm,
     });
 });
