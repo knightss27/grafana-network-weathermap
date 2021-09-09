@@ -199,13 +199,17 @@ export const SimplePanel: React.FC<Props> = (props) => {
       x += d.labelWidth/2;
     } else if (side.anchor !== Anchor.Center) {
 
-      // To be used with constant-spacing
-      const maxWidth = wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks-1) + wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks-1)
-      // console.log(maxWidth, side.anchor, d.anchors[side.anchor].numLinks)
-      x = d.x - maxWidth/2 + (d.anchors[side.anchor].numFilledLinks) * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
-
-      // To be used with auto-spacing
-      // x = d.x + -d.labelWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((d.labelWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
+      if (d.useConstantSpacing) {
+        // To be used with constant-spacing
+        const maxWidth = wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks-1) + wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks-1)
+        // console.log(maxWidth, side.anchor, d.anchors[side.anchor].numLinks)
+        x = d.x - maxWidth/2 + (d.anchors[side.anchor].numFilledLinks) * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
+      } else {
+        // To be used with auto-spacing
+        // TODO: factor out this padding to variable
+        const paddedWidth = d.labelWidth + 20;
+        x = d.x + -paddedWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((paddedWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
+      }
       
       d.anchors[side.anchor].numFilledLinks++;
     }
