@@ -30,15 +30,15 @@ export const NodeBuilder = (props: Props) => {
         },
       },
       enableNodeGrid: false,
-      gridSizePx: 10
-    }
-  }
+      gridSizePx: 10,
+    },
+  };
 
   if (!props.value) {
     console.log('Initializing weathermap plugin.');
     props.onChange(defaultValue);
   }
-  
+
   if (props.value) {
     return (
       <React.Fragment>

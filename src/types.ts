@@ -17,7 +17,7 @@ export enum Anchor {
   Top,
   Bottom,
   Left,
-  Right
+  Right,
 }
 
 export interface NodeAnchor {
@@ -30,11 +30,11 @@ export interface Node {
   position: [number, number];
   label?: string;
   anchors: {
-    [Anchor.Center]: NodeAnchor,
-    [Anchor.Top]: NodeAnchor,
-    [Anchor.Bottom]: NodeAnchor,
-    [Anchor.Left]: NodeAnchor,
-    [Anchor.Right]: NodeAnchor,
+    [Anchor.Center]: NodeAnchor;
+    [Anchor.Top]: NodeAnchor;
+    [Anchor.Bottom]: NodeAnchor;
+    [Anchor.Left]: NodeAnchor;
+    [Anchor.Right]: NodeAnchor;
   };
   useConstantSpacing: boolean;
 }
@@ -107,5 +107,5 @@ export interface Weathermap {
   nodes: Node[];
   links: Link[];
   scale: { [propName: number]: string };
-  settings: WeathermapSettings
+  settings: WeathermapSettings;
 }

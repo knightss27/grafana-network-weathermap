@@ -35,7 +35,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     let weathermap: Weathermap = value;
     weathermap.nodes[i].useConstantSpacing = e.currentTarget.checked;
     onChange(weathermap);
-  }
+  };
 
   const addNewNode = () => {
     let weathermap: Weathermap = value;
@@ -48,9 +48,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
         1: { numLinks: 0, numFilledLinks: 0 },
         2: { numLinks: 0, numFilledLinks: 0 },
         3: { numLinks: 0, numFilledLinks: 0 },
-        4: { numLinks: 0, numFilledLinks: 0 }
+        4: { numLinks: 0, numFilledLinks: 0 },
       },
-      useConstantSpacing: false
+      useConstantSpacing: false,
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -74,7 +74,13 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   return (
     <React.Fragment>
-      <h6 style={{padding: "10px 0px 5px 5px", marginTop: "10px", borderTop: "1px solid var(--in-content-button-background)"}}>
+      <h6
+        style={{
+          padding: '10px 0px 5px 5px',
+          marginTop: '10px',
+          borderTop: '1px solid var(--in-content-button-background)',
+        }}
+      >
         Nodes
       </h6>
       <Select
@@ -127,10 +133,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 />
               </InlineField>
               <InlineField label={'Constant Spacing'}>
-                <InlineSwitch
-                  value={node.useConstantSpacing}
-                  onChange={(e) => handleSpacingChange(e, i)}
-                />
+                <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
                 Remove Node

@@ -83,9 +83,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           </InlineField>
         </InlineFieldRow>
         <InlineFieldRow>
-          <InlineField 
-            label="Enable Node Grid Snapping"
-          >
+          <InlineField label="Enable Node Grid Snapping">
             <InlineSwitch
               value={value.settings.enableNodeGrid}
               css={''}
@@ -96,10 +94,8 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-          {value.settings.enableNodeGrid ? 
-            <InlineField
-              label="Grid Size (px)"
-            >
+          {value.settings.enableNodeGrid ? (
+            <InlineField label="Grid Size (px)">
               <Input
                 value={value.settings.gridSizePx}
                 placeholder={'Grid Size (px)'}
@@ -113,8 +109,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
                 }}
               ></Input>
             </InlineField>
-              : ""
-          }
+          ) : (
+            ''
+          )}
         </InlineFieldRow>
       </React.Fragment>
     );

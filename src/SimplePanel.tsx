@@ -6,18 +6,14 @@ import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import Draggable from 'react-draggable';
 
-
 interface Props extends PanelProps<SimpleOptions> {}
 
 export const SimplePanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
   const styles = getStyles();
 
-
-
   // Better variables
   const wm = options.weathermap;
-
 
   /** FIELDS */
   /** ----------------------------------------------------------------------------------- */
@@ -34,8 +30,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const height = parseInt(settings.HEIGHT);
   // let backgroundColor: string = options.backgroundColor;
 
-
-
   /** ----------------------------------------------------------------------------------- */
 
   /** COLOR SCALES */
@@ -47,7 +41,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
-      return "#ddd"
+      return '#ddd';
     }
 
     const percent = Math.round((current / max) * 100);
@@ -168,7 +162,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function calculateTextY(d: any) {
     // fontSize
-    return 10/2;
+    return 10 / 2;
   }
 
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
@@ -194,26 +188,34 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let x = d.x;
     let y = d.y;
     if (side.anchor === Anchor.Left) {
-      x -= d.labelWidth/2;
+      x -= d.labelWidth / 2;
     } else if (side.anchor === Anchor.Right) {
-      x += d.labelWidth/2;
+      x += d.labelWidth / 2;
     } else if (side.anchor !== Anchor.Center) {
-
       if (d.useConstantSpacing) {
         // To be used with constant-spacing
-        const maxWidth = wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks-1) + wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks-1)
+        const maxWidth =
+          wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks - 1) +
+          wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks - 1);
         // console.log(maxWidth, side.anchor, d.anchors[side.anchor].numLinks)
-        x = d.x - maxWidth/2 + (d.anchors[side.anchor].numFilledLinks) * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
+        x =
+          d.x -
+          maxWidth / 2 +
+          d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
       } else {
         // To be used with auto-spacing
         // TODO: factor out this padding to variable
         const paddedWidth = d.labelWidth + 20;
-        x = d.x + -paddedWidth/2 + (d.anchors[side.anchor].numFilledLinks + 1) * ((paddedWidth) / (nodes[d.index].anchors[side.anchor].numLinks + 1));
+        x =
+          d.x +
+          -paddedWidth / 2 +
+          (d.anchors[side.anchor].numFilledLinks + 1) *
+            (paddedWidth / (nodes[d.index].anchors[side.anchor].numLinks + 1));
       }
-      
+
       d.anchors[side.anchor].numFilledLinks++;
     }
-    return {x, y};
+    return { x, y };
   }
 
   // Calculate link positions / text / colors / etc.
@@ -253,9 +255,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       let dataSourceA = toReturn.sides.A.query;
       let dataSourceZ = toReturn.sides.Z.query;
 
-      let dataFrames = data.series.filter(
-        (series) => (series.name == dataSourceA || series.name == dataSourceZ)
-      );
+      let dataFrames = data.series.filter((series) => series.name == dataSourceA || series.name == dataSourceZ);
 
       let dataValues = dataFrames.map((frame) => {
         return {
@@ -280,14 +280,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     // console.log(toReturn);
     if (i == 0) {
-      tempNodes = tempNodes.map(n => {
+      tempNodes = tempNodes.map((n) => {
         n.anchors = {
           0: { numLinks: n.anchors[0].numLinks, numFilledLinks: 0 },
           1: { numLinks: n.anchors[1].numLinks, numFilledLinks: 0 },
           2: { numLinks: n.anchors[2].numLinks, numFilledLinks: 0 },
           3: { numLinks: n.anchors[3].numLinks, numFilledLinks: 0 },
-          4: { numLinks: n.anchors[4].numLinks, numFilledLinks: 0 }
-        }
+          4: { numLinks: n.anchors[4].numLinks, numFilledLinks: 0 },
+        };
         return n;
       });
     }
@@ -312,16 +312,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.index = i;
     toReturn.x = toReturn.position[0];
     toReturn.y = toReturn.position[1];
-    toReturn.labelWidth = measureText(d.label ? d.label : "", 10).width;
+    toReturn.labelWidth = measureText(d.label ? d.label : '', 10).width;
     toReturn.anchors = {
       0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
       1: { numLinks: toReturn.anchors[1].numLinks, numFilledLinks: 0 },
       2: { numLinks: toReturn.anchors[2].numLinks, numFilledLinks: 0 },
       3: { numLinks: toReturn.anchors[3].numLinks, numFilledLinks: 0 },
-      4: { numLinks: toReturn.anchors[4].numLinks, numFilledLinks: 0 }
-    }
+      4: { numLinks: toReturn.anchors[4].numLinks, numFilledLinks: 0 },
+    };
     return toReturn;
-}
+  }
 
   const mounted = useRef(false);
 
@@ -340,14 +340,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }, [props]);
 
   useEffect(() => {
-      tempNodes = nodes.slice();
-      setLinks(
-        options.weathermap
-          ? options.weathermap.links.map((d, i) => {
-              return generateDrawnLink(d, i, false);
-            })
-          : []
-      );
+    tempNodes = nodes.slice();
+    setLinks(
+      options.weathermap
+        ? options.weathermap.links.map((d, i) => {
+            return generateDrawnLink(d, i, false);
+          })
+        : []
+    );
   }, [nodes]);
 
   if (options.weathermap) {
@@ -503,8 +503,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     prevState.map((val, index) => {
                       if (index == i) {
                         const scaledPos = getScaledMousePos(position);
-                        val.x = options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx) : scaledPos.x;
-                        val.y = options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx) : scaledPos.y;
+                        val.x = options.weathermap.settings.enableNodeGrid
+                          ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx)
+                          : scaledPos.x;
+                        val.y = options.weathermap.settings.enableNodeGrid
+                          ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx)
+                          : scaledPos.y;
                       }
                       return val;
                     })
@@ -520,8 +524,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   let current: Weathermap = options.weathermap;
                   const scaledPos = getScaledMousePos(position);
                   current.nodes[i].position = [
-                    options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx) : scaledPos.x,
-                    options.weathermap.settings.enableNodeGrid ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx) : scaledPos.y,
+                    options.weathermap.settings.enableNodeGrid
+                      ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx)
+                      : scaledPos.x,
+                    options.weathermap.settings.enableNodeGrid
+                      ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx)
+                      : scaledPos.y,
                   ];
                   onOptionsChange({
                     ...options,
