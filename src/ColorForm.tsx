@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {  } from 'react';
 import { css } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
 import { Button, Input, InlineField, InlineFieldRow } from '@grafana/ui';
@@ -16,7 +16,12 @@ export const ColorForm = ({ value, onChange }: Props) => {
   // const theme = useTheme();
   const styles = getStyles();
 
+  let prevFocused = 0;
+
   const handleNumberChange = (e: any, key: number) => {
+
+    prevFocused = key;
+
     let weathermap: Weathermap = value;
     let prev: string = weathermap.scale[key];
     delete weathermap.scale[key];
@@ -25,6 +30,7 @@ export const ColorForm = ({ value, onChange }: Props) => {
   };
 
   const handleColorChange = (e: any, key: number) => {
+    console.log('blurred!')
     let weathermap: Weathermap = value;
     weathermap.scale[key] = e.currentTarget.value;
     onChange(weathermap);
@@ -47,7 +53,8 @@ export const ColorForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  // const [currentNode, setCurrentNode] = useState('null');
+  // const [editedColor, setEditedColor] = useState('');
+  // const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map(i => parseInt(i)));
 
   return (
     <React.Fragment>
@@ -60,23 +67,26 @@ export const ColorForm = ({ value, onChange }: Props) => {
       >
         Color Scale
       </h6>
-      {Object.keys(value.scale).map((percent) => (
+      {Object.keys(value.scale).map((percent, i) => (
         <InlineFieldRow>
           <InlineField label="%">
             <Input
-              value={percent}
+              id={`nw-input-${percent}`}
+              value={parseInt(percent)}
               placeholder={'Percent Load'}
               type={'number'}
               css={''}
               className={styles.nodeLabel}
               name={'percent'}
               onChange={(e) => handleNumberChange(e, parseInt(percent))}
+              // onBlur={(e) => handleNumberChange(e, parseInt(percent))}
             ></Input>
           </InlineField>
           <InlineField label="Color">
             <Input
               value={value.scale[parseInt(percent)]}
               onChange={(e) => handleColorChange(e, parseInt(percent))}
+              // onBlur={(e) => handleColorChange(e, parseInt(percent))}
               placeholder={'Percent Color'}
               type={'string'}
               css={''}
