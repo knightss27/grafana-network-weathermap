@@ -128,11 +128,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 />
               </InlineField>
               <InlineField label={'Constant Spacing'}>
-                <InlineSwitch 
-                  value={node.useConstantSpacing} 
-                  onChange={(e) => handleSpacingChange(e, i)}
-                  css={''}
-                />
+                <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} css={''} />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
                 Remove Node
