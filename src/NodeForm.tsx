@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { css } from 'emotion';
 import { Button, Input, InlineField, InlineFieldRow, InlineSwitch, Select, stylesFactory } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
@@ -14,18 +12,16 @@ interface Settings {
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const NodeForm = ({ value, onChange }: Props) => {
-  // const  = props;
-  // const theme = useTheme();
   const styles = getStyles();
 
   const handleChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
-    if (e.currentTarget.name == 'X') {
-      weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value);
-    } else if (e.currentTarget.name == 'Y') {
-      weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value);
-    } else {
-      weathermap.nodes[i][e.currentTarget.name] = e.currentTarget.value;
+    if (e.currentTarget.name === 'X') {
+      weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value, 10);
+    } else if (e.currentTarget.name === 'Y') {
+      weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value, 10);
+    } else if (e.currentTarget.name === 'label') {
+      weathermap.nodes[i].label = e.currentTarget.value;
     }
     onChange(weathermap);
   };
@@ -69,7 +65,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  const [currentNode, setCurrentNode] = useState('null');
+  const [currentNode, setCurrentNode] = useState((null as unknown) as Node);
 
   return (
     <React.Fragment>
@@ -84,7 +80,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       </h6>
       <Select
         onChange={(v) => {
-          setCurrentNode(v);
+          setCurrentNode(v.value as Node);
         }}
         value={currentNode}
         options={value.nodes}
@@ -95,7 +91,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       ></Select>
 
       {value.nodes.map((node, i) => {
-        if (node.id == currentNode.id) {
+        if (node.id === currentNode.id) {
           return (
             <InlineFieldRow>
               <InlineField label={'X'}>
@@ -132,7 +128,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 />
               </InlineField>
               <InlineField label={'Constant Spacing'}>
-                <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} />
+                <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} css={''} />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
                 Remove Node

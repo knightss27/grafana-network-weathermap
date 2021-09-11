@@ -68,7 +68,7 @@ export const LinkForm = (props: Props) => {
   };
 
   const addNewLink = () => {
-    if (value.nodes.length == 0) {
+    if (value.nodes.length === 0) {
       throw new Error('There must be >= 1 Nodes to create a link.');
     }
     let weathermap: Weathermap = value;
@@ -137,13 +137,13 @@ export const LinkForm = (props: Props) => {
       ></Select>
 
       {value.links.map((link: Link, i) => {
-        if (link.id == currentLink.id) {
+        if (link.id === currentLink.id) {
           return (
             <React.Fragment>
               {Object.values(link.sides).map((side: LinkSide, sideIndex) => {
-                const sName: 'A' | 'Z' = sideIndex == 0 ? 'A' : 'Z';
+                const sName: 'A' | 'Z' = sideIndex === 0 ? 'A' : 'Z';
                 return (
-                  <React.Fragment>
+                  <React.Fragment key={sideIndex}>
                     <InlineFieldRow className={styles.row}>
                       <InlineField label={`${sName} Side`} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
                         <Select

@@ -21,9 +21,9 @@ export const ColorForm = (props: Props) => {
     let weathermap: Weathermap = value;
     let prev: string = weathermap.scale[key];
     delete weathermap.scale[key];
-    weathermap.scale[parseInt(e.currentTarget.value)] = prev;
+    weathermap.scale[parseInt(e.currentTarget.value, 10)] = prev;
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i)));
+    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
   };
 
   const handleColorChange = (e: any, key: number) => {
@@ -34,20 +34,20 @@ export const ColorForm = (props: Props) => {
 
   const addNewValue = () => {
     let weathermap: Weathermap = value;
-    if (Object.keys(value.scale).length == 0) {
+    if (Object.keys(value.scale).length === 0) {
       weathermap.scale[0] = '#ffffff';
     } else {
-      weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1]) + 10] = '#ffffff';
+      weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1], 10) + 10] = '#ffffff';
     }
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i)));
+    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
   };
 
   const clearValues = () => {
     let weathermap: Weathermap = value;
     weathermap.scale = {};
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i)));
+    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
   };
 
   const handleDeletePercent = (key: number) => {
@@ -57,7 +57,7 @@ export const ColorForm = (props: Props) => {
   };
 
   // const [editedColor, setEditedColor] = useState('');
-  const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map((i) => parseInt(i)));
+  const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map((i) => parseInt(i, 10)));
 
   return (
     <React.Fragment>
@@ -71,7 +71,7 @@ export const ColorForm = (props: Props) => {
         Color Scale
       </h6>
       {Object.keys(value.scale).map((percent, i) => (
-        <InlineFieldRow>
+        <InlineFieldRow key={i}>
           <InlineField label="%">
             <Input
               id={`nw-input-${percent}`}
@@ -90,13 +90,13 @@ export const ColorForm = (props: Props) => {
                 // TODO: remove this unecessary hack for updating
                 onChange(value);
               }}
-              onBlur={(e) => handleNumberChange(e, parseInt(percent))}
+              onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}
             ></Input>
           </InlineField>
           <InlineField label="Color">
             <Input
-              value={value.scale[parseInt(percent)]}
-              onChange={(e) => handleColorChange(e, parseInt(percent))}
+              value={value.scale[parseInt(percent, 10)]}
+              onChange={(e) => handleColorChange(e, parseInt(percent, 10))}
               placeholder={'Percent Color'}
               type={'string'}
               css={''}
@@ -104,7 +104,7 @@ export const ColorForm = (props: Props) => {
               name={'color'}
             ></Input>
           </InlineField>
-          <Button icon="trash-alt" variant="destructive" onClick={(e) => handleDeletePercent(parseInt(percent))} />
+          <Button icon="trash-alt" variant="destructive" onClick={(e) => handleDeletePercent(parseInt(percent, 10))} />
         </InlineFieldRow>
       ))}
 

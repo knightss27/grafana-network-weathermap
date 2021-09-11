@@ -33,7 +33,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               name={'panelWidth'}
               onChange={(e) => {
                 let options = value;
-                options.settings.panel.panelSize.width = parseInt(e.currentTarget.value);
+                options.settings.panel.panelSize.width = e.currentTarget.valueAsNumber;
                 onChange(options);
               }}
             ></Input>
@@ -47,7 +47,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               name={'panelHeight'}
               onChange={(e) => {
                 let options = value;
-                options.settings.panel.panelSize.height = parseInt(e.currentTarget.value);
+                options.settings.panel.panelSize.height = e.currentTarget.valueAsNumber;
                 onChange(options);
               }}
             ></Input>
@@ -64,7 +64,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               name={'linkStrokeWidth'}
               onChange={(e) => {
                 let options = value;
-                options.settings.linkStrokeWidth = parseInt(e.currentTarget.value);
+                options.settings.linkStrokeWidth = e.currentTarget.valueAsNumber;
                 onChange(options);
               }}
             ></Input>
@@ -78,7 +78,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               name={'linkSpacing'}
               onChange={(e) => {
                 let options = value;
-                options.settings.linkSpacing = parseInt(e.currentTarget.value);
+                options.settings.linkSpacing = e.currentTarget.valueAsNumber;
                 onChange(options);
               }}
             ></Input>
@@ -152,7 +152,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
                 name={'gridSize'}
                 onChange={(e) => {
                   let options = value;
-                  options.settings.gridSizePx = parseInt(e.currentTarget.value);
+                  options.settings.gridSizePx = e.currentTarget.valueAsNumber;
                   onChange(options);
                 }}
               ></Input>
