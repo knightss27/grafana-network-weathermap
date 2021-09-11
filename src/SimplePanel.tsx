@@ -150,7 +150,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function calculateTextY(d: any) {
     // fontSize
-    return 10 / 2;
+    return calculateRectangleAutoHeight(d)/2 - 10/2;
   }
 
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
