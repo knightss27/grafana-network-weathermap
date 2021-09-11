@@ -83,6 +83,50 @@ export const PanelForm = ({ value, onChange }: Props) => {
           </InlineField>
         </InlineFieldRow>
         <InlineFieldRow>
+          <InlineField label="Arrow Width">
+            <Input
+              value={value.settings.linkArrow.width}
+              placeholder={'Arrow Width'}
+              type={'number'}
+              css={''}
+              name={'arrowWidth'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.linkArrow.width = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+          <InlineField label="Arrow Height">
+            <Input
+              value={value.settings.linkArrow.height}
+              placeholder={'Arrow Height'}
+              type={'number'}
+              css={''}
+              name={'arrowHeight'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.linkArrow.height = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+          <InlineField label="Arrow Offset">
+            <Input
+              value={value.settings.linkArrow.offset}
+              placeholder={'Arrow Offset'}
+              type={'number'}
+              css={''}
+              name={'arrowOffset'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.linkArrow.offset = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+        </InlineFieldRow>
+        <InlineFieldRow>
           <InlineField label="Enable Node Grid Snapping">
             <InlineSwitch
               value={value.settings.enableNodeGrid}
