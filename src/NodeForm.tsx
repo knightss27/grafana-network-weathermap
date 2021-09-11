@@ -46,6 +46,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
         4: { numLinks: 0, numFilledLinks: 0 },
       },
       useConstantSpacing: false,
+      padding: {
+        vertical: 4,
+        horizontal: 10
+      }
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -65,7 +69,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  const [currentNode, setCurrentNode] = useState((null as unknown) as Node);
+  const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : ('null' as unknown) as Node);
 
   return (
     <React.Fragment>

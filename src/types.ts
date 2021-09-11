@@ -37,6 +37,10 @@ export interface Node {
     [Anchor.Right]: NodeAnchor;
   };
   useConstantSpacing: boolean;
+  padding: {
+    vertical: number;
+    horizontal: number;
+  }
 }
 
 export interface LinkSide {

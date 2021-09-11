@@ -18,6 +18,16 @@ export const LinkForm = (props: Props) => {
 
   // const dataOptions: DataFrame[] | undefined = ;
 
+  const findNodeIndex = (n1: Node): number => {
+    let nodeIndex = -1;
+    value.nodes.forEach((node, i) => {
+      if (node.id === n1.id) {
+        nodeIndex = i;
+      }
+    })
+    return nodeIndex
+  }
+
   const handleBandwidthChange = (amt: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
     weathermap.links[i].sides[side].bandwidth = amt;
@@ -34,23 +44,29 @@ export const LinkForm = (props: Props) => {
 
   const handleAnchorChange = (anchor: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
+    const nodeIndex = findNodeIndex(weathermap.links[i].nodes[side === 'A' ? 0 : 1]);
+
     // remove from old
-    weathermap.links[i].nodes[side === 'A' ? 0 : 1].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
+    weathermap.nodes[nodeIndex].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
     weathermap.links[i].sides[side].anchor = anchor;
     // add to new
-    weathermap.links[i].nodes[side === 'A' ? 0 : 1].anchors[weathermap.links[i].sides[side].anchor].numLinks++;
+    weathermap.nodes[nodeIndex].anchors[weathermap.links[i].sides[side].anchor].numLinks++;
     onChange(weathermap);
   };
 
   const handleNodeChange = (node: Node, side: 'A' | 'Z', i: number) => {
     let weathermap: Weathermap = value;
-    node.anchors[weathermap.links[i].sides[side].anchor].numLinks++;
+    const nodeIndex = findNodeIndex(node);
+
+    weathermap.nodes[nodeIndex].anchors[weathermap.links[i].sides[side].anchor].numLinks++;
     if (side === 'A') {
-      weathermap.links[i].nodes[0].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
-      weathermap.links[i].nodes[0] = node;
+      const n2 = findNodeIndex(weathermap.links[i].nodes[0]);
+      weathermap.nodes[n2].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
+      weathermap.links[i].nodes[0] = weathermap.nodes[nodeIndex];
     } else if (side === 'Z') {
-      weathermap.links[i].nodes[1].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
-      weathermap.links[i].nodes[1] = node;
+      const n2 = findNodeIndex(weathermap.links[i].nodes[1]);
+      weathermap.nodes[n2].anchors[weathermap.links[i].sides[side].anchor].numLinks--;
+      weathermap.links[i].nodes[1] = weathermap.nodes[nodeIndex];
     }
     onChange(weathermap);
   };

@@ -141,18 +141,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
         return getImageRectOffset(d, d.labelOFFSET);
       }
     }
-    return -8 / 2;
+    return -10 / 2;
   }
 
   function calculateTextX(d: any) {
-    let offset = d.label !== undefined ? -(d.label.length * parseInt(settings.FONTDEFINE[2], 10)) / 2 : 0;
-    if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.labelOFFSET === 'W') {
-        return offset + getImageRectOffset(d, d.labelOFFSET);
-      } else if (d.labelOFFSET === 'E') {
-        return -offset + getImageRectOffset(d, d.labelOFFSET);
-      }
-    }
     return 0;
   }
 
@@ -178,15 +170,30 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return Math.ceil(i / j) * j;
   }
 
+  function calculateRectangleAutoHeight(d: DrawnNode): number {
+    const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
+    const minHeight = 10 + 2 * d.padding.vertical; // fontSize + padding
+    const linkHeight = wm.settings.linkStrokeWidth + 4;
+    const fullHeight = linkHeight * numLinks - 4;
+    const final = (numLinks > 1 ? fullHeight : minHeight);
+    return final;
+  }
+
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
     // const rectXOffset = calculateRectX(d);
     // let toReturn = d.x + rectXOffset + (linkIndex + 1) * ((Math.abs(rectXOffset) * 2) / (d.numLinks + 1));
     let x = d.x;
-    let y = d.y;
-    if (side.anchor === Anchor.Left) {
-      x -= d.labelWidth / 2;
-    } else if (side.anchor === Anchor.Right) {
-      x += d.labelWidth / 2;
+    let y = d.y + d.padding.vertical;
+    if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
+      if (side.anchor === Anchor.Left) {
+        x -= d.labelWidth / 2;
+      } else {
+        x += d.labelWidth / 2;
+      }
+      if (d.anchors[side.anchor].numLinks > 1) {
+        y -= 10/2 + d.padding.vertical;
+        y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * 4 - (wm.settings.linkStrokeWidth/2);
+      }
     } else if (side.anchor !== Anchor.Center) {
       if (d.useConstantSpacing) {
         // To be used with constant-spacing
@@ -207,9 +214,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
           (d.anchors[side.anchor].numFilledLinks + 1) *
             (paddedWidth / (nodes[d.index].anchors[side.anchor].numLinks + 1));
       }
-
-      d.anchors[side.anchor].numFilledLinks++;
     }
+    d.anchors[side.anchor].numFilledLinks++;
     return { x, y };
   }
 
@@ -415,7 +421,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     strokeWidth={wm.settings.linkStrokeWidth}
                     stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                     x1={d.lineStartA.x}
-                    y1={d.source.y}
+                    y1={d.lineStartA.y}
                     x2={d.lineEndA.x}
                     y2={d.lineEndA.y}
                   ></line>
@@ -434,7 +440,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     strokeWidth={wm.settings.linkStrokeWidth}
                     stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
                     x1={d.lineStartZ.x}
-                    y1={d.target.y}
+                    y1={d.lineStartZ.y}
                     x2={d.lineEndZ.x}
                     y2={d.lineEndZ.y}
                   ></line>
@@ -549,8 +555,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   <rect
                     x={calculateRectX(d)}
                     y={calculateRectY(d)}
-                    width={d.label !== undefined ? d.labelWidth + 20 : 0}
-                    height={10 + 8}
+                    width={d.label !== undefined ? (d.labelWidth + (d.padding.horizontal * 2)) : 0}
+                    // TODO: extract '10' to fontSize variable
+                    height={calculateRectangleAutoHeight(d)}
                     fill={'#EFEFEF'}
                     stroke={'#DCDCDC'}
                     strokeWidth={2}
