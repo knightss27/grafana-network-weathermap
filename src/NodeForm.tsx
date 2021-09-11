@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { css } from 'emotion';
 import { Button, Input, InlineField, InlineFieldRow, InlineSwitch, Select, stylesFactory } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
@@ -20,10 +18,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const handleChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
-    if (e.currentTarget.name == 'X') {
-      weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value);
-    } else if (e.currentTarget.name == 'Y') {
-      weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value);
+    if (e.currentTarget.name === 'X') {
+      weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value, 10);
+    } else if (e.currentTarget.name === 'Y') {
+      weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value, 10);
     } else {
       weathermap.nodes[i][e.currentTarget.name] = e.currentTarget.value;
     }
@@ -95,7 +93,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       ></Select>
 
       {value.nodes.map((node, i) => {
-        if (node.id == currentNode.id) {
+        if (node.id === currentNode.id) {
           return (
             <InlineFieldRow>
               <InlineField label={'X'}>

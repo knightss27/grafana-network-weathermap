@@ -23,8 +23,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // const linkStrokeWidth = 8;
 
   // User defined constants.
-  const width = parseInt(settings.WIDTH);
-  const height = parseInt(settings.HEIGHT);
+  const width = parseInt(settings.WIDTH, 10);
+  const height = parseInt(settings.HEIGHT, 10);
   // let backgroundColor: string = options.backgroundColor;
 
   /** ----------------------------------------------------------------------------------- */
@@ -33,7 +33,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   /** ----------------------------------------------------------------------------------- */
   const colors: any = {};
   Object.keys(options.weathermap ? options.weathermap.scale : {}).forEach((pct: string) => {
-    colors[parseInt(pct)] = options.weathermap.scale[parseInt(pct)];
+    colors[parseInt(pct, 10)] = options.weathermap.scale[parseInt(pct, 10)];
   });
 
   function getScaleColor(current: number, max: number) {
@@ -44,7 +44,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const percent = Math.round((current / max) * 100);
     let actual = '';
     Object.keys(colors).forEach((amount: string) => {
-      if (parseInt(amount) <= percent) {
+      if (parseInt(amount, 10) <= percent) {
         actual = amount;
       }
     });
@@ -125,10 +125,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function calculateRectX(d: any) {
     // This allows for NSEW offsets.
-    let offset = d.label != undefined ? -(measureText(d.label, 10).width / 2 + 20 / 2) : 0;
-    if (d.labelOFFSET == 'W') {
+    let offset = d.label !== undefined ? -(measureText(d.label, 10).width / 2 + 20 / 2) : 0;
+    if (d.labelOFFSET === 'W') {
       return 2 * offset + getImageRectOffset(d, d.labelOFFSET);
-    } else if (d.labelOFFSET == 'E') {
+    } else if (d.labelOFFSET === 'E') {
       return getImageRectOffset(d, d.labelOFFSET);
     }
     return offset;
@@ -137,7 +137,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function calculateRectY(d: any) {
     // This allows for NSEW offsets.
     if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.labelOFFSET == 'S' || d.labelOFFSET == 'N') {
+      if (d.labelOFFSET === 'S' || d.labelOFFSET === 'N') {
         return getImageRectOffset(d, d.labelOFFSET);
       }
     }
@@ -145,11 +145,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }
 
   function calculateTextX(d: any) {
-    let offset = d.label != undefined ? -(d.label.length * parseInt(settings.FONTDEFINE[2])) / 2 : 0;
+    let offset = d.label !== undefined ? -(d.label.length * parseInt(settings.FONTDEFINE[2], 10)) / 2 : 0;
     if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.labelOFFSET == 'W') {
+      if (d.labelOFFSET === 'W') {
         return offset + getImageRectOffset(d, d.labelOFFSET);
-      } else if (d.labelOFFSET == 'E') {
+      } else if (d.labelOFFSET === 'E') {
         return -offset + getImageRectOffset(d, d.labelOFFSET);
       }
     }
@@ -168,8 +168,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function getScaleColorHeight(index: number) {
     const keys = Object.keys(colors);
-    const current: number = parseInt(keys[index]);
-    const next: number = keys[index + 1] !== undefined ? parseInt(keys[index + 1]) : 101;
+    const current: number = parseInt(keys[index], 10);
+    const next: number = keys[index + 1] !== undefined ? parseInt(keys[index + 1], 10) : 101;
     let height: number = ((next - current) / 100) * 200;
     return height.toString() + 'px';
   }
@@ -219,13 +219,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.index = i;
 
     // Set the link's source and target Node
-    toReturn.source = nodes.filter((n) => n.id == toReturn.nodes[0].id)[0];
-    toReturn.target = nodes.filter((n) => n.id == toReturn.nodes[1].id)[0];
+    toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
+    toReturn.target = nodes.filter((n) => n.id === toReturn.nodes[1].id)[0];
 
     // Check if we have a query to run for the A Side
     if (toReturn.sides.A.bandwidthQuery) {
       let dataFrame = data.series
-        .filter((series) => series.name == toReturn.sides.A.bandwidthQuery)
+        .filter((series) => series.name === toReturn.sides.A.bandwidthQuery)
         .map((frame) => frame.fields[1].values.get(0));
 
       toReturn.sides.A.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
@@ -234,7 +234,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     // Check if we have a query to run for the B Side
     if (toReturn.sides.Z.bandwidthQuery) {
       let dataFrame = data.series
-        .filter((series) => series.name == toReturn.sides.Z.bandwidthQuery)
+        .filter((series) => series.name === toReturn.sides.Z.bandwidthQuery)
         .map((frame) => frame.fields[1].values.get(0));
 
       toReturn.sides.A.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
@@ -250,7 +250,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       let dataSourceA = toReturn.sides.A.query;
       let dataSourceZ = toReturn.sides.Z.query;
 
-      let dataFrames = data.series.filter((series) => series.name == dataSourceA || series.name == dataSourceZ);
+      let dataFrames = data.series.filter((series) => series.name === dataSourceA || series.name === dataSourceZ);
 
       let dataValues = dataFrames.map((frame) => {
         return {
@@ -259,8 +259,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
         };
       });
 
-      let aValues = dataValues.filter((s) => s.name == dataSourceA);
-      let zValues = dataValues.filter((s) => s.name == dataSourceZ);
+      let aValues = dataValues.filter((s) => s.name === dataSourceA);
+      let zValues = dataValues.filter((s) => s.name === dataSourceZ);
 
       toReturn.sides.A.currentValue = aValues[0] ? aValues[0].value : 0;
       toReturn.sides.Z.currentValue = zValues[0] ? zValues[0].value : 0;
@@ -273,7 +273,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
     }
 
-    if (i == 0) {
+    if (i === 0) {
       tempNodes = tempNodes.map((n) => {
         n.anchors = {
           0: { numLinks: n.anchors[0].numLinks, numFilledLinks: 0 },
@@ -366,7 +366,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         <div className={styles.colorScaleContainer}>
           <div className={styles.colorBoxTitle}>Traffic Load</div>
           {Object.keys(colors).map((percent, i) => (
-            <div className={styles.colorScaleItem}>
+            <div className={styles.colorScaleItem} key={i}>
               <span
                 className={cx(
                   styles.colorBox,
@@ -379,7 +379,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               <span className={styles.colorLabel}>
                 {percent +
                   '%' +
-                  (Object.keys(colors)[i + 1] == undefined ? '' : ' - ' + Object.keys(colors)[i + 1] + '%')}
+                  (Object.keys(colors)[i + 1] === undefined ? '' : ' - ' + Object.keys(colors)[i + 1] + '%')}
               </span>
             </div>
           ))}
@@ -405,6 +405,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
             {links.map((d, i) => {
               return (
                 <g
+                  key={i}
                   className="line"
                   strokeOpacity={1}
                   width={Math.abs(d.target.x - d.source.x)}
@@ -456,7 +457,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
             {links.map((d, i) => {
               const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
               return (
-                <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
                   <rect
                     x={-measureText(`${d.sides.A.currentText}`, 7).width / 2 - 12 / 2}
                     y={-5}
@@ -478,7 +479,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
             {links.map((d, i) => {
               const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
               return (
-                <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
                   <rect
                     x={-measureText(`${d.sides.Z.currentText}`, 7).width / 2 - 12 / 2}
                     y={-5}
@@ -499,11 +500,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
           <g>
             {nodes.map((d, i) => (
               <Draggable
+                key={i}
                 position={{ x: d.x, y: d.y }}
                 onDrag={(e, position) => {
                   setNodes((prevState) =>
                     prevState.map((val, index) => {
-                      if (index == i) {
+                      if (index === i) {
                         const scaledPos = getScaledMousePos(position);
                         val.x = options.weathermap.settings.enableNodeGrid
                           ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx)
@@ -540,14 +542,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 }}
               >
                 <g
-                  display={d.label != undefined ? 'inline' : 'none'}
+                  display={d.label !== undefined ? 'inline' : 'none'}
                   cursor={'move'}
                   transform={`translate(${d.x},${d.y})`}
                 >
                   <rect
                     x={calculateRectX(d)}
                     y={calculateRectY(d)}
-                    width={d.label != undefined ? d.labelWidth + 20 : 0}
+                    width={d.label !== undefined ? d.labelWidth + 20 : 0}
                     height={10 + 8}
                     fill={'#EFEFEF'}
                     stroke={'#DCDCDC'}
@@ -565,7 +567,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     className={styles.nodeText}
                     fontSize="10px"
                   >
-                    {d.label != undefined ? d.label : ''}
+                    {d.label !== undefined ? d.label : ''}
                   </text>
                 </g>
               </Draggable>
