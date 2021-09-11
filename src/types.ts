@@ -94,9 +94,16 @@ export interface DrawnLink extends Link {
   arrowPolygonZ: any;
 }
 
+export interface ArrowOptions {
+  width: number;
+  height: number;
+  offset: number;
+}
+
 export interface WeathermapSettings {
   linkSpacing: number;
   linkStrokeWidth: number;
+  linkArrow: ArrowOptions;
   panel: PanelOptions;
   enableNodeGrid: boolean;
   gridSizePx: number;

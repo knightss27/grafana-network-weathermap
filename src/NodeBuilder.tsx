@@ -22,6 +22,11 @@ export const NodeBuilder = (props: Props) => {
     settings: {
       linkSpacing: 10,
       linkStrokeWidth: 8,
+      linkArrow: {
+        width: 8,
+        height: 10,
+        offset: 5
+      },
       panel: {
         backgroundColor: '#ffffff',
         panelSize: {

@@ -83,9 +83,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find the points that create the two other points of a triangle for the arrow's tip;
   function getArrowPolygon(_p1: any, _p2: any) {
-    // let linkWidth = settings.LINK.DEFAULT.WIDTH; //TODO: Make arrow size actually have something to do with the link's specified width.
-    let h = 5.5 * Math.sqrt(3);
-    let w = 4;
+    let h = wm.settings.linkArrow.height;
+    let w = wm.settings.linkArrow.width/2;
     let vec1 = { x: _p2.x - _p1.x, y: _p2.y - _p1.y };
     let length = Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y);
     vec1.x = vec1.x / length;
@@ -197,7 +196,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
         const maxWidth =
           wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks - 1) +
           wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks - 1);
-        // console.log(maxWidth, side.anchor, d.anchors[side.anchor].numLinks)
         x =
           d.x -
           maxWidth / 2 +
@@ -296,12 +294,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.lineStartZ = getMultiLinkPosition(tempNodes[toReturn.target.index], toReturn.sides.Z);
     // tempNodes[toReturn.target.index].filledLinks++;
 
-    toReturn.lineEndA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter - 4);
-    toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -distFromCenter + 5);
+    toReturn.lineEndA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -wm.settings.linkArrow.offset - wm.settings.linkArrow.height);
+    toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -wm.settings.linkArrow.offset);
     toReturn.arrowPolygonA = getArrowPolygon(toReturn.lineStartA, toReturn.arrowCenterA);
 
-    toReturn.lineEndZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, distFromCenter + 4);
-    toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, distFromCenter - 5);
+    toReturn.lineEndZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, wm.settings.linkArrow.offset + wm.settings.linkArrow.height);
+    toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, wm.settings.linkArrow.offset);
     toReturn.arrowPolygonZ = getArrowPolygon(toReturn.lineStartZ, toReturn.arrowCenterZ);
 
     return toReturn;
