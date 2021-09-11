@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { css } from 'emotion';
-import { stylesFactory } from '@grafana/ui';
-import { Button, Input, InlineField, InlineFieldRow } from '@grafana/ui';
+import { Button, Input, InlineField, InlineFieldRow, stylesFactory } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 

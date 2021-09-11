@@ -45,7 +45,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
 
     const percent = Math.round((current / max) * 100);
-    let actual: string = '';
+    let actual = '';
     Object.keys(colors).forEach((amount: string) => {
       if (parseInt(amount) <= percent) {
         actual = amount;
@@ -416,9 +416,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   ></line>
                   <polygon
                     points={`
-                                      ${d.arrowCenterA.x} 
-                                      ${d.arrowCenterA.y} 
-                                      ${d.arrowPolygonA.p1.x} 
+                                      ${d.arrowCenterA.x}
+                                      ${d.arrowCenterA.y}
+                                      ${d.arrowPolygonA.p1.x}
                                       ${d.arrowPolygonA.p1.y}
                                       ${d.arrowPolygonA.p2.x}
                                       ${d.arrowPolygonA.p2.y}
@@ -435,9 +435,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   ></line>
                   <polygon
                     points={`
-                                      ${d.arrowCenterZ.x} 
-                                      ${d.arrowCenterZ.y} 
-                                      ${d.arrowPolygonZ.p1.x} 
+                                      ${d.arrowCenterZ.x}
+                                      ${d.arrowCenterZ.y}
+                                      ${d.arrowPolygonZ.p1.x}
                                       ${d.arrowPolygonZ.p1.y}
                                       ${d.arrowPolygonZ.p2.x}
                                       ${d.arrowPolygonZ.p2.y}
