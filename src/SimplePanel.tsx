@@ -428,7 +428,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                   ></polygon>
                   <line
-                    strokeWidth={settings.LINK.DEFAULT.WIDTH + 'px'}
+                    strokeWidth={wm.settings.linkStrokeWidth}
                     stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
                     x1={d.lineStartZ.x}
                     y1={d.target.y}
