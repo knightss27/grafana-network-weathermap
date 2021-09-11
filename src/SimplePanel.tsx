@@ -18,9 +18,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
   /** FIELDS */
   /** ----------------------------------------------------------------------------------- */
 
-  // Distance that the tips of arrows will be drawn from the center. (px)
-  const distFromCenter = 6;
-
   // Quick definition to be moved
   // const linkSpacing = 15;
   // const linkStrokeWidth = 8;
@@ -45,7 +42,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
 
     const percent = Math.round((current / max) * 100);
-    let actual: string = '';
+    let actual = '';
     Object.keys(colors).forEach((amount: string) => {
       if (parseInt(amount) <= percent) {
         actual = amount;
@@ -276,7 +273,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
       toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
     }
 
-    // console.log(toReturn);
     if (i == 0) {
       tempNodes = tempNodes.map((n) => {
         n.anchors = {
@@ -416,9 +412,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   ></line>
                   <polygon
                     points={`
-                                      ${d.arrowCenterA.x} 
-                                      ${d.arrowCenterA.y} 
-                                      ${d.arrowPolygonA.p1.x} 
+                                      ${d.arrowCenterA.x}
+                                      ${d.arrowCenterA.y}
+                                      ${d.arrowPolygonA.p1.x}
                                       ${d.arrowPolygonA.p1.y}
                                       ${d.arrowPolygonA.p2.x}
                                       ${d.arrowPolygonA.p2.y}
@@ -435,9 +431,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   ></line>
                   <polygon
                     points={`
-                                      ${d.arrowCenterZ.x} 
-                                      ${d.arrowCenterZ.y} 
-                                      ${d.arrowPolygonZ.p1.x} 
+                                      ${d.arrowCenterZ.x}
+                                      ${d.arrowCenterZ.y}
+                                      ${d.arrowPolygonZ.p1.x}
                                       ${d.arrowPolygonZ.p1.y}
                                       ${d.arrowPolygonZ.p2.x}
                                       ${d.arrowPolygonZ.p2.y}
@@ -538,9 +534,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 <g
                   display={d.label != undefined ? 'inline' : 'none'}
                   cursor={'move'}
-                  onDoubleClick={() => {
-                    console.log('double clicked');
-                  }}
                   transform={`translate(${d.x},${d.y})`}
                 >
                   <rect

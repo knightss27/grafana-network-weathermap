@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { css } from 'emotion';
-import { InlineSwitch, Select, stylesFactory } from '@grafana/ui';
-import { Button, Input, InlineField, InlineFieldRow } from '@grafana/ui';
+import { Button, Input, InlineField, InlineFieldRow, InlineSwitch, Select, stylesFactory } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';

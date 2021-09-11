@@ -10,7 +10,6 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const PanelForm = ({ value, onChange }: Props) => {
   const handleColorChange = (color: string) => {
-    console.log('changing to: ' + color);
     let options = value;
     options.settings.panel.backgroundColor = color;
     onChange(options);

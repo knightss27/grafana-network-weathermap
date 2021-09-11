@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { css } from 'emotion';
-import { stylesFactory } from '@grafana/ui';
-import { Button, Input, InlineField, InlineFieldRow } from '@grafana/ui';
+import { Button, Input, InlineField, InlineFieldRow, stylesFactory } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 
@@ -18,12 +17,7 @@ export const ColorForm = (props: Props) => {
 
   const { value, onChange } = props;
 
-  let prevFocused = 0;
-
   const handleNumberChange = (e: any, key: number) => {
-    console.log('setting focused')
-    prevFocused = key;
-
     let weathermap: Weathermap = value;
     let prev: string = weathermap.scale[key];
     delete weathermap.scale[key];
@@ -45,7 +39,6 @@ export const ColorForm = (props: Props) => {
     } else {
       weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1]) + 10] = '#ffffff';
     }
-    console.log(weathermap.scale);
     onChange(weathermap);
     setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
   };
