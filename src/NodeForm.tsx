@@ -20,7 +20,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value, 10);
     } else if (e.currentTarget.name === 'Y') {
       weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value, 10);
-    } else if (e.currentTarget.name === 'label')  {
+    } else if (e.currentTarget.name === 'label') {
       weathermap.nodes[i].label = e.currentTarget.value;
     }
     onChange(weathermap);
@@ -65,7 +65,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  const [currentNode, setCurrentNode] = useState(null as unknown as Node);
+  const [currentNode, setCurrentNode] = useState((null as unknown) as Node);
 
   return (
     <React.Fragment>
@@ -129,9 +129,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
               </InlineField>
               <InlineField label={'Constant Spacing'}>
                 <InlineSwitch 
-                value={node.useConstantSpacing} 
-                onChange={(e) => handleSpacingChange(e, i)}
-                css={''}
+                  value={node.useConstantSpacing} 
+                  onChange={(e) => handleSpacingChange(e, i)}
+                  css={''}
                 />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
