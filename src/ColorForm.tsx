@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { css } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
 import { Button, Input, InlineField, InlineFieldRow } from '@grafana/ui';
@@ -22,14 +22,14 @@ export const ColorForm = (props: Props) => {
 
   const handleNumberChange = (e: any, key: number) => {
     console.log('setting focused')
-    prevFocused = parseInt(e.currentTarget.value);
+    prevFocused = key;
 
     let weathermap: Weathermap = value;
     let prev: string = weathermap.scale[key];
     delete weathermap.scale[key];
     weathermap.scale[parseInt(e.currentTarget.value)] = prev;
     onChange(weathermap);
-    setFocus();
+    setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
   };
 
   const handleColorChange = (e: any, key: number) => {
@@ -43,28 +43,28 @@ export const ColorForm = (props: Props) => {
     if (Object.keys(value.scale).length == 0) {
       weathermap.scale[0] = '#ffffff';
     } else {
-      weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1]) + 1] = '#ffffff';
+      weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1]) + 10] = '#ffffff';
     }
     console.log(weathermap.scale);
     onChange(weathermap);
+    setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
   };
 
   const clearValues = () => {
     let weathermap: Weathermap = value;
     weathermap.scale = {};
     onChange(weathermap);
+    setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
   };
 
-  const setFocus = () => {
-    console.log(prevFocused)
-    const selected = document.getElementById(`nw-input-${prevFocused}`);
-    console.log(selected)
-    selected?.focus();
-    console.log('focusing on ' + prevFocused)
+  const handleDeletePercent = (key: number) => {
+    let weathermap: Weathermap = value;
+    delete weathermap.scale[key];
+    onChange(weathermap);
   }
 
   // const [editedColor, setEditedColor] = useState('');
-  // const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map(i => parseInt(i)));
+  const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map(i => parseInt(i)));
 
   return (
     <React.Fragment>
@@ -82,21 +82,28 @@ export const ColorForm = (props: Props) => {
           <InlineField label="%">
             <Input
               id={`nw-input-${percent}`}
-              value={parseInt(percent)}
+              value={editedPercents[i]}
               placeholder={'Percent Load'}
               type={'number'}
               css={''}
               className={styles.nodeLabel}
               name={'percent'}
-              onChange={(e) => handleNumberChange(e, parseInt(percent))}
-              // onBlur={(e) => handleNumberChange(e, parseInt(percent))}
+              onChange={(e) => {
+                setEditedPercents(prev => {
+                  let t = prev;
+                  t[i] = e.currentTarget.valueAsNumber;
+                  return t;
+                });
+                // TODO: remove this unecessary hack for updating
+                onChange(value)
+              }}
+              onBlur={(e) => handleNumberChange(e, parseInt(percent))}
             ></Input>
           </InlineField>
           <InlineField label="Color">
             <Input
               value={value.scale[parseInt(percent)]}
               onChange={(e) => handleColorChange(e, parseInt(percent))}
-              // onBlur={(e) => handleColorChange(e, parseInt(percent))}
               placeholder={'Percent Color'}
               type={'string'}
               css={''}
@@ -104,6 +111,11 @@ export const ColorForm = (props: Props) => {
               name={'color'}
             ></Input>
           </InlineField>
+          <Button
+            icon="trash-alt"
+            variant="destructive"
+            onClick={(e) => handleDeletePercent(parseInt(percent))}
+          />
         </InlineFieldRow>
       ))}
 
