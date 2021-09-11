@@ -2,6 +2,7 @@ import React from 'react';
 import { ColorPicker, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
+import { FormDivider} from './FormDivider';
 
 interface Settings {}
 
@@ -18,6 +19,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
   if (value) {
     return (
       <React.Fragment>
+        <FormDivider
+          title="Panel"
+        />
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
           Background Color:
           <ColorPicker color={value.settings.panel.backgroundColor} onChange={handleColorChange} />
@@ -52,6 +56,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
             ></Input>
           </InlineField>
         </InlineFieldRow>
+        <FormDivider
+          title="Link Options"
+        />
         <InlineFieldRow>
           <InlineField label="Link Stroke Width">
             <Input
@@ -82,6 +89,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
             ></Input>
           </InlineField>
         </InlineFieldRow>
+        <FormDivider
+          title="Arrow Options"
+        />
         <InlineFieldRow>
           <InlineField label="Arrow Width">
             <Input
@@ -126,6 +136,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
             ></Input>
           </InlineField>
         </InlineFieldRow>
+        <FormDivider
+          title="Grid Options"
+        />
         <InlineFieldRow>
           <InlineField label="Enable Node Grid Snapping">
             <InlineSwitch
