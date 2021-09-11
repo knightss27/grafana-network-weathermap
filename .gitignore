@@ -29,3 +29,5 @@ e2e-results/
 # Editors
 .idea
 
+# Release
+grafana-weathermap-*.zip
