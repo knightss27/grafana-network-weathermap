@@ -23,7 +23,7 @@ export const ColorForm = (props: Props) => {
     delete weathermap.scale[key];
     weathermap.scale[parseInt(e.currentTarget.value)] = prev;
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
+    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i)));
   };
 
   const handleColorChange = (e: any, key: number) => {
@@ -40,24 +40,24 @@ export const ColorForm = (props: Props) => {
       weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1]) + 10] = '#ffffff';
     }
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
+    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i)));
   };
 
   const clearValues = () => {
     let weathermap: Weathermap = value;
     weathermap.scale = {};
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map(i => parseInt(i)));
+    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i)));
   };
 
   const handleDeletePercent = (key: number) => {
     let weathermap: Weathermap = value;
     delete weathermap.scale[key];
     onChange(weathermap);
-  }
+  };
 
   // const [editedColor, setEditedColor] = useState('');
-  const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map(i => parseInt(i)));
+  const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map((i) => parseInt(i)));
 
   return (
     <React.Fragment>
@@ -82,13 +82,13 @@ export const ColorForm = (props: Props) => {
               className={styles.nodeLabel}
               name={'percent'}
               onChange={(e) => {
-                setEditedPercents(prev => {
+                setEditedPercents((prev) => {
                   let t = prev;
                   t[i] = e.currentTarget.valueAsNumber;
                   return t;
                 });
                 // TODO: remove this unecessary hack for updating
-                onChange(value)
+                onChange(value);
               }}
               onBlur={(e) => handleNumberChange(e, parseInt(percent))}
             ></Input>
@@ -104,11 +104,7 @@ export const ColorForm = (props: Props) => {
               name={'color'}
             ></Input>
           </InlineField>
-          <Button
-            icon="trash-alt"
-            variant="destructive"
-            onClick={(e) => handleDeletePercent(parseInt(percent))}
-          />
+          <Button icon="trash-alt" variant="destructive" onClick={(e) => handleDeletePercent(parseInt(percent))} />
         </InlineFieldRow>
       ))}
 

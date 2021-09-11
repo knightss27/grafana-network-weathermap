@@ -25,7 +25,7 @@ export const NodeBuilder = (props: Props) => {
       linkArrow: {
         width: 8,
         height: 10,
-        offset: 5
+        offset: 5,
       },
       panel: {
         backgroundColor: '#ffffff',

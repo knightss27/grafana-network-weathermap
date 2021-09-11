@@ -81,7 +81,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // Find the points that create the two other points of a triangle for the arrow's tip;
   function getArrowPolygon(_p1: any, _p2: any) {
     let h = wm.settings.linkArrow.height;
-    let w = wm.settings.linkArrow.width/2;
+    let w = wm.settings.linkArrow.width / 2;
     let vec1 = { x: _p2.x - _p1.x, y: _p2.y - _p1.y };
     let length = Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y);
     vec1.x = vec1.x / length;
@@ -290,11 +290,19 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.lineStartZ = getMultiLinkPosition(tempNodes[toReturn.target.index], toReturn.sides.Z);
     // tempNodes[toReturn.target.index].filledLinks++;
 
-    toReturn.lineEndA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -wm.settings.linkArrow.offset - wm.settings.linkArrow.height);
+    toReturn.lineEndA = getMiddlePoint(
+      toReturn.lineStartZ,
+      toReturn.lineStartA,
+      -wm.settings.linkArrow.offset - wm.settings.linkArrow.height
+    );
     toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -wm.settings.linkArrow.offset);
     toReturn.arrowPolygonA = getArrowPolygon(toReturn.lineStartA, toReturn.arrowCenterA);
 
-    toReturn.lineEndZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, wm.settings.linkArrow.offset + wm.settings.linkArrow.height);
+    toReturn.lineEndZ = getMiddlePoint(
+      toReturn.lineStartZ,
+      toReturn.lineStartA,
+      wm.settings.linkArrow.offset + wm.settings.linkArrow.height
+    );
     toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, wm.settings.linkArrow.offset);
     toReturn.arrowPolygonZ = getArrowPolygon(toReturn.lineStartZ, toReturn.arrowCenterZ);
 
