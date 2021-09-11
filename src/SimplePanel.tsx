@@ -18,9 +18,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
   /** FIELDS */
   /** ----------------------------------------------------------------------------------- */
 
-  // Distance that the tips of arrows will be drawn from the center. (px)
-  const distFromCenter = 6;
-
   // Quick definition to be moved
   // const linkSpacing = 15;
   // const linkStrokeWidth = 8;
@@ -276,7 +273,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
       toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
     }
 
-    // console.log(toReturn);
     if (i == 0) {
       tempNodes = tempNodes.map((n) => {
         n.anchors = {
@@ -538,9 +534,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 <g
                   display={d.label != undefined ? 'inline' : 'none'}
                   cursor={'move'}
-                  onDoubleClick={() => {
-                    console.log('double clicked');
-                  }}
                   transform={`translate(${d.x},${d.y})`}
                 >
                   <rect

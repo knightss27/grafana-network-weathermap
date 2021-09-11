@@ -26,7 +26,6 @@ export const ExportForm = ({ value, onChange }: Props) => {
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
     const svgBlob = new Blob([preface, data], { type: 'image/svg+xml;charset=utf-8' });
     const svgUrl = URL.createObjectURL(svgBlob);
-    console.log(svgUrl);
 
     generateDownloadLink(svgUrl, `network-weathermap-${new Date().toISOString()}.svg`);
   };
