@@ -2,7 +2,7 @@
 
 ## Installation
 
-TBD.
+TBD
 
 ## Creating a New Weathermap
 
