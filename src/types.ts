@@ -41,7 +41,7 @@ export interface Node {
   padding: {
     horizontal: number;
     vertical: number;
-  }
+  };
 }
 
 export interface LinkSide {

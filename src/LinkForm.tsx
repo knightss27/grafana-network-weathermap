@@ -24,9 +24,9 @@ export const LinkForm = (props: Props) => {
       if (node.id === n1.id) {
         nodeIndex = i;
       }
-    })
-    return nodeIndex
-  }
+    });
+    return nodeIndex;
+  };
 
   const handleBandwidthChange = (amt: number, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;

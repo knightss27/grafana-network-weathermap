@@ -20,7 +20,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // User defined constants.
   const width = parseInt(settings.WIDTH, 10);
   const height = parseInt(settings.HEIGHT, 10);
-  
+
   // Things to use multiple times
   const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
 
@@ -99,10 +99,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
         })
       : []
   );
-  
+
   // To be used to calculate how many links we've drawn
   let tempNodes = nodes.slice();
-  
+
   // Links
   const [links, setLinks] = useState(
     options.weathermap
@@ -111,7 +111,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         })
       : []
   );
-  
+
   // Find where to draw the rectangle for the node (top left x)
   function calculateRectX(d: DrawnNode) {
     // TODO: font-size replacement
@@ -128,7 +128,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // Calculate the middle of the rectangle for text centering
   function calculateTextY(d: any) {
     // TODO: font-size replacement
-    return calculateRectangleAutoHeight(d)/2 - 10/2;
+    return calculateRectangleAutoHeight(d) / 2 - 10 / 2;
   }
 
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
@@ -148,7 +148,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const minHeight = 10 + 2 * d.padding.vertical; // fontSize + padding
     const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical + 2 * d.padding.vertical;
     const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
-    const final = (!d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight);
+    const final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
     return final;
   }
 
@@ -169,10 +169,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
         const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical;
-        const fullHeight = linkHeight * d.anchors[side.anchor].numLinks - wm.settings.linkSpacingVertical - wm.settings.linkStrokeWidth;
+        const fullHeight =
+          linkHeight * d.anchors[side.anchor].numLinks - wm.settings.linkSpacingVertical - wm.settings.linkStrokeWidth;
         y -= fullHeight / 2;
-        y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * wm.settings.linkSpacingVertical - (wm.settings.linkStrokeWidth);
-        
+        y +=
+          (d.anchors[side.anchor].numFilledLinks + 1) * wm.settings.linkStrokeWidth +
+          d.anchors[side.anchor].numFilledLinks * wm.settings.linkSpacingVertical -
+          wm.settings.linkStrokeWidth;
       }
     } else if (side.anchor !== Anchor.Center) {
       if (d.useConstantSpacing) {
@@ -186,7 +189,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacingHorizontal);
       } else {
         // To be used with auto-spacing
-        const paddedWidth = d.labelWidth + d.padding.horizontal*2;
+        const paddedWidth = d.labelWidth + d.padding.horizontal * 2;
         x =
           d.x +
           -paddedWidth / 2 +
@@ -259,7 +262,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
       toReturn.sides.A.currentValue = aValues[0] ? aValues[0].value : 0;
       toReturn.sides.Z.currentValue = zValues[0] ? zValues[0].value : 0;
 
-      
       let scaledASideValue = linkValueFormatter(toReturn.sides.A.currentValue);
       let scaledZSideValue = linkValueFormatter(toReturn.sides.Z.currentValue);
 
@@ -546,7 +548,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   <rect
                     x={calculateRectX(d)}
                     y={calculateRectY(d)}
-                    width={d.label !== undefined ? (d.labelWidth + (d.padding.horizontal * 2)) : 0}
+                    width={d.label !== undefined ? d.labelWidth + d.padding.horizontal * 2 : 0}
                     height={calculateRectangleAutoHeight(d)}
                     fill={'#EFEFEF'}
                     stroke={'#DCDCDC'}

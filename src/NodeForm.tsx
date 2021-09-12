@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
-import { Button, Input, InlineField, InlineFieldRow, InlineSwitch, Select, stylesFactory, ControlledCollapse } from '@grafana/ui';
+import {
+  Button,
+  Input,
+  InlineField,
+  InlineFieldRow,
+  InlineSwitch,
+  Select,
+  stylesFactory,
+  ControlledCollapse,
+} from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
@@ -59,8 +68,8 @@ export const NodeForm = ({ value, onChange }: Props) => {
       compactVerticalLinks: false,
       padding: {
         vertical: 4,
-        horizontal: 10
-      }
+        horizontal: 10,
+      },
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -80,7 +89,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : ('null' as unknown) as Node);
+  const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : (('null' as unknown) as Node));
 
   return (
     <React.Fragment>
@@ -176,10 +185,18 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 <ControlledCollapse label="Advanced">
                   <InlineFieldRow>
                     <InlineField label={'Constant Spacing'}>
-                      <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} css={''} />
+                      <InlineSwitch
+                        value={node.useConstantSpacing}
+                        onChange={(e) => handleSpacingChange(e, i)}
+                        css={''}
+                      />
                     </InlineField>
                     <InlineField label={'Compact Vertical Links'}>
-                      <InlineSwitch value={node.compactVerticalLinks} onChange={(e) => handleCompactChange(e, i)} css={''} />
+                      <InlineSwitch
+                        value={node.compactVerticalLinks}
+                        onChange={(e) => handleCompactChange(e, i)}
+                        css={''}
+                      />
                     </InlineField>
                   </InlineFieldRow>
                 </ControlledCollapse>
