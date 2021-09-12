@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "website/**"
+      - ".github/workflow/**"
 
 jobs:
   deploy-docs:
@@ -30,5 +31,6 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: website/site/
+          fqdn: grafana-weathermap.seth.cx
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
