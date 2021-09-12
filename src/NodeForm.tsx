@@ -14,7 +14,7 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {}
 export const NodeForm = ({ value, onChange }: Props) => {
   const styles = getStyles();
 
-  const handleChange = (e: any, i: number) => {
+  const handleChange = (e: React.FormEvent<HTMLInputElement>, i: number) => {
     let weathermap: Weathermap = value;
     if (e.currentTarget.name === 'X') {
       weathermap.nodes[i].position[0] = parseInt(e.currentTarget.value, 10);
@@ -22,6 +22,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
       weathermap.nodes[i].position[1] = parseInt(e.currentTarget.value);
     } else if (e.currentTarget.name === 'label') {
       weathermap.nodes[i].label = e.currentTarget.value;
+    } else if (e.currentTarget.name === 'paddingHorizontal') {
+      weathermap.nodes[i].padding.horizontal = e.currentTarget.valueAsNumber;
+    } else if (e.currentTarget.name === 'paddingVertical') {
+      weathermap.nodes[i].padding.vertical = e.currentTarget.valueAsNumber;
     }
     onChange(weathermap);
   };
@@ -110,7 +114,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   <Input
                     value={node.position[0]}
                     onChange={(e) => handleChange(e, i)}
-                    placeholder={'position X'}
+                    placeholder={'Position X'}
                     type={'number'}
                     css={''}
                     className={styles.nodeLabel}
@@ -121,24 +125,52 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   <Input
                     value={node.position[1]}
                     onChange={(e) => handleChange(e, i)}
-                    placeholder={'position Y'}
+                    placeholder={'Position Y'}
                     type={'number'}
                     css={''}
                     className={styles.nodeLabel}
                     name={'Y'}
                   />
                 </InlineField>
-                <InlineField label={'label'}>
+                <InlineField label={'Label'}>
                   <Input
                     value={node.label}
                     onChange={(e) => handleChange(e, i)}
-                    placeholder={'NODE label'}
+                    placeholder={'Node Label'}
                     type={'text'}
                     css={''}
                     className={styles.nodeLabel}
                     name={'label'}
                   />
                 </InlineField>
+              </InlineFieldRow>
+              <InlineFieldRow>
+                <ControlledCollapse label="Padding">
+                  <InlineFieldRow>
+                    <InlineField label={'Horizontal'}>
+                      <Input
+                        value={node.padding.horizontal}
+                        onChange={(e) => handleChange(e, i)}
+                        placeholder={'Horizontal Padding'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={'paddingHorizontal'}
+                      />
+                    </InlineField>
+                    <InlineField label={'Vertical'}>
+                      <Input
+                        value={node.padding.vertical}
+                        onChange={(e) => handleChange(e, i)}
+                        placeholder={'Vertical Padding'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={'paddingVertical'}
+                      />
+                    </InlineField>
+                  </InlineFieldRow>
+                </ControlledCollapse>
               </InlineFieldRow>
               <InlineFieldRow>
                 <ControlledCollapse label="Advanced">
