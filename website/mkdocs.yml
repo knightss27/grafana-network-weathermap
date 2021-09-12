@@ -1,0 +1,6 @@
+site_name: Grafana Network Weathermap Plugin
+repo_url: https://github.com/knightss27/grafana-network-weathermap
+theme:
+  name: material
+  features:
+    - navigation.sections
