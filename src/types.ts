@@ -36,10 +36,8 @@ export interface Node {
     [Anchor.Left]: NodeAnchor;
     [Anchor.Right]: NodeAnchor;
   };
-  useConstantSpacing: {
-    horizontal: boolean;
-    vertical: boolean;
-  }
+  useConstantSpacing: boolean;
+  compactVerticalLinks: boolean;
   padding: {
     horizontal: number;
     vertical: number;

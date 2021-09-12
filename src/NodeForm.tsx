@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
-import { Button, Input, InlineField, InlineFieldRow, InlineSwitch, Select, stylesFactory } from '@grafana/ui';
+import { Button, Input, InlineField, InlineFieldRow, InlineSwitch, Select, stylesFactory, ControlledCollapse } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
@@ -28,7 +28,13 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const handleSpacingChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
-    weathermap.nodes[i].useConstantSpacing.horizontal = e.currentTarget.checked;
+    weathermap.nodes[i].useConstantSpacing = e.currentTarget.checked;
+    onChange(weathermap);
+  };
+
+  const handleCompactChange = (e: any, i: number) => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].compactVerticalLinks = e.currentTarget.checked;
     onChange(weathermap);
   };
 
@@ -45,10 +51,8 @@ export const NodeForm = ({ value, onChange }: Props) => {
         3: { numLinks: 0, numFilledLinks: 0 },
         4: { numLinks: 0, numFilledLinks: 0 },
       },
-      useConstantSpacing:{
-        horizontal: false,
-        vertical: false,
-      },
+      useConstantSpacing: false,
+      compactVerticalLinks: false,
       padding: {
         vertical: 4,
         horizontal: 10
@@ -100,47 +104,60 @@ export const NodeForm = ({ value, onChange }: Props) => {
       {value.nodes.map((node, i) => {
         if (node.id === currentNode.id) {
           return (
-            <InlineFieldRow>
-              <InlineField label={'X'}>
-                <Input
-                  value={node.position[0]}
-                  onChange={(e) => handleChange(e, i)}
-                  placeholder={'position X'}
-                  type={'number'}
-                  css={''}
-                  className={styles.nodeLabel}
-                  name={'X'}
-                />
-              </InlineField>
-              <InlineField label={'Y'}>
-                <Input
-                  value={node.position[1]}
-                  onChange={(e) => handleChange(e, i)}
-                  placeholder={'position Y'}
-                  type={'number'}
-                  css={''}
-                  className={styles.nodeLabel}
-                  name={'Y'}
-                />
-              </InlineField>
-              <InlineField label={'label'}>
-                <Input
-                  value={node.label}
-                  onChange={(e) => handleChange(e, i)}
-                  placeholder={'NODE label'}
-                  type={'text'}
-                  css={''}
-                  className={styles.nodeLabel}
-                  name={'label'}
-                />
-              </InlineField>
-              <InlineField label={'Constant Spacing'}>
-                <InlineSwitch value={node.useConstantSpacing.horizontal} onChange={(e) => handleSpacingChange(e, i)} css={''} />
-              </InlineField>
-              <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
-                Remove Node
-              </Button>
-            </InlineFieldRow>
+            <React.Fragment>
+              <InlineFieldRow>
+                <InlineField label={'X'}>
+                  <Input
+                    value={node.position[0]}
+                    onChange={(e) => handleChange(e, i)}
+                    placeholder={'position X'}
+                    type={'number'}
+                    css={''}
+                    className={styles.nodeLabel}
+                    name={'X'}
+                  />
+                </InlineField>
+                <InlineField label={'Y'}>
+                  <Input
+                    value={node.position[1]}
+                    onChange={(e) => handleChange(e, i)}
+                    placeholder={'position Y'}
+                    type={'number'}
+                    css={''}
+                    className={styles.nodeLabel}
+                    name={'Y'}
+                  />
+                </InlineField>
+                <InlineField label={'label'}>
+                  <Input
+                    value={node.label}
+                    onChange={(e) => handleChange(e, i)}
+                    placeholder={'NODE label'}
+                    type={'text'}
+                    css={''}
+                    className={styles.nodeLabel}
+                    name={'label'}
+                  />
+                </InlineField>
+              </InlineFieldRow>
+              <InlineFieldRow>
+                <ControlledCollapse label="Advanced">
+                  <InlineFieldRow>
+                    <InlineField label={'Constant Spacing'}>
+                      <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} css={''} />
+                    </InlineField>
+                    <InlineField label={'Compact Vertical Links'}>
+                      <InlineSwitch value={node.compactVerticalLinks} onChange={(e) => handleCompactChange(e, i)} css={''} />
+                    </InlineField>
+                  </InlineFieldRow>
+                </ControlledCollapse>
+              </InlineFieldRow>
+              <InlineFieldRow>
+                <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
+                  Remove Node
+                </Button>
+              </InlineFieldRow>
+            </React.Fragment>
           );
         }
         return;

@@ -146,9 +146,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
     // TODO: font-size replacement
     const minHeight = 10 + 2 * d.padding.vertical; // fontSize + padding
-    const linkHeight = wm.settings.linkStrokeWidth + 4;
-    const fullHeight = linkHeight * numLinks - 4;
-    const final = (numLinks > 1 ? fullHeight : minHeight);
+    const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical;
+    const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
+    const final = (!d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight);
     return final;
   }
 
@@ -167,12 +167,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
         x += d.labelWidth / 2 + d.padding.horizontal / 2;
       }
       // Calculate vertical alignments given # of links
-      if (d.anchors[side.anchor].numLinks > 1) {
+      if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
         y -= 10/2 + d.padding.vertical;
-        y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * 4 - (wm.settings.linkStrokeWidth/2);
+        y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * wm.settings.linkSpacingVertical - (wm.settings.linkStrokeWidth/2);
       }
     } else if (side.anchor !== Anchor.Center) {
-      if (d.useConstantSpacing.horizontal) {
+      if (d.useConstantSpacing) {
         // To be used with constant-spacing
         const maxWidth =
           wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks - 1) +

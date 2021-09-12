@@ -69,16 +69,30 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             ></Input>
           </InlineField>
-          <InlineField label="Link Spacing">
+          <InlineField label="Link Spacing Horizontal">
             <Input
               value={value.settings.linkSpacingHorizontal}
-              placeholder={'Link Spacing'}
+              placeholder={'Link Spacing Horizontal'}
               type={'number'}
               css={''}
               name={'linkSpacingHorizontal'}
               onChange={(e) => {
                 let options = value;
                 options.settings.linkSpacingHorizontal = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+          <InlineField label="Link Spacing Vertical">
+            <Input
+              value={value.settings.linkSpacingVertical}
+              placeholder={'Link Spacing Horizontal'}
+              type={'number'}
+              css={''}
+              name={'linkSpacingVertical'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.linkSpacingVertical = e.currentTarget.valueAsNumber;
                 onChange(options);
               }}
             ></Input>
