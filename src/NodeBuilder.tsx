@@ -20,7 +20,8 @@ export const NodeBuilder = (props: Props) => {
     links: [],
     scale: {},
     settings: {
-      linkSpacing: 10,
+      linkSpacingHorizontal: 10,
+      linkSpacingVertical: 5,
       linkStrokeWidth: 8,
       linkArrow: {
         width: 8,

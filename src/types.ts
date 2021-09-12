@@ -36,10 +36,13 @@ export interface Node {
     [Anchor.Left]: NodeAnchor;
     [Anchor.Right]: NodeAnchor;
   };
-  useConstantSpacing: boolean;
+  useConstantSpacing: {
+    horizontal: boolean;
+    vertical: boolean;
+  }
   padding: {
-    vertical: number;
     horizontal: number;
+    vertical: number;
   }
 }
 
@@ -105,7 +108,8 @@ export interface ArrowOptions {
 }
 
 export interface WeathermapSettings {
-  linkSpacing: number;
+  linkSpacingHorizontal: number;
+  linkSpacingVertical: number;
   linkStrokeWidth: number;
   linkArrow: ArrowOptions;
   panel: PanelOptions;

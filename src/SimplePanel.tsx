@@ -172,15 +172,15 @@ export const SimplePanel: React.FC<Props> = (props) => {
         y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * 4 - (wm.settings.linkStrokeWidth/2);
       }
     } else if (side.anchor !== Anchor.Center) {
-      if (d.useConstantSpacing) {
+      if (d.useConstantSpacing.horizontal) {
         // To be used with constant-spacing
         const maxWidth =
           wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks - 1) +
-          wm.settings.linkSpacing * (d.anchors[side.anchor].numLinks - 1);
+          wm.settings.linkSpacingHorizontal * (d.anchors[side.anchor].numLinks - 1);
         x =
           d.x -
           maxWidth / 2 +
-          d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
+          d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacingHorizontal);
       } else {
         // To be used with auto-spacing
         const paddedWidth = d.labelWidth + d.padding.horizontal*2;

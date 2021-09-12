@@ -28,7 +28,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const handleSpacingChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
-    weathermap.nodes[i].useConstantSpacing = e.currentTarget.checked;
+    weathermap.nodes[i].useConstantSpacing.horizontal = e.currentTarget.checked;
     onChange(weathermap);
   };
 
@@ -45,7 +45,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
         3: { numLinks: 0, numFilledLinks: 0 },
         4: { numLinks: 0, numFilledLinks: 0 },
       },
-      useConstantSpacing: false,
+      useConstantSpacing:{
+        horizontal: false,
+        vertical: false,
+      },
       padding: {
         vertical: 4,
         horizontal: 10
@@ -132,7 +135,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 />
               </InlineField>
               <InlineField label={'Constant Spacing'}>
-                <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} css={''} />
+                <InlineSwitch value={node.useConstantSpacing.horizontal} onChange={(e) => handleSpacingChange(e, i)} css={''} />
               </InlineField>
               <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
                 Remove Node
