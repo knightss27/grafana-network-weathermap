@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PanelProps, scaledUnits } from '@grafana/data';
-import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, Node, SimpleOptions, Weathermap } from 'types';
+import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, Node, SimpleOptions, Position, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
@@ -12,25 +12,19 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange } = props;
   const styles = getStyles();
 
-  // Better variables
+  // Better variable name
   const wm = options.weathermap;
 
   /** FIELDS */
-  /** ----------------------------------------------------------------------------------- */
-
-  // Quick definition to be moved
-  // const linkSpacing = 15;
-  // const linkStrokeWidth = 8;
 
   // User defined constants.
   const width = parseInt(settings.WIDTH, 10);
   const height = parseInt(settings.HEIGHT, 10);
-  // let backgroundColor: string = options.backgroundColor;
-
-  /** ----------------------------------------------------------------------------------- */
+  
+  // Things to use multiple times
+  const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
 
   /** COLOR SCALES */
-  /** ----------------------------------------------------------------------------------- */
   const colors: any = {};
   Object.keys(options.weathermap ? options.weathermap.scale : {}).forEach((pct: string) => {
     colors[parseInt(pct, 10)] = options.weathermap.scale[parseInt(pct, 10)];
@@ -50,17 +44,19 @@ export const SimplePanel: React.FC<Props> = (props) => {
     });
     return colors[actual];
   }
-  /** ----------------------------------------------------------------------------------- */
 
-  /** LINK AND ARROW RENDERING */
-  /** ----------------------------------------------------------------------------------- */
-  // Find the middle point of a link.
-
-  interface Position {
-    x: number;
-    y: number;
+  // Calculate the height of a scale's sub-rectangle
+  function getScaleColorHeight(index: number) {
+    const keys = Object.keys(colors);
+    const current: number = parseInt(keys[index], 10);
+    const next: number = keys[index + 1] !== undefined ? parseInt(keys[index + 1], 10) : 101;
+    let height: number = ((next - current) / 100) * 200;
+    return height.toString() + 'px';
   }
 
+  /** LINK AND ARROW RENDERING */
+
+  // Get the middle point between two nodes
   function getMiddlePoint(source: Position, target: Position, offset: number): Position {
     const x = (source.x + target.x) / 2;
     const y = (source.y + target.y) / 2;
@@ -72,13 +68,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return { x: newX, y: newY };
   }
 
+  // Get a point a percentage of the way between two nodes
   function getPercentPoint(source: Position, target: Position, percent: number): Position {
     const newX = target.x + (source.x - target.x) * percent;
     const newY = target.y + (source.y - target.y) * percent;
     return { x: newX, y: newY };
   }
 
-  // Find the points that create the two other points of a triangle for the arrow's tip;
+  // Find the points that create the two other points of a triangle for the arrow's tip
   function getArrowPolygon(_p1: any, _p2: any) {
     let h = wm.settings.linkArrow.height;
     let w = wm.settings.linkArrow.width / 2;
@@ -91,20 +88,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let v2 = { x: _p2.x - h * vec1.x - w * vec2.x, y: _p2.y - h * vec1.y - w * vec2.y };
     return { p1: v1, p2: v2 };
   }
-  /** ----------------------------------------------------------------------------------- */
 
-  /** ICON AND TEXT OFFSET CALCULATIONS */
-  /** ----------------------------------------------------------------------------------- */
-  // TODO: Create functions that actually calculate width properly, for now they just assume square-ish icons.
+  /* STATE */
 
-  function getImageRectOffset(d: any, dir: string) {
-    return 0;
-  }
-
-  // function getImageTextOffset(d: any, dir: string) {
-  //   return 0;
-  // }
-
+  // Nodes
   const [nodes, setNodes] = useState(
     options.weathermap
       ? options.weathermap.nodes.map((d, i) => {
@@ -112,66 +99,52 @@ export const SimplePanel: React.FC<Props> = (props) => {
         })
       : []
   );
-
+  
+  // To be used to calculate how many links we've drawn
   let tempNodes = nodes.slice();
-
+  
+  // Links
   const [links, setLinks] = useState(
     options.weathermap
       ? options.weathermap.links.map((d, i) => {
-          return generateDrawnLink(d, i, true);
+          return generateDrawnLink(d, i);
         })
       : []
   );
-
-  function calculateRectX(d: any) {
-    // This allows for NSEW offsets.
-    let offset = d.label !== undefined ? -(measureText(d.label, 10).width / 2 + 20 / 2) : 0;
-    if (d.labelOFFSET === 'W') {
-      return 2 * offset + getImageRectOffset(d, d.labelOFFSET);
-    } else if (d.labelOFFSET === 'E') {
-      return getImageRectOffset(d, d.labelOFFSET);
-    }
+  
+  // Find where to draw the rectangle for the node (top left x)
+  function calculateRectX(d: DrawnNode) {
+    // TODO: font-size replacement
+    const offset = d.label !== undefined ? -(measureText(d.label, 10).width / 2 + d.padding.horizontal) : 0;
     return offset;
   }
 
-  function calculateRectY(d: any) {
-    // This allows for NSEW offsets.
-    if (d.ICON !== undefined && d.labelOFFSET !== undefined && d.ICONHEIGHT !== undefined) {
-      if (d.labelOFFSET === 'S' || d.labelOFFSET === 'N') {
-        return getImageRectOffset(d, d.labelOFFSET);
-      }
-    }
+  // Find where to draw the rectangle for the node (top left y)
+  function calculateRectY(d: DrawnNode) {
+    // TODO: font-size replacement
     return -10 / 2;
   }
 
-  function calculateTextX(d: any) {
-    return 0;
-  }
-
+  // Calculate the middle of the rectangle for text centering
   function calculateTextY(d: any) {
-    // fontSize
+    // TODO: font-size replacement
     return calculateRectangleAutoHeight(d)/2 - 10/2;
   }
 
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
-    // TODO
+    // TODO add functionality
     return pos;
   }
 
-  function getScaleColorHeight(index: number) {
-    const keys = Object.keys(colors);
-    const current: number = parseInt(keys[index], 10);
-    const next: number = keys[index + 1] !== undefined ? parseInt(keys[index + 1], 10) : 101;
-    let height: number = ((next - current) / 100) * 200;
-    return height.toString() + 'px';
-  }
-
+  // For use with nodeGrid
   function nearestMultiple(i: number, j: number): number {
     return Math.ceil(i / j) * j;
   }
 
+  // Calculate the auto-determined height of a node's rectangle
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
+    // TODO: font-size replacement
     const minHeight = 10 + 2 * d.padding.vertical; // fontSize + padding
     const linkHeight = wm.settings.linkStrokeWidth + 4;
     const fullHeight = linkHeight * numLinks - 4;
@@ -179,17 +152,21 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return final;
   }
 
+  // Calculate the position of a link given the node and side information
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
-    // const rectXOffset = calculateRectX(d);
-    // let toReturn = d.x + rectXOffset + (linkIndex + 1) * ((Math.abs(rectXOffset) * 2) / (d.numLinks + 1));
+    // Set initial x and y values for links. Defaults to center x of the node, and the top y + padding.
     let x = d.x;
     let y = d.y + d.padding.vertical;
+
+    // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
+      // Align left/right
       if (side.anchor === Anchor.Left) {
-        x -= d.labelWidth / 2;
+        x -= d.labelWidth / 2 + d.padding.horizontal / 2;
       } else {
-        x += d.labelWidth / 2;
+        x += d.labelWidth / 2 + d.padding.horizontal / 2;
       }
+      // Calculate vertical alignments given # of links
       if (d.anchors[side.anchor].numLinks > 1) {
         y -= 10/2 + d.padding.vertical;
         y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * 4 - (wm.settings.linkStrokeWidth/2);
@@ -206,25 +183,30 @@ export const SimplePanel: React.FC<Props> = (props) => {
           d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacing);
       } else {
         // To be used with auto-spacing
-        // TODO: factor out this padding to variable
-        const paddedWidth = d.labelWidth + 20;
+        const paddedWidth = d.labelWidth + d.padding.horizontal*2;
         x =
           d.x +
           -paddedWidth / 2 +
           (d.anchors[side.anchor].numFilledLinks + 1) *
             (paddedWidth / (nodes[d.index].anchors[side.anchor].numLinks + 1));
       }
+      // Add height if we are at the bottom;
+      if (side.anchor === Anchor.Bottom) {
+        y += calculateRectangleAutoHeight(d) - d.padding.vertical * 3;
+      }
     }
+    // Mark that we've drawn another link
     d.anchors[side.anchor].numFilledLinks++;
     return { x, y };
   }
 
   // Calculate link positions / text / colors / etc.
-  function generateDrawnLink(d: Link, i: number, isFirstPass: boolean): DrawnLink {
+  function generateDrawnLink(d: Link, i: number): DrawnLink {
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
 
     // Set the link's source and target Node
+    // TODO: optimize this
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
     toReturn.target = nodes.filter((n) => n.id === toReturn.nodes[1].id)[0];
 
@@ -271,9 +253,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
       toReturn.sides.A.currentValue = aValues[0] ? aValues[0].value : 0;
       toReturn.sides.Z.currentValue = zValues[0] ? zValues[0].value : 0;
 
-      let testFormat = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
-      let scaledASideValue = testFormat(toReturn.sides.A.currentValue);
-      let scaledZSideValue = testFormat(toReturn.sides.Z.currentValue);
+      
+      let scaledASideValue = linkValueFormatter(toReturn.sides.A.currentValue);
+      let scaledZSideValue = linkValueFormatter(toReturn.sides.Z.currentValue);
 
       toReturn.sides.A.currentText = `${scaledASideValue.text} ${scaledASideValue.suffix}/s`;
       toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
@@ -291,10 +273,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
         return n;
       });
     }
+
     toReturn.lineStartA = getMultiLinkPosition(tempNodes[toReturn.source.index], toReturn.sides.A);
-    // tempNodes[toReturn.source.index].filledLinks++;
     toReturn.lineStartZ = getMultiLinkPosition(tempNodes[toReturn.target.index], toReturn.sides.Z);
-    // tempNodes[toReturn.target.index].filledLinks++;
 
     toReturn.lineEndA = getMiddlePoint(
       toReturn.lineStartZ,
@@ -315,6 +296,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return toReturn;
   }
 
+  // Calculate node position, width, etc.
   function generateDrawnNode(d: Node, i: number): DrawnNode {
     let toReturn: DrawnNode = Object.create(d);
     toReturn.index = i;
@@ -331,8 +313,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return toReturn;
   }
 
+  // Minimize uneeded state changes
   const mounted = useRef(false);
 
+  // Update nodes on props change
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
@@ -347,12 +331,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
   }, [props]);
 
+  // Update links on nodes change
   useEffect(() => {
     tempNodes = nodes.slice();
     setLinks(
       options.weathermap
         ? options.weathermap.links.map((d, i) => {
-            return generateDrawnLink(d, i, false);
+            return generateDrawnLink(d, i);
           })
         : []
     );
@@ -526,7 +511,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   tempNodes = nodes.slice();
                   setLinks(
                     options.weathermap.links.map((d, i) => {
-                      return generateDrawnLink(d, i, false);
+                      return generateDrawnLink(d, i);
                     })
                   );
                 }}
@@ -556,7 +541,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     x={calculateRectX(d)}
                     y={calculateRectY(d)}
                     width={d.label !== undefined ? (d.labelWidth + (d.padding.horizontal * 2)) : 0}
-                    // TODO: extract '10' to fontSize variable
                     height={calculateRectangleAutoHeight(d)}
                     fill={'#EFEFEF'}
                     stroke={'#DCDCDC'}
@@ -565,7 +549,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     ry={7}
                   ></rect>
                   <text
-                    x={calculateTextX(d)}
+                    x={0}
                     y={calculateTextY(d)}
                     textAnchor={'middle'}
                     alignmentBaseline={'central'}

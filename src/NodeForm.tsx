@@ -84,7 +84,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       </h6>
       <Select
         onChange={(v) => {
-          setCurrentNode(v.value as Node);
+          setCurrentNode(v as Node);
         }}
         value={currentNode}
         options={value.nodes}
