@@ -162,15 +162,15 @@ export const SimplePanel: React.FC<Props> = (props) => {
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
       // Align left/right
       if (side.anchor === Anchor.Left) {
-        x -= d.labelWidth / 2 + d.padding.horizontal / 2;
+        x -= d.labelWidth / 2 + d.padding.horizontal - wm.settings.linkStrokeWidth / 2;
       } else {
-        x += d.labelWidth / 2 + d.padding.horizontal / 2;
+        x += d.labelWidth / 2 + d.padding.horizontal;
       }
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
         const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical;
         const fullHeight = linkHeight * d.anchors[side.anchor].numLinks - wm.settings.linkSpacingVertical - wm.settings.linkStrokeWidth;
-        y -= fullHeight/2;
+        y -= fullHeight / 2;
         y += (d.anchors[side.anchor].numFilledLinks+1) * (wm.settings.linkStrokeWidth) + (d.anchors[side.anchor].numFilledLinks) * wm.settings.linkSpacingVertical - (wm.settings.linkStrokeWidth);
         
       }
@@ -195,7 +195,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
       }
       // Add height if we are at the bottom;
       if (side.anchor === Anchor.Bottom) {
-        y += calculateRectangleAutoHeight(d) / 2 - d.padding.vertical;
+        y += calculateRectangleAutoHeight(d) / 2 - wm.settings.linkStrokeWidth / 2;
+      } else if (side.anchor === Anchor.Top) {
+        y -= calculateRectangleAutoHeight(d) / 2;
+        y += wm.settings.linkStrokeWidth / 2;
       }
     }
     // Mark that we've drawn another link
