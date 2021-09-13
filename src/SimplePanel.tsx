@@ -249,7 +249,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
       // Set the text if we have a query
       if (toReturn.sides[side].query) {
-        let dataSource = toReturn.sides.A.query;
+        let dataSource = toReturn.sides[side].query;
         let values = dataValues.filter((s) => s.name === dataSource);
 
         toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
