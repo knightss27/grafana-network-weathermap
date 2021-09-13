@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "website/**"
+      - 'website/**'
 
 jobs:
   deploy-docs:
@@ -21,7 +21,7 @@ jobs:
 
       - name: Install mkdocs
         run: pip install mkdocs-material
-        
+
       - name: Build with mkdocs
         run: cd website && mkdocs build
 

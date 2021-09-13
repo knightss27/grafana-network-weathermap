@@ -219,55 +219,48 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
     toReturn.target = nodes.filter((n) => n.id === toReturn.nodes[1].id)[0];
 
-    // Check if we have a query to run for the A Side
-    if (toReturn.sides.A.bandwidthQuery) {
-      let dataFrame = data.series
-        .filter((series) => series.name === toReturn.sides.A.bandwidthQuery)
-        .map((frame) => frame.fields[1].values.get(0));
+    let dataFrames = data.series.filter(
+      (series) => series.name === toReturn.sides.A.query || series.name === toReturn.sides.Z.query
+    );
 
-      toReturn.sides.A.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+    let dataValues = dataFrames.map((frame) => {
+      return {
+        value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
+        name: frame.name,
+      };
+    });
+
+    // For each of our A/Z sides
+    for (let s = 0; s < 2; s++) {
+      const side: 'A' | 'Z' = s === 0 ? 'A' : 'Z';
+
+      // Check if we have a query to run for this side
+      if (toReturn.sides[side].bandwidthQuery) {
+        let dataFrame = data.series
+          .filter((series) => series.name === toReturn.sides[side].bandwidthQuery)
+          .map((frame) => frame.fields[1].values.get(0));
+
+        toReturn.sides[side].bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+      }
+
+      // Set the display value to zero, just in case nothing exists
+      toReturn.sides[side].currentValue = 0;
+      toReturn.sides[side].currentText = 'n/a';
+
+      // Set the text if we have a query
+      if (toReturn.sides[side].query) {
+        let dataSource = toReturn.sides.A.query;
+        let values = dataValues.filter((s) => s.name === dataSource);
+
+        toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
+
+        let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
+        toReturn.sides[side].currentText = `${scaledSideValue.text} ${scaledSideValue.suffix}/s`;
+      }
     }
 
-    // Check if we have a query to run for the B Side
-    if (toReturn.sides.Z.bandwidthQuery) {
-      let dataFrame = data.series
-        .filter((series) => series.name === toReturn.sides.Z.bandwidthQuery)
-        .map((frame) => frame.fields[1].values.get(0));
-
-      toReturn.sides.A.bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
-    }
-
-    // Set the display value to zero, just in case nothing exists
-    toReturn.sides.A.currentValue = 0;
-    toReturn.sides.Z.currentValue = 0;
-    toReturn.sides.A.currentText = 'n/a';
-    toReturn.sides.Z.currentText = 'n/a';
-
-    if (toReturn.sides.A.query && toReturn.sides.Z.query) {
-      let dataSourceA = toReturn.sides.A.query;
-      let dataSourceZ = toReturn.sides.Z.query;
-
-      let dataFrames = data.series.filter((series) => series.name === dataSourceA || series.name === dataSourceZ);
-
-      let dataValues = dataFrames.map((frame) => {
-        return {
-          value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-          name: frame.name,
-        };
-      });
-
-      let aValues = dataValues.filter((s) => s.name === dataSourceA);
-      let zValues = dataValues.filter((s) => s.name === dataSourceZ);
-
-      toReturn.sides.A.currentValue = aValues[0] ? aValues[0].value : 0;
-      toReturn.sides.Z.currentValue = zValues[0] ? zValues[0].value : 0;
-
-      let scaledASideValue = linkValueFormatter(toReturn.sides.A.currentValue);
-      let scaledZSideValue = linkValueFormatter(toReturn.sides.Z.currentValue);
-
-      toReturn.sides.A.currentText = `${scaledASideValue.text} ${scaledASideValue.suffix}/s`;
-      toReturn.sides.Z.currentText = `${scaledZSideValue.text} ${scaledZSideValue.suffix}/s`;
-    }
+    // Calculate positions for links and arrow polygons. Not included above to help with typing.
+    // TODO: type this properly, using the DrawnLinkSide interface
 
     if (i === 0) {
       tempNodes = tempNodes.map((n) => {
