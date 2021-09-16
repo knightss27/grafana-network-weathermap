@@ -5,6 +5,7 @@ import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import settings from './weathermap.config.json';
 import Draggable from 'react-draggable';
+import svgPanZoom from 'svg-pan-zoom';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -14,6 +15,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Better variable name
   const wm = options.weathermap;
+
+  // Get edit mode
+  // const isEditMode = window.location.search.includes('editPanel');
 
   /** FIELDS */
 
@@ -343,6 +347,39 @@ export const SimplePanel: React.FC<Props> = (props) => {
         : []
     );
   }, [nodes]);
+
+  let isAltPressed = false;
+
+  document.onkeydown = (e: KeyboardEvent) => {
+    // console.log(e)
+    if (e.ctrlKey) {
+      isAltPressed = true;
+    }
+  }
+
+  document.onkeyup = (e: KeyboardEvent) => {
+    // console.log(e)
+    if (!e.ctrlKey) {
+      isAltPressed = false;
+    }
+  }
+
+  // TODO: optimize this? also should it be an edit mode only thing?
+  let zoomer: any = null;
+  useEffect(() => {
+    if (zoomer) {
+      zoomer.destroy();
+    }
+    zoomer = svgPanZoom(`#nw-${options.weathermap.id}`, {
+      beforePan: (oldPan, newPan) => {
+        if (isAltPressed) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    });
+  }, [])
 
   if (options.weathermap) {
     return (
