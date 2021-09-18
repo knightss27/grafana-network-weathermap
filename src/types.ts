@@ -5,6 +5,8 @@ export interface SimpleOptions {
 export interface PanelOptions {
   backgroundColor: string;
   panelSize: PanelSize;
+  zoomScale: number;
+  offset: Position;
 }
 
 export interface PanelSize {
