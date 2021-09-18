@@ -34,6 +34,11 @@ export const NodeBuilder = (props: Props) => {
           width: 600,
           height: 600,
         },
+        zoomScale: 0,
+        offset: {
+          x: 0,
+          y: 0,
+        }
       },
       enableNodeGrid: false,
       gridSizePx: 10,
