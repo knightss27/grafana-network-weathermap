@@ -3,7 +3,7 @@ name: Test
 on:
   push:
     paths:
-      - "src/**"
+      - 'src/**'
   pull_request:
 
 jobs:

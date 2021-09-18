@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "website/**"
-      - ".github/workflows/**"
+      - 'website/**'
+      - '.github/workflows/**'
 
 jobs:
   deploy-docs:

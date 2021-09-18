@@ -140,7 +140,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // For use with nodeGrid
   function nearestMultiple(i: number, j: number): number {
-    console.log('nearest', i, j)
+    console.log('nearest', i, j);
     return Math.ceil(i / j) * j;
   }
 
@@ -358,11 +358,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
       zoomed.settings.panel.zoomScale -= 1;
     }
     onOptionsChange({
-      weathermap: zoomed
+      weathermap: zoomed,
     });
-  }
+  };
 
-  const [ isDragging, setDragging ] = useState(false);
+  const [isDragging, setDragging] = useState(false);
 
   let aspectX = wm.settings.panel.panelSize.width / width2;
   let aspectY = wm.settings.panel.panelSize.height / height2;
@@ -372,7 +372,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     aspectX = wm.settings.panel.panelSize.width / width2;
     aspectY = wm.settings.panel.panelSize.height / height2;
     aspectMultiplier = Math.max(aspectX, aspectY);
-  }
+  };
 
   const drag = (e: any) => {
     if (e.ctrlKey || e.buttons === 4) {
@@ -386,10 +386,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
       panned.settings.panel.offset = {
         x: prev.x + e.nativeEvent.movementX * zoomAmt * aspectMultiplier,
         y: prev.y + e.nativeEvent.movementY * zoomAmt * aspectMultiplier,
-      }
+      };
       onOptionsChange({ weathermap: panned });
     }
-  }
+  };
 
   if (options.weathermap) {
     return (
@@ -435,22 +435,40 @@ export const SimplePanel: React.FC<Props> = (props) => {
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox={`0 0 ${options.weathermap.settings.panel.panelSize.width * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)} ${options.weathermap.settings.panel.panelSize.height * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}`}
+          viewBox={`0 0 ${
+            options.weathermap.settings.panel.panelSize.width *
+            Math.pow(1.2, options.weathermap.settings.panel.zoomScale)
+          } ${
+            options.weathermap.settings.panel.panelSize.height *
+            Math.pow(1.2, options.weathermap.settings.panel.zoomScale)
+          }`}
           shapeRendering="crispEdges"
           textRendering="geometricPrecision"
           fontFamily="sans-serif"
           // @ts-ignore
           onWheel={zoom}
-          onMouseDown={(e) => {e.preventDefault(); updateAspects(); setDragging(true)}}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            updateAspects();
+            setDragging(true);
+          }}
           // @ts-ignore
-          onMouseMove={(e) => {isDragging && (e.ctrlKey || e.buttons === 4) ? drag(e) : undefined}}
-          onMouseUp={() => {setDragging(false)}}
+          onMouseMove={(e) => {
+            isDragging && (e.ctrlKey || e.buttons === 4) ? drag(e) : undefined;
+          }}
+          onMouseUp={() => {
+            setDragging(false);
+          }}
         >
-          <g transform={`translate(${
-            (width2 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - width2)/2 + options.weathermap.settings.panel.offset.x
+          <g
+            transform={`translate(${
+              (width2 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - width2) / 2 +
+              options.weathermap.settings.panel.offset.x
             }, ${
-              (height2 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - height2)/2 + options.weathermap.settings.panel.offset.y
-            })`}>
+              (height2 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - height2) / 2 +
+              options.weathermap.settings.panel.offset.y
+            })`}
+          >
             <g>
               {links.map((d, i) => {
                 return (
@@ -555,13 +573,17 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     setNodes((prevState) =>
                       prevState.map((val, index) => {
                         if (index === i) {
-                          const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY});
-                          val.x = Math.round(options.weathermap.settings.enableNodeGrid
-                            ? nearestMultiple(position.x, options.weathermap.settings.gridSizePx)
-                            : val.x + scaledPos.x);
-                          val.y = Math.round(options.weathermap.settings.enableNodeGrid
-                            ? nearestMultiple(position.y, options.weathermap.settings.gridSizePx)
-                            : val.y + scaledPos.y);
+                          const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
+                          val.x = Math.round(
+                            options.weathermap.settings.enableNodeGrid
+                              ? nearestMultiple(position.x, options.weathermap.settings.gridSizePx)
+                              : val.x + scaledPos.x
+                          );
+                          val.y = Math.round(
+                            options.weathermap.settings.enableNodeGrid
+                              ? nearestMultiple(position.y, options.weathermap.settings.gridSizePx)
+                              : val.y + scaledPos.y
+                          );
                         }
                         return val;
                       })

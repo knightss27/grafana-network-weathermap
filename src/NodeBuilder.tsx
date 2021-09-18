@@ -38,7 +38,7 @@ export const NodeBuilder = (props: Props) => {
         offset: {
           x: 0,
           y: 0,
-        }
+        },
       },
       enableNodeGrid: false,
       gridSizePx: 10,
