@@ -3,9 +3,7 @@ import { PanelProps, scaledUnits } from '@grafana/data';
 import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, Node, SimpleOptions, Position, Weathermap } from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
-import settings from './weathermap.config.json';
-import Draggable from 'react-draggable';
-import svgPanZoom from 'svg-pan-zoom';
+import { DraggableCore } from 'react-draggable';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -20,10 +18,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // const isEditMode = window.location.search.includes('editPanel');
 
   /** FIELDS */
-
-  // User defined constants.
-  const width = parseInt(settings.WIDTH, 10);
-  const height = parseInt(settings.HEIGHT, 10);
 
   // Things to use multiple times
   const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
@@ -135,13 +129,18 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return calculateRectangleAutoHeight(d) / 2 - 10 / 2;
   }
 
+  // Calculate aspect-ratio corrected drag positions
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
-    // TODO add functionality
-    return pos;
+    const zoomAmt = Math.pow(1.2, wm.settings.panel.zoomScale);
+    return {
+      x: pos.x * zoomAmt * aspectMultiplier,
+      y: pos.y * zoomAmt * aspectMultiplier,
+    };
   }
 
   // For use with nodeGrid
   function nearestMultiple(i: number, j: number): number {
+    console.log('nearest', i, j)
     return Math.ceil(i / j) * j;
   }
 
@@ -348,32 +347,49 @@ export const SimplePanel: React.FC<Props> = (props) => {
     );
   }, [nodes]);
 
-  // TODO: optimize this? also should it be an edit mode only thing?
-  let zoomer: any = null;
-  useEffect(() => {
-    if (zoomer) {
-      zoomer.destroy();
-    }
-    zoomer = svgPanZoom(`#nw-${options.weathermap.id}`, {
-      customEventsHandler: {
-        haltEventListeners: [],
-        init: (options) => {
-          options.instance.disablePan();
+  const zoom = (e: WheelEvent) => {
+    console.log('zooming');
 
-          options.svgElement.addEventListener("mousemove", (e) => {
-            if (e.ctrlKey) {
-              options.instance.enablePan();
-            } else {
-              options.instance.disablePan();
-            }
-          });
-        },
-        destroy: (options: any) => {
-          options.svgElement.removeEventListener("mousemove");
-        }
-      }
+    let zoomed: Weathermap = wm;
+
+    if (e.deltaY > 0) {
+      zoomed.settings.panel.zoomScale += 1;
+    } else {
+      zoomed.settings.panel.zoomScale -= 1;
+    }
+    onOptionsChange({
+      weathermap: zoomed
     });
-  }, [])
+  }
+
+  const [ isDragging, setDragging ] = useState(false);
+
+  let aspectX = wm.settings.panel.panelSize.width / width2;
+  let aspectY = wm.settings.panel.panelSize.height / height2;
+  let aspectMultiplier = Math.max(aspectX, aspectY);
+
+  const updateAspects = () => {
+    aspectX = wm.settings.panel.panelSize.width / width2;
+    aspectY = wm.settings.panel.panelSize.height / height2;
+    aspectMultiplier = Math.max(aspectX, aspectY);
+  }
+
+  const drag = (e: any) => {
+    if (e.ctrlKey || e.buttons === 4) {
+      e.nativeEvent.preventDefault();
+
+      const panned: Weathermap = wm;
+      const prev = wm.settings.panel.offset;
+
+      const zoomAmt = Math.pow(1.2, wm.settings.panel.zoomScale);
+
+      panned.settings.panel.offset = {
+        x: prev.x + e.nativeEvent.movementX * zoomAmt * aspectMultiplier,
+        y: prev.y + e.nativeEvent.movementY * zoomAmt * aspectMultiplier,
+      }
+      onOptionsChange({ weathermap: panned });
+    }
+  }
 
   if (options.weathermap) {
     return (
@@ -381,8 +397,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
         className={cx(
           styles.wrapper,
           css`
-            width: ${width}px;
-            height: ${height}px;
+            width: ${width2}px;
+            height: ${height2}px;
           `
         )}
       >
@@ -419,182 +435,193 @@ export const SimplePanel: React.FC<Props> = (props) => {
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox={`0 0 ${options.weathermap.settings.panel.panelSize.width} ${options.weathermap.settings.panel.panelSize.height}`}
+          viewBox={`0 0 ${options.weathermap.settings.panel.panelSize.width * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)} ${options.weathermap.settings.panel.panelSize.height * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}`}
           shapeRendering="crispEdges"
           textRendering="geometricPrecision"
           fontFamily="sans-serif"
+          // @ts-ignore
+          onWheel={zoom}
+          onMouseDown={(e) => {e.preventDefault(); updateAspects(); setDragging(true)}}
+          // @ts-ignore
+          onMouseMove={(e) => {isDragging && (e.ctrlKey || e.buttons === 4) ? drag(e) : undefined}}
+          onMouseUp={() => {setDragging(false)}}
         >
-          <g>
-            {links.map((d, i) => {
-              return (
-                <g
-                  key={i}
-                  className="line"
-                  strokeOpacity={1}
-                  width={Math.abs(d.target.x - d.source.x)}
-                  height={Math.abs(d.target.y - d.source.y)}
-                >
-                  <line
-                    strokeWidth={wm.settings.linkStrokeWidth}
-                    stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                    x1={d.lineStartA.x}
-                    y1={d.lineStartA.y}
-                    x2={d.lineEndA.x}
-                    y2={d.lineEndA.y}
-                  ></line>
-                  <polygon
-                    points={`
-                                      ${d.arrowCenterA.x}
-                                      ${d.arrowCenterA.y}
-                                      ${d.arrowPolygonA.p1.x}
-                                      ${d.arrowPolygonA.p1.y}
-                                      ${d.arrowPolygonA.p2.x}
-                                      ${d.arrowPolygonA.p2.y}
-                                  `}
-                    fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                  ></polygon>
-                  <line
-                    strokeWidth={wm.settings.linkStrokeWidth}
-                    stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                    x1={d.lineStartZ.x}
-                    y1={d.lineStartZ.y}
-                    x2={d.lineEndZ.x}
-                    y2={d.lineEndZ.y}
-                  ></line>
-                  <polygon
-                    points={`
-                                      ${d.arrowCenterZ.x}
-                                      ${d.arrowCenterZ.y}
-                                      ${d.arrowPolygonZ.p1.x}
-                                      ${d.arrowPolygonZ.p1.y}
-                                      ${d.arrowPolygonZ.p2.x}
-                                      ${d.arrowPolygonZ.p2.y}
-                                  `}
-                    fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                  ></polygon>
-                </g>
-              );
-            })}
-          </g>
-          <g>
-            {links.map((d, i) => {
-              const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
-              return (
-                <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
-                  <rect
-                    x={-measureText(`${d.sides.A.currentText}`, 7).width / 2 - 12 / 2}
-                    y={-5}
-                    width={measureText(`${d.sides.A.currentText}`, 7).width + 12}
-                    height={7 + 8}
-                    fill={'#EFEFEF'}
-                    stroke={'#DCDCDC'}
-                    strokeWidth={2}
-                    rx={(7 + 8) / 2}
-                  ></rect>
-                  <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
-                    {`${d.sides.A.currentText}`}
-                  </text>
-                </g>
-              );
-            })}
-          </g>
-          <g>
-            {links.map((d, i) => {
-              const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
-              return (
-                <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
-                  <rect
-                    x={-measureText(`${d.sides.Z.currentText}`, 7).width / 2 - 12 / 2}
-                    y={-5}
-                    width={measureText(`${d.sides.Z.currentText}`, 7).width + 12}
-                    height={7 + 8}
-                    fill={'#EFEFEF'}
-                    stroke={'#DCDCDC'}
-                    strokeWidth={2}
-                    rx={(7 + 8) / 2}
-                  ></rect>
-                  <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
-                    {`${d.sides.Z.currentText}`}
-                  </text>
-                </g>
-              );
-            })}
-          </g>
-          <g>
-            {nodes.map((d, i) => (
-              <Draggable
-                key={i}
-                position={{ x: d.x, y: d.y }}
-                onDrag={(e, position) => {
-                  setNodes((prevState) =>
-                    prevState.map((val, index) => {
-                      if (index === i) {
-                        const scaledPos = getScaledMousePos(position);
-                        val.x = options.weathermap.settings.enableNodeGrid
-                          ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx)
-                          : scaledPos.x;
-                        val.y = options.weathermap.settings.enableNodeGrid
-                          ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx)
-                          : scaledPos.y;
-                      }
-                      return val;
-                    })
-                  );
-                  tempNodes = nodes.slice();
-                  setLinks(
-                    options.weathermap.links.map((d, i) => {
-                      return generateDrawnLink(d, i);
-                    })
-                  );
-                }}
-                onStop={(e, position) => {
-                  let current: Weathermap = options.weathermap;
-                  const scaledPos = getScaledMousePos(position);
-                  current.nodes[i].position = [
-                    options.weathermap.settings.enableNodeGrid
-                      ? nearestMultiple(scaledPos.x, options.weathermap.settings.gridSizePx)
-                      : scaledPos.x,
-                    options.weathermap.settings.enableNodeGrid
-                      ? nearestMultiple(scaledPos.y, options.weathermap.settings.gridSizePx)
-                      : scaledPos.y,
-                  ];
-                  onOptionsChange({
-                    ...options,
-                    weathermap: current,
-                  });
-                }}
-              >
-                <g
-                  display={d.label !== undefined ? 'inline' : 'none'}
-                  cursor={'move'}
-                  transform={`translate(${d.x},${d.y})`}
-                >
-                  <rect
-                    x={calculateRectX(d)}
-                    y={calculateRectY(d)}
-                    width={d.label !== undefined ? d.labelWidth + d.padding.horizontal * 2 : 0}
-                    height={calculateRectangleAutoHeight(d)}
-                    fill={'#EFEFEF'}
-                    stroke={'#DCDCDC'}
-                    strokeWidth={2}
-                    rx={6}
-                    ry={7}
-                  ></rect>
-                  <text
-                    x={0}
-                    y={calculateTextY(d)}
-                    textAnchor={'middle'}
-                    alignmentBaseline={'central'}
-                    dominantBaseline={'central'}
-                    color={'#2B2B2B'}
-                    className={styles.nodeText}
-                    fontSize="10px"
+          <g transform={`translate(${
+            (width2 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - width2)/2 + options.weathermap.settings.panel.offset.x
+            }, ${
+              (height2 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - height2)/2 + options.weathermap.settings.panel.offset.y
+            })`}>
+            <g>
+              {links.map((d, i) => {
+                return (
+                  <g
+                    key={i}
+                    className="line"
+                    strokeOpacity={1}
+                    width={Math.abs(d.target.x - d.source.x)}
+                    height={Math.abs(d.target.y - d.source.y)}
                   >
-                    {d.label !== undefined ? d.label : ''}
-                  </text>
-                </g>
-              </Draggable>
-            ))}
+                    <line
+                      strokeWidth={wm.settings.linkStrokeWidth}
+                      stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                      x1={d.lineStartA.x}
+                      y1={d.lineStartA.y}
+                      x2={d.lineEndA.x}
+                      y2={d.lineEndA.y}
+                    ></line>
+                    <polygon
+                      points={`
+                                        ${d.arrowCenterA.x}
+                                        ${d.arrowCenterA.y}
+                                        ${d.arrowPolygonA.p1.x}
+                                        ${d.arrowPolygonA.p1.y}
+                                        ${d.arrowPolygonA.p2.x}
+                                        ${d.arrowPolygonA.p2.y}
+                                    `}
+                      fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                    ></polygon>
+                    <line
+                      strokeWidth={wm.settings.linkStrokeWidth}
+                      stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
+                      x1={d.lineStartZ.x}
+                      y1={d.lineStartZ.y}
+                      x2={d.lineEndZ.x}
+                      y2={d.lineEndZ.y}
+                    ></line>
+                    <polygon
+                      points={`
+                                        ${d.arrowCenterZ.x}
+                                        ${d.arrowCenterZ.y}
+                                        ${d.arrowPolygonZ.p1.x}
+                                        ${d.arrowPolygonZ.p1.y}
+                                        ${d.arrowPolygonZ.p2.x}
+                                        ${d.arrowPolygonZ.p2.y}
+                                    `}
+                      fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
+                    ></polygon>
+                  </g>
+                );
+              })}
+            </g>
+            <g>
+              {links.map((d, i) => {
+                const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
+                return (
+                  <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
+                    <rect
+                      x={-measureText(`${d.sides.A.currentText}`, 7).width / 2 - 12 / 2}
+                      y={-5}
+                      width={measureText(`${d.sides.A.currentText}`, 7).width + 12}
+                      height={7 + 8}
+                      fill={'#EFEFEF'}
+                      stroke={'#DCDCDC'}
+                      strokeWidth={2}
+                      rx={(7 + 8) / 2}
+                    ></rect>
+                    <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
+                      {`${d.sides.A.currentText}`}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+            <g>
+              {links.map((d, i) => {
+                const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
+                return (
+                  <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                    <rect
+                      x={-measureText(`${d.sides.Z.currentText}`, 7).width / 2 - 12 / 2}
+                      y={-5}
+                      width={measureText(`${d.sides.Z.currentText}`, 7).width + 12}
+                      height={7 + 8}
+                      fill={'#EFEFEF'}
+                      stroke={'#DCDCDC'}
+                      strokeWidth={2}
+                      rx={(7 + 8) / 2}
+                    ></rect>
+                    <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
+                      {`${d.sides.Z.currentText}`}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+            <g>
+              {nodes.map((d, i) => (
+                <DraggableCore
+                  key={i}
+                  onDrag={(e, position) => {
+                    setNodes((prevState) =>
+                      prevState.map((val, index) => {
+                        if (index === i) {
+                          const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY});
+                          val.x = Math.round(options.weathermap.settings.enableNodeGrid
+                            ? nearestMultiple(position.x, options.weathermap.settings.gridSizePx)
+                            : val.x + scaledPos.x);
+                          val.y = Math.round(options.weathermap.settings.enableNodeGrid
+                            ? nearestMultiple(position.y, options.weathermap.settings.gridSizePx)
+                            : val.y + scaledPos.y);
+                        }
+                        return val;
+                      })
+                    );
+                    tempNodes = nodes.slice();
+                    setLinks(
+                      options.weathermap.links.map((d, i) => {
+                        return generateDrawnLink(d, i);
+                      })
+                    );
+                  }}
+                  onStop={(e, position) => {
+                    // TODO: decide if i can just copy the nodes array
+                    let current: Weathermap = options.weathermap;
+                    current.nodes[i].position = [
+                      options.weathermap.settings.enableNodeGrid
+                        ? nearestMultiple(nodes[i].x, options.weathermap.settings.gridSizePx)
+                        : nodes[i].x,
+                      options.weathermap.settings.enableNodeGrid
+                        ? nearestMultiple(nodes[i].y, options.weathermap.settings.gridSizePx)
+                        : nodes[i].y,
+                    ];
+                    onOptionsChange({
+                      ...options,
+                      weathermap: current,
+                    });
+                  }}
+                >
+                  <g
+                    display={d.label !== undefined ? 'inline' : 'none'}
+                    cursor={'move'}
+                    transform={`translate(${d.x},${d.y})`}
+                  >
+                    <rect
+                      x={calculateRectX(d)}
+                      y={calculateRectY(d)}
+                      width={d.label !== undefined ? d.labelWidth + d.padding.horizontal * 2 : 0}
+                      height={calculateRectangleAutoHeight(d)}
+                      fill={'#EFEFEF'}
+                      stroke={'#DCDCDC'}
+                      strokeWidth={2}
+                      rx={6}
+                      ry={7}
+                    ></rect>
+                    <text
+                      x={0}
+                      y={calculateTextY(d)}
+                      textAnchor={'middle'}
+                      alignmentBaseline={'central'}
+                      dominantBaseline={'central'}
+                      color={'#2B2B2B'}
+                      className={styles.nodeText}
+                      fontSize="10px"
+                    >
+                      {d.label !== undefined ? d.label : ''}
+                    </text>
+                  </g>
+                </DraggableCore>
+              ))}
+            </g>
           </g>
         </svg>
       </div>
