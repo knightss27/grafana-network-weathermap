@@ -15,7 +15,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const wm = options.weathermap;
 
   // Get edit mode
-  // const isEditMode = window.location.search.includes('editPanel');
+  const isEditMode = window.location.search.includes('editPanel');
 
   /** FIELDS */
 
@@ -622,6 +622,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               {nodes.map((d, i) => (
                 <DraggableCore
                   key={i}
+                  disabled={!isEditMode}
                   onDrag={(e, position) => {
                     setNodes((prevState) =>
                       prevState.map((val, index) => {
@@ -668,6 +669,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   <g
                     display={d.label !== undefined ? 'inline' : 'none'}
                     cursor={'move'}
+                    // TODO: fix the jump-into-place mechanism when turning on panel grid
                     transform={`translate(${
                       options.weathermap.settings.panel.grid.enabled
                         ? nearestMultiple(d.x, options.weathermap.settings.panel.grid.size)
