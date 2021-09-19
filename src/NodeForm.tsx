@@ -55,7 +55,11 @@ export const NodeForm = ({ value, onChange }: Props) => {
     let weathermap: Weathermap = value;
     const node: Node = {
       id: uuidv4(),
-      position: [400, 400],
+      // TODO: fix this position
+      position: [
+        (weathermap.settings.panel.panelSize.width * Math.pow(1.2, weathermap.settings.panel.zoomScale)) / 2,
+        (weathermap.settings.panel.panelSize.height * Math.pow(1.2, weathermap.settings.panel.zoomScale)) / 2,
+      ],
       label: 'Test Label',
       anchors: {
         0: { numLinks: 0, numFilledLinks: 0 },
