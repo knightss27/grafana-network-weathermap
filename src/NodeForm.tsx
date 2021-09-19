@@ -82,6 +82,14 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const removeNode = (i: number) => {
     let weathermap: Weathermap = value;
+    weathermap.links = weathermap.links.filter((link) => {
+      for (const node of link.nodes) {
+        if (node.id === weathermap.nodes[i].id) {
+          return false;
+        }
+      }
+      return true;
+    })
     weathermap.nodes.splice(i, 1);
     onChange(weathermap);
   };
