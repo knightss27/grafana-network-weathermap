@@ -167,7 +167,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       if (side.anchor === Anchor.Left) {
         x -= d.labelWidth / 2 + d.padding.horizontal - wm.settings.linkStrokeWidth / 2;
       } else {
-        x += d.labelWidth / 2 + d.padding.horizontal;
+        x += d.labelWidth / 2 + d.padding.horizontal - wm.settings.linkStrokeWidth / 2;
       }
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
