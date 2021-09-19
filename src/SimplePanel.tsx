@@ -472,7 +472,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   d={`M ${wm.settings.panel.grid.size} 0 L 0 0 0 ${wm.settings.panel.grid.size}`}
                   fill="none"
                   stroke="gray"
-                  stroke-width="2"
+                  strokeWidth="2"
                   opacity={0.5}
                 />
               </pattern>
