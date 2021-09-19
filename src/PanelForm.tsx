@@ -176,8 +176,8 @@ export const PanelForm = ({ value, onChange }: Props) => {
           )}
         </InlineFieldRow>
         {value.settings.panel.grid.enabled ? (
-        <InlineFieldRow>
-          <InlineField label="Grid Guides">
+          <InlineFieldRow>
+            <InlineField label="Grid Guides">
               <InlineSwitch
                 value={value.settings.panel.grid.guidesEnabled}
                 css={''}
@@ -189,7 +189,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
               />
             </InlineField>
           </InlineFieldRow>
-        ) : ''}
+        ) : (
+          ''
+        )}
       </React.Fragment>
     );
   } else {

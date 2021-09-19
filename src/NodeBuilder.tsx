@@ -43,7 +43,7 @@ export const NodeBuilder = (props: Props) => {
           enabled: false,
           size: 10,
           guidesEnabled: false,
-        }
+        },
       },
     },
   };

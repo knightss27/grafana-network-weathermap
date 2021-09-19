@@ -11,7 +11,7 @@ export interface PanelOptions {
     enabled: boolean;
     size: number;
     guidesEnabled: boolean;
-  }
+  };
 }
 
 export interface PanelSize {

@@ -460,31 +460,64 @@ export const SimplePanel: React.FC<Props> = (props) => {
             setDragging(false);
           }}
         >
-          {wm.settings.panel.grid.enabled ? <defs>
-            <pattern id="smallGrid" width={wm.settings.panel.grid.size} height={wm.settings.panel.grid.size} patternUnits="userSpaceOnUse">
-              <path d={`M ${wm.settings.panel.grid.size} 0 L 0 0 0 ${wm.settings.panel.grid.size}`} fill="none" stroke="gray" stroke-width="2" opacity={0.5}/>
-            </pattern>
-          </defs> : ''}
+          {wm.settings.panel.grid.enabled ? (
+            <defs>
+              <pattern
+                id="smallGrid"
+                width={wm.settings.panel.grid.size}
+                height={wm.settings.panel.grid.size}
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d={`M ${wm.settings.panel.grid.size} 0 L 0 0 0 ${wm.settings.panel.grid.size}`}
+                  fill="none"
+                  stroke="gray"
+                  stroke-width="2"
+                  opacity={0.5}
+                />
+              </pattern>
+            </defs>
+          ) : (
+            ''
+          )}
           <g
             transform={`translate(${
-              (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) - wm.settings.panel.panelSize.width) / 2 +
+              (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                wm.settings.panel.panelSize.width) /
+                2 +
               wm.settings.panel.offset.x
             }, ${
-              (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) - wm.settings.panel.panelSize.height) / 2 +
+              (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                wm.settings.panel.panelSize.height) /
+                2 +
               wm.settings.panel.offset.y
             })`}
           >
-            { wm.settings.panel.grid.guidesEnabled ?
-            <rect 
-              x={-((wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) - wm.settings.panel.panelSize.width) / 2 +
-                wm.settings.panel.offset.x)}
-              y={-((wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) - wm.settings.panel.panelSize.height) / 2 +
-                wm.settings.panel.offset.y)}
-              width="100%"
-              height="100%"
-              fill="url(#smallGrid)" 
-            />
-            : ''}
+            {wm.settings.panel.grid.guidesEnabled ? (
+              <rect
+                x={
+                  -(
+                    (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                      wm.settings.panel.panelSize.width) /
+                      2 +
+                    wm.settings.panel.offset.x
+                  )
+                }
+                y={
+                  -(
+                    (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                      wm.settings.panel.panelSize.height) /
+                      2 +
+                    wm.settings.panel.offset.y
+                  )
+                }
+                width="100%"
+                height="100%"
+                fill="url(#smallGrid)"
+              />
+            ) : (
+              ''
+            )}
             <g>
               {links.map((d, i) => {
                 return (
@@ -592,12 +625,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                           const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
                           val.x = Math.round(
                             options.weathermap.settings.panel.grid.enabled
-                              ? wm.nodes[i].position[0] + ((val.x + scaledPos.x) - wm.nodes[i].position[0])
+                              ? wm.nodes[i].position[0] + (val.x + scaledPos.x - wm.nodes[i].position[0])
                               : val.x + scaledPos.x
                           );
                           val.y = Math.round(
                             options.weathermap.settings.panel.grid.enabled
-                              ? wm.nodes[i].position[1] + ((val.y + scaledPos.y) - wm.nodes[i].position[1])
+                              ? wm.nodes[i].position[1] + (val.y + scaledPos.y - wm.nodes[i].position[1])
                               : val.y + scaledPos.y
                           );
                         }
@@ -631,14 +664,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   <g
                     display={d.label !== undefined ? 'inline' : 'none'}
                     cursor={'move'}
-                    transform={
-                      `translate(${options.weathermap.settings.panel.grid.enabled
-                      ? nearestMultiple(d.x, options.weathermap.settings.panel.grid.size)
-                      : d.x},
-                      ${options.weathermap.settings.panel.grid.enabled
-                        ? nearestMultiple(d.y, options.weathermap.settings.panel.grid.size)
-                        : d.y})`
-                    }
+                    transform={`translate(${
+                      options.weathermap.settings.panel.grid.enabled
+                        ? nearestMultiple(d.x, options.weathermap.settings.panel.grid.size)
+                        : d.x
+                    },
+                      ${
+                        options.weathermap.settings.panel.grid.enabled
+                          ? nearestMultiple(d.y, options.weathermap.settings.panel.grid.size)
+                          : d.y
+                      })`}
                   >
                     <rect
                       x={calculateRectX(d)}
