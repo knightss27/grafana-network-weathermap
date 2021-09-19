@@ -39,9 +39,12 @@ export const NodeBuilder = (props: Props) => {
           x: 0,
           y: 0,
         },
+        grid: {
+          enabled: false,
+          size: 10,
+          guidesEnabled: false,
+        }
       },
-      enableNodeGrid: false,
-      gridSizePx: 10,
     },
   };
 

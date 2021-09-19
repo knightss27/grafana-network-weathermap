@@ -7,6 +7,11 @@ export interface PanelOptions {
   panelSize: PanelSize;
   zoomScale: number;
   offset: Position;
+  grid: {
+    enabled: boolean;
+    size: number;
+    guidesEnabled: boolean;
+  }
 }
 
 export interface PanelSize {
@@ -113,8 +118,6 @@ export interface WeathermapSettings {
   linkStrokeWidth: number;
   linkArrow: ArrowOptions;
   panel: PanelOptions;
-  enableNodeGrid: boolean;
-  gridSizePx: number;
 }
 
 export interface Weathermap {

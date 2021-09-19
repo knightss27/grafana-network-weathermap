@@ -147,26 +147,26 @@ export const PanelForm = ({ value, onChange }: Props) => {
         <InlineFieldRow>
           <InlineField label="Enable Node Grid Snapping">
             <InlineSwitch
-              value={value.settings.enableNodeGrid}
+              value={value.settings.panel.grid.enabled}
               css={''}
               onChange={(e) => {
                 let wm = value;
-                wm.settings.enableNodeGrid = e.currentTarget.checked;
+                wm.settings.panel.grid.enabled = e.currentTarget.checked;
                 onChange(wm);
               }}
             />
           </InlineField>
-          {value.settings.enableNodeGrid ? (
+          {value.settings.panel.grid.enabled ? (
             <InlineField label="Grid Size (px)">
               <Input
-                value={value.settings.gridSizePx}
+                value={value.settings.panel.grid.size}
                 placeholder={'Grid Size (px)'}
                 type={'number'}
                 css={''}
                 name={'gridSize'}
                 onChange={(e) => {
                   let options = value;
-                  options.settings.gridSizePx = e.currentTarget.valueAsNumber;
+                  options.settings.panel.grid.size = e.currentTarget.valueAsNumber;
                   onChange(options);
                 }}
               ></Input>
@@ -175,6 +175,21 @@ export const PanelForm = ({ value, onChange }: Props) => {
             ''
           )}
         </InlineFieldRow>
+        {value.settings.panel.grid.enabled ? (
+        <InlineFieldRow>
+          <InlineField label="Grid Guides">
+              <InlineSwitch
+                value={value.settings.panel.grid.guidesEnabled}
+                css={''}
+                onChange={(e) => {
+                  let wm = value;
+                  wm.settings.panel.grid.guidesEnabled = e.currentTarget.checked;
+                  onChange(wm);
+                }}
+              />
+            </InlineField>
+          </InlineFieldRow>
+        ) : ''}
       </React.Fragment>
     );
   } else {
