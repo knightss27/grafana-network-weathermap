@@ -139,7 +139,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }
 
   // For use with nodeGrid
-  function nearestMultiple(i: number, j: number): number {
+  function nearestMultiple(i: number, j: number = wm.settings.panel.grid.size): number {
     // console.log('nearest', i, j);
     return Math.ceil(i / j) * j;
   }
@@ -160,6 +160,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
     // Set initial x and y values for links. Defaults to center x of the node, and the middle y.
     let x = d.x;
     let y = d.y + calculateRectangleAutoHeight(d) / 2 - 10 / 2;
+
+    // Set x and y to the rounded value if we are using the grid
+    x = wm.settings.panel.grid.enabled ? nearestMultiple(d.x) : x;
+    y = wm.settings.panel.grid.enabled ? nearestMultiple(d.y) : y;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -472,7 +476,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   d={`M ${wm.settings.panel.grid.size} 0 L 0 0 0 ${wm.settings.panel.grid.size}`}
                   fill="none"
                   stroke="gray"
-                  strokeWidth="2"
+                  strokeWidth="1"
                   opacity={0.5}
                 />
               </pattern>
