@@ -89,7 +89,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
         }
       }
       return true;
-    })
+    });
     weathermap.nodes.splice(i, 1);
     onChange(weathermap);
   };
