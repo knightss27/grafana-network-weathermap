@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "Network Weathermap",
-  "id": "knightss-27-network-weathermap",
+  "id": "knightss27-network-weathermap",
   "info": {
     "description": "A simple & sleek network weathermap, built completely with SVG components.",
     "author": {
