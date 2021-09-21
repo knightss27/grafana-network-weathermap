@@ -152,6 +152,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               onChange={(e) => {
                 let wm = value;
                 wm.settings.panel.grid.enabled = e.currentTarget.checked;
+                wm.settings.panel.grid.guidesEnabled = false;
                 onChange(wm);
               }}
             />
