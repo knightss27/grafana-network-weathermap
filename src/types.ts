@@ -106,6 +106,12 @@ export interface DrawnLink extends Link {
   arrowPolygonZ: any;
 }
 
+export interface HoveredLink {
+  link: DrawnLink;
+  side: 'A' | 'Z';
+  mouseEvent: any;
+}
+
 export interface ArrowOptions {
   width: number;
   height: number;
