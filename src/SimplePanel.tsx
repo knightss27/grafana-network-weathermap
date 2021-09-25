@@ -178,7 +178,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
       options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
         ? nearestMultiple(d.y)
         : y;
-    
+
     y += calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
 
     // Change x values for left/right anchors
@@ -511,7 +511,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
               <span className={styles.colorLabel}>
                 {percent +
                   '%' +
-                  (Object.keys(colors)[i + 1] === undefined ? (percent === '100' ? '' : ' - 100%') : ' - ' + Object.keys(colors)[i + 1] + '%')}
+                  (Object.keys(colors)[i + 1] === undefined
+                    ? percent === '100'
+                      ? ''
+                      : ' - 100%'
+                    : ' - ' + Object.keys(colors)[i + 1] + '%')}
               </span>
             </div>
           ))}
