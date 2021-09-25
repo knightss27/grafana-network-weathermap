@@ -17,7 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Create zip archive
-        run: zip grafana-weathermap-plugin-$(git describe --tags `git rev-list --tags --max-count=1`).zip dist -r
+        run: mv dist knightss27-weathermap-panel && zip grafana-weathermap-plugin-$(git describe --tags `git rev-list --tags --max-count=1`).zip dist -r
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
