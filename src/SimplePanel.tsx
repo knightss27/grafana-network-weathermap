@@ -162,8 +162,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let y = d.y + calculateRectangleAutoHeight(d) / 2 - 10 / 2;
 
     // Set x and y to the rounded value if we are using the grid
-    x = wm.settings.panel.grid.enabled ? nearestMultiple(d.x) : x;
-    y = wm.settings.panel.grid.enabled ? nearestMultiple(d.y) : y;
+    x = options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.x) : x;
+    y = options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.y) : y;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -403,6 +403,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     setHoveredLink(null as unknown as HoveredLink);
   }
 
+  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
 
   if (options.weathermap) {
     return (
@@ -701,6 +702,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   key={i}
                   disabled={!isEditMode}
                   onDrag={(e, position) => {
+                    setDraggedNode(d);
                     setNodes((prevState) =>
                       prevState.map((val, index) => {
                         if (index === i) {
@@ -728,6 +730,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   }}
                   onStop={(e, position) => {
                     // TODO: decide if i can just copy the nodes array
+                    setDraggedNode(null as unknown as DrawnNode);
                     let current: Weathermap = options.weathermap;
                     current.nodes[i].position = [
                       options.weathermap.settings.panel.grid.enabled
@@ -748,12 +751,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     cursor={'move'}
                     // TODO: fix the jump-into-place mechanism when turning on panel grid
                     transform={`translate(${
-                      options.weathermap.settings.panel.grid.enabled
+                      options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
                         ? nearestMultiple(d.x, options.weathermap.settings.panel.grid.size)
                         : d.x
                     },
                       ${
-                        options.weathermap.settings.panel.grid.enabled
+                        options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
                           ? nearestMultiple(d.y, options.weathermap.settings.panel.grid.size)
                           : d.y
                       })`}
