@@ -17,6 +17,8 @@ There are three main panel settings:
 
 By default, the panel's SVG will attempt to take up as much space both vertically and horizontally within the Grafana plugin panel as possible while still maintaining the viewbox aspect ratio.
 
+You can also pan and zoom on the panel. Zooming works with just your mousewheel, and panning can be triggered by dragging the panels view using middle click or holding control while using left click.
+
 ### Arranging Links
 
 One of the most important parts of creating a weathermap is arranging the links between nodes. Depending on the orientation of these links, some specific settings may work best.
