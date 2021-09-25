@@ -123,7 +123,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find where to draw the rectangle for the node (top left x)
   function calculateRectX(d: DrawnNode) {
-    const offset = d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0;
+    const offset =
+      d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0;
     return offset;
   }
 
@@ -409,15 +410,15 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
   };
 
-  const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
+  const [hoveredLink, setHoveredLink] = useState((null as unknown) as HoveredLink);
 
   const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
     setHoveredLink({ link: d, side, mouseEvent: e });
-  }
+  };
 
   const handleLinkHoverLoss = () => {
-    setHoveredLink(null as unknown as HoveredLink);
-  }
+    setHoveredLink((null as unknown) as HoveredLink);
+  };
 
   const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
 
@@ -433,26 +434,25 @@ export const SimplePanel: React.FC<Props> = (props) => {
           `
         )}
       >
-        {hoveredLink ? 
-        <div className={css`
-          position: absolute;
-          top: ${hoveredLink.mouseEvent.nativeEvent.layerY}px;
-          left: ${hoveredLink.mouseEvent.nativeEvent.layerX}px;
-          transform: translate(0%, -100%);
-          background-color: black;
-          z-index: 1000;
-          display: ${hoveredLink ? 'flex' : 'none'};
-          flex-direction: column;
-          cursor: none;
-          padding: 5px;
-          border-radius: 4px;
-        `}
-        >
-          <div>
-            Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}
-          </div>
-          Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
-          {/* <svg 
+        {hoveredLink ? (
+          <div
+            className={css`
+              position: absolute;
+              top: ${hoveredLink.mouseEvent.nativeEvent.layerY}px;
+              left: ${hoveredLink.mouseEvent.nativeEvent.layerX}px;
+              transform: translate(0%, -100%);
+              background-color: black;
+              z-index: 1000;
+              display: ${hoveredLink ? 'flex' : 'none'};
+              flex-direction: column;
+              cursor: none;
+              padding: 5px;
+              border-radius: 4px;
+            `}
+          >
+            <div>Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}</div>
+            Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
+            {/* <svg 
             viewBox="0 0 500 100" 
             className={css`
               background: white;
@@ -491,8 +491,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
               "
             />
           </svg> */}
-        </div>
-        : ''}
+          </div>
+        ) : (
+          ''
+        )}
         <div className={styles.colorScaleContainer}>
           <div className={styles.colorBoxTitle}>Traffic Load</div>
           {Object.keys(colors).map((percent, i) => (
@@ -628,7 +630,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y1={d.lineStartA.y}
                       x2={d.lineEndA.x}
                       y2={d.lineEndA.y}
-                      onMouseMove={(e) => {handleLinkHover(d, 'A', e)}}
+                      onMouseMove={(e) => {
+                        handleLinkHover(d, 'A', e);
+                      }}
                       onMouseOut={handleLinkHoverLoss}
                     ></line>
                     <polygon
@@ -641,7 +645,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                                         ${d.arrowPolygonA.p2.y}
                                     `}
                       fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                      onMouseMove={(e) => {handleLinkHover(d, 'A', e)}}
+                      onMouseMove={(e) => {
+                        handleLinkHover(d, 'A', e);
+                      }}
                       onMouseOut={handleLinkHoverLoss}
                     ></polygon>
                     <line
@@ -651,7 +657,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y1={d.lineStartZ.y}
                       x2={d.lineEndZ.x}
                       y2={d.lineEndZ.y}
-                      onMouseMove={(e) => {handleLinkHover(d, 'Z', e)}}
+                      onMouseMove={(e) => {
+                        handleLinkHover(d, 'Z', e);
+                      }}
                       onMouseOut={handleLinkHoverLoss}
                     ></line>
                     <polygon
@@ -664,7 +672,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                                         ${d.arrowPolygonZ.p2.y}
                                     `}
                       fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                      onMouseMove={(e) => {handleLinkHover(d, 'Z', e)}}
+                      onMouseMove={(e) => {
+                        handleLinkHover(d, 'Z', e);
+                      }}
                       onMouseOut={handleLinkHoverLoss}
                     ></polygon>
                   </g>
@@ -686,7 +696,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
-                    <text x={0} y={wm.settings.fontSizing.link - wm.settings.fontSizing.link / 4} textAnchor={'middle'} fontSize={`${wm.settings.fontSizing.link}px`}>
+                    <text
+                      x={0}
+                      y={wm.settings.fontSizing.link - wm.settings.fontSizing.link / 4}
+                      textAnchor={'middle'}
+                      fontSize={`${wm.settings.fontSizing.link}px`}
+                    >
                       {`${d.sides.A.currentText}`}
                     </text>
                   </g>
@@ -708,7 +723,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
-                    <text x={0} y={wm.settings.fontSizing.link - 2} textAnchor={'middle'} fontSize={`${wm.settings.fontSizing.link}px`}>
+                    <text
+                      x={0}
+                      y={wm.settings.fontSizing.link - 2}
+                      textAnchor={'middle'}
+                      fontSize={`${wm.settings.fontSizing.link}px`}
+                    >
                       {`${d.sides.Z.currentText}`}
                     </text>
                   </g>

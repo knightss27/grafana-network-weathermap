@@ -127,7 +127,7 @@ export interface WeathermapSettings {
   fontSizing: {
     node: number;
     link: number;
-  }
+  };
   panel: PanelOptions;
 }
 
