@@ -1,14 +1,14 @@
 {
   "type": "panel",
   "name": "Network Weathermap",
-  "id": "knightss27-network-weathermap",
+  "id": "knightss27-weathermap-panel",
   "info": {
     "description": "A simple & sleek network weathermap, built completely with SVG components.",
     "author": {
-      "name": "knightss@catlin.edu",
+      "name": "knightss27@protonmail.com",
       "url": "https://seth.cx"
     },
-    "keywords": ["network", "weathermap", "network weathermap"],
+    "keywords": ["network weathermap", "network", "weathermap"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -16,19 +16,21 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/simple-react-panel"
+        "url": "https://github.com/knightss27/grafana-network-weathermap"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+        "url": "https://github.com/knightss27/grafana-network-weathermap/blob/main/LICENSE"
       }
     ],
-    "screenshots": [],
+    "screenshots": [
+      {"name": "v0.0.2-alpha", "path": "img/v0.0.2-alpha.png"}
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaVersion": "8.0.x",
+    "grafanaDependency": "8.1.1",
     "plugins": []
   }
 }
