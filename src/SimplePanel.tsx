@@ -123,8 +123,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find where to draw the rectangle for the node (top left x)
   function calculateRectX(d: DrawnNode) {
-    const offset =
-      d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0;
+    const offset = Math.min(-calculateRectangleAutoWidth(d)/2, d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0);
     return offset;
   }
 
@@ -151,6 +150,24 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function nearestMultiple(i: number, j: number = wm.settings.panel.grid.size): number {
     // console.log('nearest', i, j);
     return Math.ceil(i / j) * j;
+  }
+
+  function calculateRectangleAutoWidth(d: DrawnNode): number {
+
+    const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
+
+    const maxWidth =
+    wm.settings.linkStrokeWidth * (widerSideLinks - 1) +
+    wm.settings.linkSpacingHorizontal * (widerSideLinks - 1) + d.padding.horizontal * 2;
+
+    if (d.label !== undefined) {
+      const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
+      if (!d.useConstantSpacing) {
+        return labeledWidth;
+      }
+      return Math.max(labeledWidth, maxWidth);
+    }
+    return 0;
   }
 
   // Calculate the auto-determined height of a node's rectangle
@@ -185,9 +202,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
       // Align left/right
       if (side.anchor === Anchor.Left) {
-        x -= d.labelWidth / 2 + d.padding.horizontal - wm.settings.linkStrokeWidth / 2;
+        x -= calculateRectangleAutoWidth(d)/2 - wm.settings.linkStrokeWidth / 2;
       } else {
-        x += d.labelWidth / 2 + d.padding.horizontal - wm.settings.linkStrokeWidth / 2;
+        x += calculateRectangleAutoWidth(d)/2 - wm.settings.linkStrokeWidth / 2;
       }
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
@@ -806,7 +823,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     <rect
                       x={calculateRectX(d)}
                       y={calculateRectY(d)}
-                      width={d.label !== undefined ? d.labelWidth + d.padding.horizontal * 2 : 0}
+                      width={calculateRectangleAutoWidth(d)}
                       height={calculateRectangleAutoHeight(d)}
                       fill={'#EFEFEF'}
                       stroke={'#DCDCDC'}
