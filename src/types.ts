@@ -124,6 +124,10 @@ export interface WeathermapSettings {
   linkSpacingVertical: number;
   linkStrokeWidth: number;
   linkArrow: ArrowOptions;
+  fontSizing: {
+    node: number;
+    link: number;
+  }
   panel: PanelOptions;
 }
 

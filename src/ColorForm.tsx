@@ -87,7 +87,7 @@ export const ColorForm = (props: Props) => {
                   t[i] = e.currentTarget.valueAsNumber;
                   return t;
                 });
-                // TODO: remove this unecessary hack for updating
+                // TODO: find a way to not force an update to the panel here
                 onChange(value);
               }}
               onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}

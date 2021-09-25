@@ -193,6 +193,37 @@ export const PanelForm = ({ value, onChange }: Props) => {
         ) : (
           ''
         )}
+        <FormDivider title="Font Options" />
+        <InlineFieldRow>
+          <InlineField label="Node Font Size">
+            <Input
+              value={value.settings.fontSizing.node}
+              placeholder={'Node Font Size'}
+              type={'number'}
+              css={''}
+              name={'nodeFontSize'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.fontSizing.node = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+          <InlineField label="Link Font Size">
+            <Input
+              value={value.settings.fontSizing.link}
+              placeholder={'Link Font Size'}
+              type={'number'}
+              css={''}
+              name={'linkFontSize'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.fontSizing.link = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+        </InlineFieldRow>
       </React.Fragment>
     );
   } else {

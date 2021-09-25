@@ -28,6 +28,10 @@ export const NodeBuilder = (props: Props) => {
         height: 10,
         offset: 2,
       },
+      fontSizing: {
+        node: 10,
+        link: 7,
+      },
       panel: {
         backgroundColor: '#ffffff',
         panelSize: {

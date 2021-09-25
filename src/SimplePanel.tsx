@@ -123,21 +123,18 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find where to draw the rectangle for the node (top left x)
   function calculateRectX(d: DrawnNode) {
-    // TODO: font-size replacement
-    const offset = d.label !== undefined ? -(measureText(d.label, 10).width / 2 + d.padding.horizontal) : 0;
+    const offset = d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0;
     return offset;
   }
 
   // Find where to draw the rectangle for the node (top left y)
   function calculateRectY(d: DrawnNode) {
-    // TODO: font-size replacement
-    return -10 / 2;
+    return -wm.settings.fontSizing.node / 2;
   }
 
   // Calculate the middle of the rectangle for text centering
   function calculateTextY(d: any) {
-    // TODO: font-size replacement
-    return calculateRectangleAutoHeight(d) / 2 - 10 / 2;
+    return calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
   }
 
   // Calculate aspect-ratio corrected drag positions
@@ -158,8 +155,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // Calculate the auto-determined height of a node's rectangle
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
-    // TODO: font-size replacement
-    const minHeight = 10 + 2 * d.padding.vertical; // fontSize + padding
+    const minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
     const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical + 2 * d.padding.vertical;
     const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
     const final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
@@ -170,7 +166,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
     // Set initial x and y values for links. Defaults to center x of the node, and the middle y.
     let x = d.x;
-    let y = d.y + calculateRectangleAutoHeight(d) / 2 - 10 / 2;
+    let y = d.y + calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
 
     // Set x and y to the rounded value if we are using the grid
     x =
@@ -330,7 +326,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     toReturn.index = i;
     toReturn.x = toReturn.position[0];
     toReturn.y = toReturn.position[1];
-    toReturn.labelWidth = measureText(d.label ? d.label : '', 10).width;
+    toReturn.labelWidth = measureText(d.label ? d.label : '', wm.settings.fontSizing.node).width;
     toReturn.anchors = {
       0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
       1: { numLinks: toReturn.anchors[1].numLinks, numFilledLinks: 0 },
@@ -681,16 +677,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 return (
                   <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
                     <rect
-                      x={-measureText(`${d.sides.A.currentText}`, 7).width / 2 - 12 / 2}
+                      x={-measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width / 2 - 12 / 2}
                       y={-5}
-                      width={measureText(`${d.sides.A.currentText}`, 7).width + 12}
-                      height={7 + 8}
+                      width={measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width + 12}
+                      height={wm.settings.fontSizing.link + 8}
                       fill={'#EFEFEF'}
                       stroke={'#DCDCDC'}
                       strokeWidth={2}
-                      rx={(7 + 8) / 2}
+                      rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
-                    <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
+                    <text x={0} y={wm.settings.fontSizing.link - wm.settings.fontSizing.link / 4} textAnchor={'middle'} fontSize={`${wm.settings.fontSizing.link}px`}>
                       {`${d.sides.A.currentText}`}
                     </text>
                   </g>
@@ -703,16 +699,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 return (
                   <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
                     <rect
-                      x={-measureText(`${d.sides.Z.currentText}`, 7).width / 2 - 12 / 2}
+                      x={-measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width / 2 - 12 / 2}
                       y={-5}
-                      width={measureText(`${d.sides.Z.currentText}`, 7).width + 12}
-                      height={7 + 8}
+                      width={measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width + 12}
+                      height={wm.settings.fontSizing.link + 8}
                       fill={'#EFEFEF'}
                       stroke={'#DCDCDC'}
                       strokeWidth={2}
-                      rx={(7 + 8) / 2}
+                      rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
-                    <text x={0} y={7 - 2} textAnchor={'middle'} fontSize={'7px'}>
+                    <text x={0} y={wm.settings.fontSizing.link - 2} textAnchor={'middle'} fontSize={`${wm.settings.fontSizing.link}px`}>
                       {`${d.sides.Z.currentText}`}
                     </text>
                   </g>
@@ -772,7 +768,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   <g
                     display={d.label !== undefined ? 'inline' : 'none'}
                     cursor={'move'}
-                    // TODO: fix the jump-into-place mechanism when turning on panel grid
                     transform={`translate(${
                       options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
                         ? nearestMultiple(d.x, options.weathermap.settings.panel.grid.size)
@@ -803,7 +798,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       dominantBaseline={'central'}
                       color={'#2B2B2B'}
                       className={styles.nodeText}
-                      fontSize="10px"
+                      fontSize={`${wm.settings.fontSizing.node}px`}
                     >
                       {d.label !== undefined ? d.label : ''}
                     </text>
