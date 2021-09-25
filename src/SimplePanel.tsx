@@ -167,7 +167,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
     // Set initial x and y values for links. Defaults to center x of the node, and the middle y.
     let x = d.x;
-    let y = d.y + calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
+    let y = d.y;
 
     // Set x and y to the rounded value if we are using the grid
     x =
@@ -178,6 +178,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
       options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
         ? nearestMultiple(d.y)
         : y;
+    
+    y += calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -204,15 +206,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
         const maxWidth =
           wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks - 1) +
           wm.settings.linkSpacingHorizontal * (d.anchors[side.anchor].numLinks - 1);
-        x =
-          d.x -
-          maxWidth / 2 +
+        x +=
+          -maxWidth / 2 +
           d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacingHorizontal);
       } else {
         // To be used with auto-spacing
         const paddedWidth = d.labelWidth + d.padding.horizontal * 2;
-        x =
-          d.x +
+        x +=
           -paddedWidth / 2 +
           (d.anchors[side.anchor].numFilledLinks + 1) *
             (paddedWidth / (nodes[d.index].anchors[side.anchor].numLinks + 1));
