@@ -9,4 +9,4 @@ This project is still a work in progress. It is currently not yet signed for use
 Currently, I cannot guarantee that there will be consistent state versioning between plugin versions, meaning it is possible that an update could force you to recreate your weathermap. If you really do build something large, and want to ensure it is easier to port over to a newer version, you can export the entire weathermap into a JSON file using the button at the bottom of the editing panel (although this itself is a very much alpha feature).
 
 Example layout:
-![Example Image](https://github.com/knightss27/grafana-network-weathermap/blob/main/src/img/general-example.png)
+![Example Image](https://github.com/knightss27/grafana-network-weathermap/blob/main/src/img/general-example.svg)
