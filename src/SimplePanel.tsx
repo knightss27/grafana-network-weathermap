@@ -511,7 +511,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
               <span className={styles.colorLabel}>
                 {percent +
                   '%' +
-                  (Object.keys(colors)[i + 1] === undefined ? '' : ' - ' + Object.keys(colors)[i + 1] + '%')}
+                  (Object.keys(colors)[i + 1] === undefined ? (percent === '100' ? '' : ' - 100%') : ' - ' + Object.keys(colors)[i + 1] + '%')}
               </span>
             </div>
           ))}
