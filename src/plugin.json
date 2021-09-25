@@ -23,9 +23,10 @@
         "url": "https://github.com/knightss27/grafana-network-weathermap/blob/main/LICENSE"
       }
     ],
-    "screenshots": [{ "name": "General Example", "path": "img/general-example.png" },
+    "screenshots": [
+      { "name": "General Example", "path": "img/general-example.png" },
       { "name": "v0.0.2-alpha", "path": "img/v0.0.2-alpha.png" }
-      ],
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
