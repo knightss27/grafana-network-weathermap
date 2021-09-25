@@ -281,6 +281,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
         let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
         toReturn.sides[side].currentText = `${scaledSideValue.text} ${scaledSideValue.suffix}/s`;
       }
+
+      let scaledBandwidth = linkValueFormatter(toReturn.sides[side].bandwidth);
+      toReturn.sides[side].currentBandwidthText = `${scaledBandwidth.text} ${scaledBandwidth.suffix}/s`;
     }
 
     // Calculate positions for links and arrow polygons. Not included above to help with typing.
@@ -410,15 +413,15 @@ export const SimplePanel: React.FC<Props> = (props) => {
     }
   };
 
-  // const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
+  const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
 
-  // const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
-  //   setHoveredLink({ link: d, side, mouseEvent: e });
-  // }
+  const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
+    setHoveredLink({ link: d, side, mouseEvent: e });
+  }
 
-  // const handleLinkHoverLoss = () => {
-  //   setHoveredLink(null as unknown as HoveredLink);
-  // }
+  const handleLinkHoverLoss = () => {
+    setHoveredLink(null as unknown as HoveredLink);
+  }
 
   const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
 
@@ -434,7 +437,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           `
         )}
       >
-        {/* {hoveredLink ? 
+        {hoveredLink ? 
         <div className={css`
           position: absolute;
           top: ${hoveredLink.mouseEvent.nativeEvent.layerY}px;
@@ -449,8 +452,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
           border-radius: 4px;
         `}
         >
-          Bandwidth: {hoveredLink.link.sides[hoveredLink.side].bandwidth}
-          <svg 
+          <div>
+            Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}
+          </div>
+          Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
+          {/* <svg 
             viewBox="0 0 500 100" 
             className={css`
               background: white;
@@ -488,9 +494,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 440, 80
               "
             />
-          </svg>
+          </svg> */}
         </div>
-        : ''} */}
+        : ''}
         <div className={styles.colorScaleContainer}>
           <div className={styles.colorBoxTitle}>Traffic Load</div>
           {Object.keys(colors).map((percent, i) => (
@@ -626,8 +632,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y1={d.lineStartA.y}
                       x2={d.lineEndA.x}
                       y2={d.lineEndA.y}
-                      // onMouseMove={(e) => {handleLinkHover(d, 'A', e)}}
-                      // onMouseOut={handleLinkHoverLoss}
+                      onMouseMove={(e) => {handleLinkHover(d, 'A', e)}}
+                      onMouseOut={handleLinkHoverLoss}
                     ></line>
                     <polygon
                       points={`
@@ -639,8 +645,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                                         ${d.arrowPolygonA.p2.y}
                                     `}
                       fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                      // onMouseMove={(e) => {handleLinkHover(d, 'A', e)}}
-                      // onMouseOut={handleLinkHoverLoss}
+                      onMouseMove={(e) => {handleLinkHover(d, 'A', e)}}
+                      onMouseOut={handleLinkHoverLoss}
                     ></polygon>
                     <line
                       strokeWidth={wm.settings.linkStrokeWidth}
@@ -649,8 +655,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y1={d.lineStartZ.y}
                       x2={d.lineEndZ.x}
                       y2={d.lineEndZ.y}
-                      // onMouseMove={(e) => {handleLinkHover(d, 'Z', e)}}
-                      // onMouseOut={handleLinkHoverLoss}
+                      onMouseMove={(e) => {handleLinkHover(d, 'Z', e)}}
+                      onMouseOut={handleLinkHoverLoss}
                     ></line>
                     <polygon
                       points={`
@@ -662,8 +668,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                                         ${d.arrowPolygonZ.p2.y}
                                     `}
                       fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                      // onMouseMove={(e) => {handleLinkHover(d, 'Z', e)}}
-                      // onMouseOut={handleLinkHoverLoss}
+                      onMouseMove={(e) => {handleLinkHover(d, 'Z', e)}}
+                      onMouseOut={handleLinkHoverLoss}
                     ></polygon>
                   </g>
                 );

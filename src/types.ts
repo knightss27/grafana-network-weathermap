@@ -87,6 +87,7 @@ export interface Position {
 export interface DrawnLinkSide extends LinkSide {
   currentValue: number;
   currentText: string;
+  currentBandwidthText: string;
 }
 export interface DrawnLink extends Link {
   sides: {
