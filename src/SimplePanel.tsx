@@ -1,6 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PanelProps, scaledUnits } from '@grafana/data';
-import { Anchor, DrawnLink, DrawnNode, Link, LinkSide, Node, SimpleOptions, Position, Weathermap, HoveredLink } from 'types';
+import {
+  Anchor,
+  DrawnLink,
+  DrawnNode,
+  Link,
+  LinkSide,
+  Node,
+  SimpleOptions,
+  Position,
+  Weathermap,
+  HoveredLink,
+} from 'types';
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory } from '@grafana/ui';
 import { DraggableCore } from 'react-draggable';
@@ -162,8 +173,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let y = d.y + calculateRectangleAutoHeight(d) / 2 - 10 / 2;
 
     // Set x and y to the rounded value if we are using the grid
-    x = options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.x) : x;
-    y = options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.y) : y;
+    x =
+      options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+        ? nearestMultiple(d.x)
+        : x;
+    y =
+      options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+        ? nearestMultiple(d.y)
+        : y;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -403,7 +420,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   //   setHoveredLink(null as unknown as HoveredLink);
   // }
 
-  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+  const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
 
   if (options.weathermap) {
     return (
@@ -730,7 +747,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   }}
                   onStop={(e, position) => {
                     // TODO: decide if i can just copy the nodes array
-                    setDraggedNode(null as unknown as DrawnNode);
+                    setDraggedNode((null as unknown) as DrawnNode);
                     let current: Weathermap = options.weathermap;
                     current.nodes[i].position = [
                       options.weathermap.settings.panel.grid.enabled
