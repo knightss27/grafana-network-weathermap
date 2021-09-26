@@ -117,6 +117,14 @@ export const LinkForm = (props: Props) => {
 
   const removeLink = (i: number) => {
     let weathermap: Weathermap = value;
+    let toRemove = weathermap.links[i];
+    for (let i = 0; i < weathermap.nodes.length; i++) {
+      if (weathermap.nodes[i].id == toRemove.nodes[0].id) {
+        weathermap.nodes[i].anchors[toRemove.sides.A.anchor].numLinks--;
+      } else if (weathermap.nodes[i].id == toRemove.nodes[1].id) {
+        weathermap.nodes[i].anchors[toRemove.sides.Z.anchor].numLinks--;
+      }
+    }
     weathermap.links.splice(i, 1);
     onChange(weathermap);
   };
