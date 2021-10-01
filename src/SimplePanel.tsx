@@ -622,8 +622,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       wm.settings.panel.panelSize.width) /
                       2 +
                     wm.settings.panel.offset.x
-                  )
-                  - (width2 - wm.settings.panel.panelSize.width)/2
+                  ) -
+                  (width2 - wm.settings.panel.panelSize.width) / 2
                 }
                 y={
                   -(
@@ -633,22 +633,24 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     wm.settings.panel.offset.y
                   )
                 }
-                width={Math.max(width2, wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale))
-                - (-(
-                  (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
-                    wm.settings.panel.panelSize.width) /
-                    2 +
-                  wm.settings.panel.offset.x
-                )
-                - (width2 - wm.settings.panel.panelSize.width)/2)
+                width={
+                  Math.max(width2, wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale)) -
+                  (-(
+                    (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                      wm.settings.panel.panelSize.width) /
+                      2 +
+                    wm.settings.panel.offset.x
+                  ) -
+                    (width2 - wm.settings.panel.panelSize.width) / 2)
                 }
-                height={Math.max(height2, wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale))
-                - (-(
-                  (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
-                    wm.settings.panel.panelSize.height) /
-                    2 +
-                  wm.settings.panel.offset.y
-                ))
+                height={
+                  Math.max(height2, wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale)) -
+                  -(
+                    (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                      wm.settings.panel.panelSize.height) /
+                      2 +
+                    wm.settings.panel.offset.y
+                  )
                 }
                 fill="url(#smallGrid)"
               />
@@ -669,7 +671,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
               wm.settings.panel.offset.y
             })`}
           >
-            
             <g>
               {links.map((d, i) => {
                 return (
