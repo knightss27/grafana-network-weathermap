@@ -611,8 +611,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 2 +
               wm.settings.panel.offset.y
             })`}
+            overflow="visible"
           >
             {wm.settings.panel.grid.guidesEnabled ? (
+              // TODO: Figure out how to get this width to be 100% of the window all the time (while still ining up).
               <rect
                 x={
                   -(
@@ -621,6 +623,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       2 +
                     wm.settings.panel.offset.x
                   )
+                  - (width2 - wm.settings.panel.panelSize.width)/2
                 }
                 y={
                   -(
@@ -630,13 +633,43 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     wm.settings.panel.offset.y
                   )
                 }
-                width="100%"
-                height="100%"
+                width={Math.max(width2, wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale))
+                - (-(
+                  (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                    wm.settings.panel.panelSize.width) /
+                    2 +
+                  wm.settings.panel.offset.x
+                )
+                - (width2 - wm.settings.panel.panelSize.width)/2)
+                }
+                height={Math.max(height2, wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale))
+                - (-(
+                  (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                    wm.settings.panel.panelSize.height) /
+                    2 +
+                  wm.settings.panel.offset.y
+                ))
+                }
                 fill="url(#smallGrid)"
               />
             ) : (
               ''
             )}
+          </g>
+          <g
+            transform={`translate(${
+              (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                wm.settings.panel.panelSize.width) /
+                2 +
+              wm.settings.panel.offset.x
+            }, ${
+              (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
+                wm.settings.panel.panelSize.height) /
+                2 +
+              wm.settings.panel.offset.y
+            })`}
+          >
+            
             <g>
               {links.map((d, i) => {
                 return (
