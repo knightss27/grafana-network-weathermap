@@ -19,7 +19,7 @@ import { DraggableCore } from 'react-draggable';
 interface Props extends PanelProps<SimpleOptions> {}
 
 export const SimplePanel: React.FC<Props> = (props) => {
-  const { options, data, width: width2, height: height2, onOptionsChange } = props;
+  const { options, data, width: width2, height: height2, onOptionsChange, timeRange, timeZone } = props;
   const styles = getStyles();
 
   // Better variable name
@@ -472,45 +472,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
           >
             <div>Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}</div>
             Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
-            {/* <svg 
-            viewBox="0 0 500 100" 
-            className={css`
-              background: white;
-              width: 200px; 
-              height: 100px;
-            `}
-          >
-            <polyline
-              fill="none"
-              stroke={hoveredLink.side === 'A' ? "#0074d9" : "red"}
-              stroke-width="3"
-              points="
-                00,120
-                20,60
-                40,80
-                60,20
-                80,80
-                100,80
-                120,60
-                140,100
-                160,90
-                180,80
-                200, 110
-                220, 10
-                240, 70
-                260, 100
-                280, 100
-                300, 40
-                320, 0
-                340, 100
-                360, 100
-                380, 120
-                400, 60
-                420, 70
-                440, 80
-              "
-            />
-          </svg> */}
           </div>
         ) : (
           ''
@@ -569,7 +530,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
             updateAspects();
             setDragging(true);
           }}
-          // @ts-ignore
           onMouseMove={(e) => {
             if (isDragging && (e.ctrlKey || e.buttons === 4)) {
               drag(e);
@@ -886,6 +846,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
             </g>
           </g>
         </svg>
+        <div className={styles.timeText}>
+          {timeRange.from.toLocaleString()}
+        </div>
       </div>
     );
   } else {
@@ -947,6 +910,14 @@ const getStyles = stylesFactory(() => {
       -ms-user-select: none;
       -o-user-select: none;
       user-select: none;
+    `,
+    timeText: css`
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      color: black;
+      padding: 5px 10px;
+      font-size: 12px;
     `,
   };
 });
