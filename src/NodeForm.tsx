@@ -9,6 +9,8 @@ import {
   Select,
   stylesFactory,
   ControlledCollapse,
+  InlineLabel,
+  ColorPicker,
 } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -51,6 +53,20 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
+  const handleColorChange = (color: string, i: number, type: string) => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].colors[type as "font" | "background" | "border"] = color;
+    onChange(weathermap);
+  }
+
+  const applyNodeColorToAll = () => {
+    let weathermap: Weathermap = value;
+    for (let node of weathermap.nodes) {
+      node.colors = { ...currentNode.colors };
+    }
+    onChange(weathermap);
+  }
+
   const addNewNode = () => {
     let weathermap: Weathermap = value;
     const node: Node = {
@@ -74,6 +90,11 @@ export const NodeForm = ({ value, onChange }: Props) => {
         vertical: 4,
         horizontal: 10,
       },
+      colors: {
+        font: "#2B2B2B",
+        background: "#EFEFEF",
+        border: "#DCDCDC",
+      }
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -214,7 +235,25 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 </ControlledCollapse>
               </InlineFieldRow>
               <InlineFieldRow>
-                <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} className={''}>
+                <ControlledCollapse label="Colors">
+                  {Object.keys(node.colors).map((colorType) => 
+                    <InlineFieldRow>
+                      <InlineLabel width="auto" style={{ marginBottom: '4px', textTransform: 'capitalize' }}>
+                        {colorType} Color:
+                        <ColorPicker
+                          color={node.colors[colorType as "font" | "background" | "border"]}
+                          onChange={(e) => handleColorChange(e, i, colorType)}
+                        />
+                      </InlineLabel>
+                    </InlineFieldRow>
+                  )}
+                  <Button variant="primary" size="md" onClick={() => applyNodeColorToAll()} style={{ marginTop: '10px' }} >
+                  Apply to All?
+                  </Button>
+                </ControlledCollapse>
+              </InlineFieldRow>
+              <InlineFieldRow>
+                <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)}>
                   Remove Node
                 </Button>
               </InlineFieldRow>

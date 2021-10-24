@@ -49,6 +49,11 @@ export interface Node {
     horizontal: number;
     vertical: number;
   };
+  colors: {
+    font: string,
+    background: string,
+    border: string,
+  }
 }
 
 export interface LinkSide {

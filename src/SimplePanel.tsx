@@ -822,8 +822,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={calculateRectY(d)}
                       width={calculateRectangleAutoWidth(d)}
                       height={calculateRectangleAutoHeight(d)}
-                      fill={'#EFEFEF'}
-                      stroke={'#DCDCDC'}
+                      fill={d.colors.background}
+                      stroke={d.colors.border}
                       strokeWidth={2}
                       rx={6}
                       ry={7}
@@ -834,7 +834,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       textAnchor={'middle'}
                       alignmentBaseline={'central'}
                       dominantBaseline={'central'}
-                      color={'#2B2B2B'}
+                      fill={d.colors.font}
                       className={styles.nodeText}
                       fontSize={`${wm.settings.fontSizing.node}px`}
                     >
