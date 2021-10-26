@@ -4,7 +4,7 @@ export interface SimpleOptions {
 
 export interface PanelOptions {
   backgroundColor: string;
-  panelSize: PanelSize;
+  panelSize: AreaSize;
   zoomScale: number;
   offset: Position;
   grid: {
@@ -14,7 +14,7 @@ export interface PanelOptions {
   };
 }
 
-export interface PanelSize {
+export interface AreaSize {
   width: number;
   height: number;
 }
@@ -30,6 +30,12 @@ export enum Anchor {
 export interface NodeAnchor {
   numLinks: number;
   numFilledLinks: number;
+}
+
+export interface Icon {
+  src: string;
+  name: string;
+  size: AreaSize;
 }
 
 export interface Node {
@@ -54,6 +60,7 @@ export interface Node {
     background: string,
     border: string,
   }
+  icon: Icon | null;
 }
 
 export interface LinkSide {

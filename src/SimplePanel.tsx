@@ -19,7 +19,7 @@ import { DraggableCore } from 'react-draggable';
 interface Props extends PanelProps<SimpleOptions> {}
 
 export const SimplePanel: React.FC<Props> = (props) => {
-  const { options, data, width: width2, height: height2, onOptionsChange, timeRange, timeZone } = props;
+  const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
   const styles = getStyles();
 
   // Better variable name
@@ -840,6 +840,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     >
                       {d.label !== undefined ? d.label : ''}
                     </text>
+                    {d.icon ? <image x={-d.icon.size.width/2} y={calculateTextY(d) - d.icon.size.height - calculateRectangleAutoHeight(d)/2} width={d.icon.size.width} height={d.icon.size.height} href={d.icon.src} /> : ''}
                   </g>
                 </DraggableCore>
               ))}

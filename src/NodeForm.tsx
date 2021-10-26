@@ -15,6 +15,7 @@ import {
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
+import { CiscoIcons } from 'iconOptions';
 
 interface Settings {
   placeholder: string;
@@ -67,6 +68,16 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   }
 
+  const handleIconChange = (icon: string, i: number) => {
+    let weathermap: Weathermap = value;
+    if (weathermap.nodes[i].icon) {
+      // @ts-ignore
+      // TODO: fix this typing error
+      weathermap.nodes[i].icon.src =  "public/plugins/knightss27-weathermap-panel/icons/cisco/" + icon;
+    }
+    onChange(weathermap);
+  }
+
   const addNewNode = () => {
     let weathermap: Weathermap = value;
     const node: Node = {
@@ -94,6 +105,14 @@ export const NodeForm = ({ value, onChange }: Props) => {
         font: "#2B2B2B",
         background: "#EFEFEF",
         border: "#DCDCDC",
+      },
+      icon: {
+        src: "public/plugins/knightss27-weathermap-panel/icons/cisco/pc.svg",
+        name: "PC Icon",
+        size: {
+          width: 40,
+          height: 40
+        }
       }
     };
     weathermap.nodes.push(node);
@@ -123,6 +142,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
   };
 
   const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : (('null' as unknown) as Node));
+
+  const iconOptions = CiscoIcons.map(t => { return {label: t} });
+  console.log(iconOptions);
 
   return (
     <React.Fragment>
@@ -186,6 +208,17 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   />
                 </InlineField>
               </InlineFieldRow>
+              <Select
+                onChange={(v) => {
+                  handleIconChange(v.label, i);
+                }}
+                value={node.icon?.src.split("/")[node.icon?.src.split("/").length-1]}
+                options={iconOptions}
+                // getOptionLabel={(link) => (link.nodes.length > 0 ? `${link.nodes[0]?.label} <> ${link.nodes[1]?.label}` : '')}
+                // getOptionValue={(link) => link.id}
+                className={styles.nodeSelect}
+                placeholder={'Select an icon'}
+              ></Select>
               <InlineFieldRow>
                 <ControlledCollapse label="Padding">
                   <InlineFieldRow>
