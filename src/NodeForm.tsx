@@ -15,7 +15,7 @@ import {
 import { StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
-import { CiscoIcons } from 'iconOptions';
+import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from 'iconOptions';
 
 interface Settings {
   placeholder: string;
@@ -69,11 +69,12 @@ export const NodeForm = ({ value, onChange }: Props) => {
   }
 
   const handleIconChange = (icon: string, i: number) => {
+    console.log(icon);
     let weathermap: Weathermap = value;
     if (weathermap.nodes[i].icon) {
       // @ts-ignore
       // TODO: fix this typing error
-      weathermap.nodes[i].icon.src =  "public/plugins/knightss27-weathermap-panel/icons/cisco/" + icon;
+      weathermap.nodes[i].icon.src =  "public/plugins/knightss27-weathermap-panel/icons/" + icon + ".svg";
     }
     onChange(weathermap);
   }
@@ -107,7 +108,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
         border: "#DCDCDC",
       },
       icon: {
-        src: "public/plugins/knightss27-weathermap-panel/icons/cisco/pc.svg",
+        src: "",
         name: "PC Icon",
         size: {
           width: 40,
@@ -143,8 +144,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : (('null' as unknown) as Node));
 
-  const iconOptions = CiscoIcons.map(t => { return {label: t} });
-  console.log(iconOptions);
+  const ciscoIconsFormatted = CiscoIcons.map(t => { return {label: t, value: "cisco/" + t} });
+  const networkingIconsFormatted = NetworkingIcons.map(t => { return {label: t, value: "networking/" + t} });
+  const databaseIconsFormatted = DatabaseIcons.map(t => { return {label: t, value: "databases/" + t} });
+  const computerIconsFormatted = ComputerIcons.map(t => { return {label: t, value: "computers_monitors/" + t} });
 
   return (
     <React.Fragment>
@@ -210,10 +213,15 @@ export const NodeForm = ({ value, onChange }: Props) => {
               </InlineFieldRow>
               <Select
                 onChange={(v) => {
-                  handleIconChange(v.label, i);
+                  handleIconChange(v.value, i);
                 }}
                 value={node.icon?.src.split("/")[node.icon?.src.split("/").length-1]}
-                options={iconOptions}
+                options={[
+                  {label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted},
+                  {label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted},
+                  {label: 'Database Icons', value: 'databases', options: databaseIconsFormatted},
+                  {label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted  }
+                ]}
                 // getOptionLabel={(link) => (link.nodes.length > 0 ? `${link.nodes[0]?.label} <> ${link.nodes[1]?.label}` : '')}
                 // getOptionValue={(link) => link.id}
                 className={styles.nodeSelect}
