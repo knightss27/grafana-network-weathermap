@@ -56,10 +56,10 @@ export interface Node {
     vertical: number;
   };
   colors: {
-    font: string,
-    background: string,
-    border: string,
-  }
+    font: string;
+    background: string;
+    border: string;
+  };
   icon: Icon | null;
 }
 

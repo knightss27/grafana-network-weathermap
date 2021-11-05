@@ -56,9 +56,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const handleColorChange = (color: string, i: number, type: string) => {
     let weathermap: Weathermap = value;
-    weathermap.nodes[i].colors[type as "font" | "background" | "border"] = color;
+    weathermap.nodes[i].colors[type as 'font' | 'background' | 'border'] = color;
     onChange(weathermap);
-  }
+  };
 
   const applyNodeColorToAll = () => {
     let weathermap: Weathermap = value;
@@ -66,7 +66,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       node.colors = { ...currentNode.colors };
     }
     onChange(weathermap);
-  }
+  };
 
   const handleIconChange = (icon: string, i: number) => {
     console.log(icon);
@@ -74,10 +74,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
     if (weathermap.nodes[i].icon) {
       // @ts-ignore
       // TODO: fix this typing error
-      weathermap.nodes[i].icon.src =  "public/plugins/knightss27-weathermap-panel/icons/" + icon + ".svg";
+      weathermap.nodes[i].icon.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
     }
     onChange(weathermap);
-  }
+  };
 
   const addNewNode = () => {
     let weathermap: Weathermap = value;
@@ -103,18 +103,18 @@ export const NodeForm = ({ value, onChange }: Props) => {
         horizontal: 10,
       },
       colors: {
-        font: "#2B2B2B",
-        background: "#EFEFEF",
-        border: "#DCDCDC",
+        font: '#2B2B2B',
+        background: '#EFEFEF',
+        border: '#DCDCDC',
       },
       icon: {
-        src: "",
-        name: "PC Icon",
+        src: '',
+        name: 'PC Icon',
         size: {
           width: 40,
-          height: 40
-        }
-      }
+          height: 40,
+        },
+      },
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -144,10 +144,18 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : (('null' as unknown) as Node));
 
-  const ciscoIconsFormatted = CiscoIcons.map(t => { return {label: t, value: "cisco/" + t} });
-  const networkingIconsFormatted = NetworkingIcons.map(t => { return {label: t, value: "networking/" + t} });
-  const databaseIconsFormatted = DatabaseIcons.map(t => { return {label: t, value: "databases/" + t} });
-  const computerIconsFormatted = ComputerIcons.map(t => { return {label: t, value: "computers_monitors/" + t} });
+  const ciscoIconsFormatted = CiscoIcons.map((t) => {
+    return { label: t, value: 'cisco/' + t };
+  });
+  const networkingIconsFormatted = NetworkingIcons.map((t) => {
+    return { label: t, value: 'networking/' + t };
+  });
+  const databaseIconsFormatted = DatabaseIcons.map((t) => {
+    return { label: t, value: 'databases/' + t };
+  });
+  const computerIconsFormatted = ComputerIcons.map((t) => {
+    return { label: t, value: 'computers_monitors/' + t };
+  });
 
   return (
     <React.Fragment>
@@ -215,15 +223,13 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 onChange={(v) => {
                   handleIconChange(v.value, i);
                 }}
-                value={node.icon?.src.split("/")[node.icon?.src.split("/").length-1]}
+                value={node.icon?.src.split('/')[node.icon?.src.split('/').length - 1]}
                 options={[
-                  {label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted},
-                  {label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted},
-                  {label: 'Database Icons', value: 'databases', options: databaseIconsFormatted},
-                  {label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted  }
+                  { label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted },
+                  { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
+                  { label: 'Database Icons', value: 'databases', options: databaseIconsFormatted },
+                  { label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted },
                 ]}
-                // getOptionLabel={(link) => (link.nodes.length > 0 ? `${link.nodes[0]?.label} <> ${link.nodes[1]?.label}` : '')}
-                // getOptionValue={(link) => link.id}
                 className={styles.nodeSelect}
                 placeholder={'Select an icon'}
               ></Select>
@@ -277,19 +283,24 @@ export const NodeForm = ({ value, onChange }: Props) => {
               </InlineFieldRow>
               <InlineFieldRow>
                 <ControlledCollapse label="Colors">
-                  {Object.keys(node.colors).map((colorType) => 
+                  {Object.keys(node.colors).map((colorType) => (
                     <InlineFieldRow>
                       <InlineLabel width="auto" style={{ marginBottom: '4px', textTransform: 'capitalize' }}>
                         {colorType} Color:
                         <ColorPicker
-                          color={node.colors[colorType as "font" | "background" | "border"]}
+                          color={node.colors[colorType as 'font' | 'background' | 'border']}
                           onChange={(e) => handleColorChange(e, i, colorType)}
                         />
                       </InlineLabel>
                     </InlineFieldRow>
-                  )}
-                  <Button variant="primary" size="md" onClick={() => applyNodeColorToAll()} style={{ marginTop: '10px' }} >
-                  Apply to All?
+                  ))}
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() => applyNodeColorToAll()}
+                    style={{ marginTop: '10px' }}
+                  >
+                    Apply to All?
                   </Button>
                 </ControlledCollapse>
               </InlineFieldRow>

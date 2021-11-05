@@ -840,16 +840,24 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     >
                       {d.label !== undefined ? d.label : ''}
                     </text>
-                    {d.icon ? <image x={-d.icon.size.width/2} y={calculateTextY(d) - d.icon.size.height - calculateRectangleAutoHeight(d)/2} width={d.icon.size.width} height={d.icon.size.height} href={d.icon.src} /> : ''}
+                    {d.icon ? (
+                      <image
+                        x={-d.icon.size.width / 2}
+                        y={calculateTextY(d) - d.icon.size.height - calculateRectangleAutoHeight(d) / 2}
+                        width={d.icon.size.width}
+                        height={d.icon.size.height}
+                        href={d.icon.src}
+                      />
+                    ) : (
+                      ''
+                    )}
                   </g>
                 </DraggableCore>
               ))}
             </g>
           </g>
         </svg>
-        <div className={styles.timeText}>
-          {timeRange.from.toLocaleString()}
-        </div>
+        <div className={styles.timeText}>{timeRange.from.toLocaleString()}</div>
       </div>
     );
   } else {
