@@ -36,6 +36,11 @@ export interface Icon {
   src: string;
   name: string;
   size: AreaSize;
+  padding: {
+    vertical: number;
+    horizontal: number;
+  };
+  drawInside: boolean;
 }
 
 export interface Node {

@@ -69,15 +69,29 @@ export const NodeForm = ({ value, onChange }: Props) => {
   };
 
   const handleIconChange = (icon: string, i: number) => {
-    console.log(icon);
     let weathermap: Weathermap = value;
-    if (weathermap.nodes[i].icon) {
-      // @ts-ignore
-      // TODO: fix this typing error
-      weathermap.nodes[i].icon.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
-    }
+      weathermap.nodes[i].icon!.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
+      weathermap.nodes[i].icon!.name = icon;
     onChange(weathermap);
   };
+
+  const handleIconSizeChange = (amt: number, i: number, type: "width" | "height") => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].icon!.size[type] = amt;
+    onChange(weathermap);
+  };
+
+  const handleIconPaddingChange = (amt: number, i: number, type: "vertical" | "horizontal") => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].icon!.padding[type] = amt;
+    onChange(weathermap);
+  };
+
+  const handleIconDrawChange = (checked: boolean, i: number) => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].icon!.drawInside = checked;
+    onChange(weathermap);
+  }
 
   const addNewNode = () => {
     let weathermap: Weathermap = value;
@@ -109,11 +123,16 @@ export const NodeForm = ({ value, onChange }: Props) => {
       },
       icon: {
         src: '',
-        name: 'PC Icon',
+        name: '',
         size: {
           width: 40,
           height: 40,
         },
+        padding: {
+          vertical: 0,
+          horizontal: 0
+        },
+        drawInside: false,
       },
     };
     weathermap.nodes.push(node);
@@ -170,7 +189,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
       </h6>
       <Select
         onChange={(v) => {
-          setCurrentNode(v as Node);
+          setCurrentNode(v as unknown as Node);
         }}
         value={currentNode}
         options={value.nodes}
@@ -221,9 +240,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
               </InlineFieldRow>
               <Select
                 onChange={(v) => {
-                  handleIconChange(v.value, i);
+                  handleIconChange(v.value!, i);
                 }}
-                value={node.icon?.src.split('/')[node.icon?.src.split('/').length - 1]}
+                value={node.icon?.name}
                 options={[
                   { label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted },
                   { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
@@ -233,6 +252,67 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 className={styles.nodeSelect}
                 placeholder={'Select an icon'}
               ></Select>
+              <InlineFieldRow>
+                <ControlledCollapse label="Icon">
+                  <InlineFieldRow>
+                    <InlineField label={'Width'}>
+                      <Input
+                        value={node.icon!.size.width}
+                        onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, "width")}
+                        placeholder={'Width'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={'iconWidth'}
+                      />
+                    </InlineField>
+                    <InlineField label={'Height'}>
+                      <Input
+                        value={node.icon!.size.height}
+                        onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, "height")}
+                        placeholder={'Height'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={'iconHeight'}
+                      />
+                    </InlineField>
+                  </InlineFieldRow>
+                  <InlineFieldRow>
+                    <InlineField label={'Padding Horizontal'}>
+                      <Input
+                        value={node.icon!.padding.horizontal}
+                        onChange={(e) => handleIconPaddingChange(e.currentTarget.valueAsNumber, i, "horizontal")}
+                        placeholder={'Horizontal Padding'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={'iconPaddingHorizontal'}
+                      />
+                    </InlineField>
+                    <InlineField label={'Padding Vertical'}>
+                      <Input
+                        value={node.icon!.padding.vertical}
+                        onChange={(e) => handleIconPaddingChange(e.currentTarget.valueAsNumber, i, "vertical")}
+                        placeholder={'Vertical Padding'}
+                        type={'number'}
+                        css={''}
+                        className={styles.nodeLabel}
+                        name={'iconPaddingVertical'}
+                      />
+                    </InlineField>
+                  </InlineFieldRow>
+                  <InlineFieldRow>
+                  <InlineField label={'Draw Inside'}>
+                      <InlineSwitch
+                        value={node.icon!.drawInside}
+                        onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
+                        css={''}
+                      />
+                    </InlineField>
+                  </InlineFieldRow>
+                </ControlledCollapse>
+              </InlineFieldRow>
               <InlineFieldRow>
                 <ControlledCollapse label="Padding">
                   <InlineFieldRow>
@@ -284,7 +364,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
               <InlineFieldRow>
                 <ControlledCollapse label="Colors">
                   {Object.keys(node.colors).map((colorType) => (
-                    <InlineFieldRow>
+                    <InlineFieldRow key={colorType}>
                       <InlineLabel width="auto" style={{ marginBottom: '4px', textTransform: 'capitalize' }}>
                         {colorType} Color:
                         <ColorPicker
