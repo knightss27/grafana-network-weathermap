@@ -197,7 +197,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical + 2 * d.padding.vertical;
     const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
     // let final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
-    let final = fullHeight > minHeight ? fullHeight : minHeight;
+    let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
     
     return final;
   }
