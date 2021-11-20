@@ -70,8 +70,30 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const handleIconChange = (icon: string, i: number) => {
     let weathermap: Weathermap = value;
+    
+    if (icon === null) {
+      weathermap.nodes[i].icon = {
+        src: '',
+        name: '',
+        size: {
+          width: 0,
+          height: 0,
+        },
+        padding: {
+          vertical: 0,
+          horizontal: 0
+        },
+        drawInside: false,
+      }
+    } else {
       weathermap.nodes[i].icon!.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
       weathermap.nodes[i].icon!.name = icon;
+
+      if (weathermap.nodes[i].icon!.size.width === 0) {
+        weathermap.nodes[i].icon!.size = {width: 40, height: 40};
+      }
+    }
+
     onChange(weathermap);
   };
 
@@ -125,8 +147,8 @@ export const NodeForm = ({ value, onChange }: Props) => {
         src: '',
         name: '',
         size: {
-          width: 40,
-          height: 40,
+          width: 0,
+          height: 0,
         },
         padding: {
           vertical: 0,
@@ -248,6 +270,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
                   { label: 'Database Icons', value: 'databases', options: databaseIconsFormatted },
                   { label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted },
+                  { label: 'None', value: null}
                 ]}
                 className={styles.nodeSelect}
                 placeholder={'Select an icon'}
