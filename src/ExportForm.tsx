@@ -1,7 +1,7 @@
 import React from 'react';
 import { InlineFieldRow, Button } from '@grafana/ui';
 import { StandardEditorProps } from '@grafana/data';
-import { Weathermap } from 'types';
+import { Link, Weathermap } from 'types';
 
 interface Settings {}
 
@@ -31,7 +31,12 @@ export const ExportForm = ({ value, onChange }: Props) => {
   };
 
   const handleJSONExport = () => {
-    const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(value));
+    let weathermap: any = value;
+    weathermap.links = value.links.map((link: Link) => {
+      return [link.nodes[0].id, link.nodes[1].id];
+    })
+
+    const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(weathermap));
 
     generateDownloadLink(data, 'network-weathermap.json');
   };
