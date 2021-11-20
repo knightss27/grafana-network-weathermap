@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
 import { Button, InlineField, InlineFieldRow, Input, Select, Slider, stylesFactory } from '@grafana/ui';
-import { StandardEditorProps } from '@grafana/data';
+import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
 
@@ -172,10 +172,10 @@ export const LinkForm = (props: Props) => {
                       <InlineField label={`${sName} Side`} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
                         <Select
                           onChange={(v) => {
-                            handleNodeChange(v as Node, sName, i);
+                            handleNodeChange(v as unknown as Node, sName, i);
                           }}
                           value={link.nodes[sideIndex]?.label || 'No label'}
-                          options={value.nodes}
+                          options={value.nodes as unknown as SelectableValue<String>[]}
                           getOptionLabel={(node) => node?.label || 'No label'}
                           getOptionValue={(node) => node.id}
                           className={styles.nodeSelect}

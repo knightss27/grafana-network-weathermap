@@ -12,7 +12,7 @@ import {
   InlineLabel,
   ColorPicker,
 } from '@grafana/ui';
-import { StandardEditorProps } from '@grafana/data';
+import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
 import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from 'iconOptions';
@@ -214,7 +214,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
           setCurrentNode((v as unknown) as Node);
         }}
         value={currentNode}
-        options={value.nodes}
+        options={value.nodes as unknown as SelectableValue<Node>[]}
         getOptionLabel={(node) => node.label}
         getOptionValue={(node) => node.id}
         className={styles.nodeSelect}
@@ -327,7 +327,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   </InlineFieldRow>
                   <InlineFieldRow>
                     <InlineField label={'Draw Inside'}>
-                      <InlineSwitch
+                     <InlineSwitch
                         value={node.icon!.drawInside}
                         onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
                         css={''}
