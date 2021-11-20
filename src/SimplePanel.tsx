@@ -184,18 +184,20 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // Calculate the auto-determined height of a node's rectangle
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
-    const minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
-    const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical + 2 * d.padding.vertical;
-    const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
-    let final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
-    
+    let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
+
     if (d.icon?.drawInside) {
-      final += d.icon.size.height + (2 * d.icon.padding.vertical);
+      minHeight += d.icon.size.height + (2 * d.icon.padding.vertical);
     }
 
     if (d.icon && d.label === "") {
-      final -= wm.settings.fontSizing.node;
+      minHeight -= wm.settings.fontSizing.node;
     }
+
+    const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical + 2 * d.padding.vertical;
+    const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
+    // let final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
+    let final = fullHeight > minHeight ? fullHeight : minHeight;
     
     return final;
   }
@@ -216,7 +218,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
         ? nearestMultiple(d.y)
         : y;
 
-    y += calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
+    // y += calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
