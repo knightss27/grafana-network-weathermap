@@ -137,7 +137,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Calculate the middle of the rectangle for text centering
   function calculateTextY(d: DrawnNode) {
-    return (d.icon?.drawInside ? d.icon.size.height/2 + d.icon.padding.vertical : 0);
+    return d.icon?.drawInside ? d.icon.size.height / 2 + d.icon.padding.vertical : 0;
   }
 
   // Calculate aspect-ratio corrected drag positions
@@ -174,9 +174,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
     } else {
       final = 0;
     }
-    
+
     if (d.icon?.drawInside && final < d.icon.padding.horizontal + d.icon.size.width + d.padding.horizontal * 2) {
-      final += (d.icon.padding.horizontal + d.icon.size.width + d.padding.horizontal * 2) - final
+      final += d.icon.padding.horizontal + d.icon.size.width + d.padding.horizontal * 2 - final;
     }
     return final;
   }
@@ -187,10 +187,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
 
     if (d.icon?.drawInside) {
-      minHeight += d.icon.size.height + (2 * d.icon.padding.vertical);
+      minHeight += d.icon.size.height + 2 * d.icon.padding.vertical;
     }
 
-    if (d.icon && d.label === "") {
+    if (d.icon && d.label === '') {
       minHeight -= wm.settings.fontSizing.node;
     }
 
@@ -198,7 +198,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
     // let final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
     let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
-    
+
     return final;
   }
 
@@ -836,37 +836,49 @@ export const SimplePanel: React.FC<Props> = (props) => {
                           : d.y
                       })`}
                   >
-                    {d.label !== "" || d.icon?.drawInside ? (
+                    {d.label !== '' || d.icon?.drawInside ? (
                       <React.Fragment>
-                      <rect
-                        x={calculateRectX(d)}
-                        y={calculateRectY(d)}
-                        width={calculateRectangleAutoWidth(d)}
-                        height={calculateRectangleAutoHeight(d)}
-                        fill={d.colors.background}
-                        stroke={d.colors.border}
-                        strokeWidth={2}
-                        rx={6}
-                        ry={7}
-                      ></rect>
-                      <text
-                        x={0}
-                        y={calculateTextY(d)}
-                        textAnchor={'middle'}
-                        alignmentBaseline={'central'}
-                        dominantBaseline={'central'}
-                        fill={d.colors.font}
-                        className={styles.nodeText}
-                        fontSize={`${wm.settings.fontSizing.node}px`}
-                      >
-                        {d.label !== undefined ? d.label : ''}
-                      </text>
-                    </React.Fragment>
-                    ) : ''}
+                        <rect
+                          x={calculateRectX(d)}
+                          y={calculateRectY(d)}
+                          width={calculateRectangleAutoWidth(d)}
+                          height={calculateRectangleAutoHeight(d)}
+                          fill={d.colors.background}
+                          stroke={d.colors.border}
+                          strokeWidth={2}
+                          rx={6}
+                          ry={7}
+                        ></rect>
+                        <text
+                          x={0}
+                          y={calculateTextY(d)}
+                          textAnchor={'middle'}
+                          alignmentBaseline={'central'}
+                          dominantBaseline={'central'}
+                          fill={d.colors.font}
+                          className={styles.nodeText}
+                          fontSize={`${wm.settings.fontSizing.node}px`}
+                        >
+                          {d.label !== undefined ? d.label : ''}
+                        </text>
+                      </React.Fragment>
+                    ) : (
+                      ''
+                    )}
                     {d.icon ? (
                       <image
-                        x={(-d.icon.size.width / 2)}
-                        y={d.icon.drawInside ? -calculateRectangleAutoHeight(d)/2 + d.icon.padding.vertical + d.padding.vertical : (d.label !== "" ? ((calculateTextY(d) - d.icon.size.height - calculateRectangleAutoHeight(d) / 2 - 1) - d.icon.padding.vertical) : -d.icon.size.height/2)}
+                        x={-d.icon.size.width / 2}
+                        y={
+                          d.icon.drawInside
+                            ? -calculateRectangleAutoHeight(d) / 2 + d.icon.padding.vertical + d.padding.vertical
+                            : d.label !== ''
+                            ? calculateTextY(d) -
+                              d.icon.size.height -
+                              calculateRectangleAutoHeight(d) / 2 -
+                              1 -
+                              d.icon.padding.vertical
+                            : -d.icon.size.height / 2
+                        }
                         width={d.icon.size.width}
                         height={d.icon.size.height}
                         href={d.icon.src}
