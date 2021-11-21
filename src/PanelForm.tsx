@@ -29,7 +29,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.panel.panelSize.width}
               placeholder={'Panel Width'}
               type={'number'}
-              
               name={'panelWidth'}
               onChange={(e) => {
                 let options = value;
@@ -43,7 +42,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.panel.panelSize.height}
               placeholder={'Panel Height'}
               type={'number'}
-              
               name={'panelHeight'}
               onChange={(e) => {
                 let options = value;
@@ -60,7 +58,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkStrokeWidth}
               placeholder={'Link Width'}
               type={'number'}
-              
               name={'linkStrokeWidth'}
               onChange={(e) => {
                 let options = value;
@@ -74,7 +71,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkSpacingHorizontal}
               placeholder={'Link Spacing Horizontal'}
               type={'number'}
-              
               name={'linkSpacingHorizontal'}
               onChange={(e) => {
                 let options = value;
@@ -88,7 +84,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkSpacingVertical}
               placeholder={'Link Spacing Horizontal'}
               type={'number'}
-              
               name={'linkSpacingVertical'}
               onChange={(e) => {
                 let options = value;
@@ -105,7 +100,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkArrow.width}
               placeholder={'Arrow Width'}
               type={'number'}
-              
               name={'arrowWidth'}
               onChange={(e) => {
                 let options = value;
@@ -119,7 +113,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkArrow.height}
               placeholder={'Arrow Height'}
               type={'number'}
-              
               name={'arrowHeight'}
               onChange={(e) => {
                 let options = value;
@@ -133,7 +126,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkArrow.offset}
               placeholder={'Arrow Offset'}
               type={'number'}
-              
               name={'arrowOffset'}
               onChange={(e) => {
                 let options = value;
@@ -148,7 +140,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
           <InlineField label="Enable Node Grid Snapping">
             <InlineSwitch
               value={value.settings.panel.grid.enabled}
-              
               onChange={(e) => {
                 let wm = value;
                 wm.settings.panel.grid.enabled = e.currentTarget.checked;
@@ -163,7 +154,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
                 value={value.settings.panel.grid.size}
                 placeholder={'Grid Size (px)'}
                 type={'number'}
-                
                 name={'gridSize'}
                 onChange={(e) => {
                   let options = value;
@@ -181,7 +171,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
             <InlineField label="Grid Guides">
               <InlineSwitch
                 value={value.settings.panel.grid.guidesEnabled}
-                
                 onChange={(e) => {
                   let wm = value;
                   wm.settings.panel.grid.guidesEnabled = e.currentTarget.checked;
@@ -200,7 +189,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.fontSizing.node}
               placeholder={'Node Font Size'}
               type={'number'}
-              
               name={'nodeFontSize'}
               onChange={(e) => {
                 let options = value;
@@ -214,7 +202,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.fontSizing.link}
               placeholder={'Link Font Size'}
               type={'number'}
-              
               name={'linkFontSize'}
               onChange={(e) => {
                 let options = value;

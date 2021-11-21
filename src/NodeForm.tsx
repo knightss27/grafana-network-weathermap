@@ -358,16 +358,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 <ControlledCollapse label="Advanced">
                   <InlineFieldRow>
                     <InlineField label={'Constant Spacing'}>
-                      <InlineSwitch
-                        value={node.useConstantSpacing}
-                        onChange={(e) => handleSpacingChange(e, i)}
-                      />
+                      <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} />
                     </InlineField>
                     <InlineField label={'Compact Vertical Links'}>
-                      <InlineSwitch
-                        value={node.compactVerticalLinks}
-                        onChange={(e) => handleCompactChange(e, i)}
-                      />
+                      <InlineSwitch value={node.compactVerticalLinks} onChange={(e) => handleCompactChange(e, i)} />
                     </InlineField>
                   </InlineFieldRow>
                 </ControlledCollapse>
