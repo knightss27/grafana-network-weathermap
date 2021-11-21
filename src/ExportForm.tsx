@@ -24,6 +24,10 @@ export const ExportForm = ({ value, onChange }: Props) => {
 
     const data = svg?.outerHTML || '';
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+
+    // TODO: Need to somehow insert icons into SVG here?
+    // svg?.innerHTML.replace("<image")
+
     const svgBlob = new Blob([preface, data], { type: 'image/svg+xml;charset=utf-8' });
     const svgUrl = URL.createObjectURL(svgBlob);
 
@@ -37,7 +41,6 @@ export const ExportForm = ({ value, onChange }: Props) => {
     })
 
     const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(weathermap));
-
     generateDownloadLink(data, 'network-weathermap.json');
   };
 
