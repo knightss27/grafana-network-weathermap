@@ -29,7 +29,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.panel.panelSize.width}
               placeholder={'Panel Width'}
               type={'number'}
-              css={''}
+              
               name={'panelWidth'}
               onChange={(e) => {
                 let options = value;
@@ -43,7 +43,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.panel.panelSize.height}
               placeholder={'Panel Height'}
               type={'number'}
-              css={''}
+              
               name={'panelHeight'}
               onChange={(e) => {
                 let options = value;
@@ -60,7 +60,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkStrokeWidth}
               placeholder={'Link Width'}
               type={'number'}
-              css={''}
+              
               name={'linkStrokeWidth'}
               onChange={(e) => {
                 let options = value;
@@ -74,7 +74,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkSpacingHorizontal}
               placeholder={'Link Spacing Horizontal'}
               type={'number'}
-              css={''}
+              
               name={'linkSpacingHorizontal'}
               onChange={(e) => {
                 let options = value;
@@ -88,7 +88,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkSpacingVertical}
               placeholder={'Link Spacing Horizontal'}
               type={'number'}
-              css={''}
+              
               name={'linkSpacingVertical'}
               onChange={(e) => {
                 let options = value;
@@ -105,7 +105,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkArrow.width}
               placeholder={'Arrow Width'}
               type={'number'}
-              css={''}
+              
               name={'arrowWidth'}
               onChange={(e) => {
                 let options = value;
@@ -119,7 +119,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkArrow.height}
               placeholder={'Arrow Height'}
               type={'number'}
-              css={''}
+              
               name={'arrowHeight'}
               onChange={(e) => {
                 let options = value;
@@ -133,7 +133,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.linkArrow.offset}
               placeholder={'Arrow Offset'}
               type={'number'}
-              css={''}
+              
               name={'arrowOffset'}
               onChange={(e) => {
                 let options = value;
@@ -148,7 +148,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           <InlineField label="Enable Node Grid Snapping">
             <InlineSwitch
               value={value.settings.panel.grid.enabled}
-              css={''}
+              
               onChange={(e) => {
                 let wm = value;
                 wm.settings.panel.grid.enabled = e.currentTarget.checked;
@@ -163,7 +163,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
                 value={value.settings.panel.grid.size}
                 placeholder={'Grid Size (px)'}
                 type={'number'}
-                css={''}
+                
                 name={'gridSize'}
                 onChange={(e) => {
                   let options = value;
@@ -181,7 +181,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             <InlineField label="Grid Guides">
               <InlineSwitch
                 value={value.settings.panel.grid.guidesEnabled}
-                css={''}
+                
                 onChange={(e) => {
                   let wm = value;
                   wm.settings.panel.grid.guidesEnabled = e.currentTarget.checked;
@@ -200,7 +200,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.fontSizing.node}
               placeholder={'Node Font Size'}
               type={'number'}
-              css={''}
+              
               name={'nodeFontSize'}
               onChange={(e) => {
                 let options = value;
@@ -214,7 +214,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               value={value.settings.fontSizing.link}
               placeholder={'Link Font Size'}
               type={'number'}
-              css={''}
+              
               name={'linkFontSize'}
               onChange={(e) => {
                 let options = value;

@@ -78,7 +78,6 @@ export const ColorForm = (props: Props) => {
               value={editedPercents[i]}
               placeholder={'Percent Load'}
               type={'number'}
-              css={''}
               className={styles.nodeLabel}
               name={'percent'}
               onChange={(e) => {
@@ -99,7 +98,6 @@ export const ColorForm = (props: Props) => {
               onChange={(e) => handleColorChange(e, parseInt(percent, 10))}
               placeholder={'Percent Color'}
               type={'string'}
-              css={''}
               className={styles.nodeLabel}
               name={'color'}
             ></Input>

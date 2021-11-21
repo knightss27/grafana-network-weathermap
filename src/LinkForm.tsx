@@ -204,7 +204,6 @@ export const LinkForm = (props: Props) => {
                           onChange={(e) => handleBandwidthChange(e.currentTarget.valueAsNumber, i, sName)}
                           placeholder={'Custom max bandwidth'}
                           type={'number'}
-                          css={''}
                           className={styles.nodeLabel}
                           name={`${sName}bandwidth`}
                         />

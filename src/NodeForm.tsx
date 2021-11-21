@@ -232,7 +232,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     onChange={(e) => handleChange(e, i)}
                     placeholder={'Position X'}
                     type={'number'}
-                    css={''}
                     className={styles.nodeLabel}
                     name={'X'}
                   />
@@ -243,7 +242,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     onChange={(e) => handleChange(e, i)}
                     placeholder={'Position Y'}
                     type={'number'}
-                    css={''}
                     className={styles.nodeLabel}
                     name={'Y'}
                   />
@@ -254,7 +252,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     onChange={(e) => handleChange(e, i)}
                     placeholder={'Node Label'}
                     type={'text'}
-                    css={''}
                     className={styles.nodeLabel}
                     name={'label'}
                   />
@@ -284,7 +281,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'width')}
                         placeholder={'Width'}
                         type={'number'}
-                        css={''}
                         className={styles.nodeLabel}
                         name={'iconWidth'}
                       />
@@ -295,7 +291,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'height')}
                         placeholder={'Height'}
                         type={'number'}
-                        css={''}
                         className={styles.nodeLabel}
                         name={'iconHeight'}
                       />
@@ -308,7 +303,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(e) => handleIconPaddingChange(e.currentTarget.valueAsNumber, i, 'horizontal')}
                         placeholder={'Horizontal Padding'}
                         type={'number'}
-                        css={''}
                         className={styles.nodeLabel}
                         name={'iconPaddingHorizontal'}
                       />
@@ -319,7 +313,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(e) => handleIconPaddingChange(e.currentTarget.valueAsNumber, i, 'vertical')}
                         placeholder={'Vertical Padding'}
                         type={'number'}
-                        css={''}
                         className={styles.nodeLabel}
                         name={'iconPaddingVertical'}
                       />
@@ -330,7 +323,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       <InlineSwitch
                         value={node.icon!.drawInside}
                         onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
-                        css={''}
                       />
                     </InlineField>
                   </InlineFieldRow>
@@ -345,7 +337,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(e) => handleChange(e, i)}
                         placeholder={'Horizontal Padding'}
                         type={'number'}
-                        css={''}
                         className={styles.nodeLabel}
                         name={'paddingHorizontal'}
                       />
@@ -356,7 +347,6 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(e) => handleChange(e, i)}
                         placeholder={'Vertical Padding'}
                         type={'number'}
-                        css={''}
                         className={styles.nodeLabel}
                         name={'paddingVertical'}
                       />
@@ -371,14 +361,12 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       <InlineSwitch
                         value={node.useConstantSpacing}
                         onChange={(e) => handleSpacingChange(e, i)}
-                        css={''}
                       />
                     </InlineField>
                     <InlineField label={'Compact Vertical Links'}>
                       <InlineSwitch
                         value={node.compactVerticalLinks}
                         onChange={(e) => handleCompactChange(e, i)}
-                        css={''}
                       />
                     </InlineField>
                   </InlineFieldRow>
