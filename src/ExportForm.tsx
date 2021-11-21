@@ -38,7 +38,7 @@ export const ExportForm = ({ value, onChange }: Props) => {
     let weathermap: any = value;
     weathermap.links = value.links.map((link: Link) => {
       return [link.nodes[0].id, link.nodes[1].id];
-    })
+    });
 
     const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(weathermap));
     generateDownloadLink(data, 'network-weathermap.json');

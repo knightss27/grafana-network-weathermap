@@ -214,7 +214,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
           setCurrentNode((v as unknown) as Node);
         }}
         value={currentNode}
-        options={value.nodes as unknown as SelectableValue<Node>[]}
+        options={(value.nodes as unknown) as Array<SelectableValue<Node>>}
         getOptionLabel={(node) => node.label}
         getOptionValue={(node) => node.id}
         className={styles.nodeSelect}
@@ -327,7 +327,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   </InlineFieldRow>
                   <InlineFieldRow>
                     <InlineField label={'Draw Inside'}>
-                     <InlineSwitch
+                      <InlineSwitch
                         value={node.icon!.drawInside}
                         onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
                         css={''}
