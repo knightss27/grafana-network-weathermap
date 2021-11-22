@@ -304,8 +304,8 @@
                         "panel": {
                             "backgroundColor": "#ffffff",
                             "grid": {
-                                "enabled": true,
-                                "guidesEnabled": true,
+                                "enabled": false,
+                                "guidesEnabled": false,
                                 "size": 10
                             },
                             "offset": {
