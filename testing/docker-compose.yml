@@ -10,8 +10,6 @@ services:
         GF_INSTALL_PLUGINS: https://github.com/knightss27/grafana-network-weathermap/releases/download/v0.0.3/grafana-weathermap-plugin-v0.0.3.zip;network-weathermap
     ports:
       - 3000:3000
-    volumes:
-      - .\grafana\custom.ini:/etc/grafana/grafana.ini
   prometheus:
     image: prom/prometheus
     volumes:
@@ -22,5 +20,3 @@ services:
     build:
       context: exporter
       dockerfile: Dockerfile
-    ports:
-      - 8080:8080

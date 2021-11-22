@@ -1,0 +1,353 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "links": [],
+    "panels": [
+        {
+            "datasource": "Prometheus",
+            "gridPos": {
+                "h": 18,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "weathermap": {
+                    "id": "237db527-427b-4b43-a7b1-43150fb2b682",
+                    "links": [
+                        {
+                            "id": "639d8b66-d34f-4c6a-9eff-7b57eab496d3",
+                            "nodes": [
+                                {
+                                    "anchors": {
+                                        "0": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "1": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "2": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "3": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "4": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 1
+                                        }
+                                    },
+                                    "colors": {
+                                        "background": "#EFEFEF",
+                                        "border": "#DCDCDC",
+                                        "font": "#2B2B2B"
+                                    },
+                                    "compactVerticalLinks": false,
+                                    "icon": {
+                                        "drawInside": false,
+                                        "name": "",
+                                        "padding": {
+                                            "horizontal": 0,
+                                            "vertical": 0
+                                        },
+                                        "size": {
+                                            "height": 0,
+                                            "width": 0
+                                        },
+                                        "src": ""
+                                    },
+                                    "id": "f4ae00ed-043f-4359-a531-ea917b420437",
+                                    "label": "Test Label",
+                                    "padding": {
+                                        "horizontal": 10,
+                                        "vertical": 4
+                                    },
+                                    "position": [
+                                        0,
+                                        0
+                                    ],
+                                    "useConstantSpacing": false
+                                },
+                                {
+                                    "anchors": {
+                                        "0": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "1": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "2": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        },
+                                        "3": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 1
+                                        },
+                                        "4": {
+                                            "numFilledLinks": 0,
+                                            "numLinks": 0
+                                        }
+                                    },
+                                    "colors": {
+                                        "background": "#EFEFEF",
+                                        "border": "#DCDCDC",
+                                        "font": "#2B2B2B"
+                                    },
+                                    "compactVerticalLinks": false,
+                                    "icon": {
+                                        "drawInside": false,
+                                        "name": "",
+                                        "padding": {
+                                            "horizontal": 0,
+                                            "vertical": 0
+                                        },
+                                        "size": {
+                                            "height": 0,
+                                            "width": 0
+                                        },
+                                        "src": ""
+                                    },
+                                    "id": "b1d74102-1680-44c0-9ee3-2eb249d730ca",
+                                    "label": "Test Label",
+                                    "padding": {
+                                        "horizontal": 10,
+                                        "vertical": 4
+                                    },
+                                    "position": [
+                                        220,
+                                        0
+                                    ],
+                                    "useConstantSpacing": false
+                                }
+                            ],
+                            "sides": {
+                                "A": {
+                                    "anchor": 4,
+                                    "bandwidth": 1000000,
+                                    "currentBandwidthText": "1 Mb/s",
+                                    "currentText": "489 Kb/s",
+                                    "currentValue": 489167.8772070111,
+                                    "labelOffset": 50,
+                                    "query": "varied"
+                                },
+                                "Z": {
+                                    "anchor": 3,
+                                    "bandwidth": 1000000,
+                                    "currentBandwidthText": "1 Mb/s",
+                                    "currentText": "700 Kb/s",
+                                    "currentValue": 700000,
+                                    "labelOffset": 50,
+                                    "query": "constant"
+                                }
+                            }
+                        }
+                    ],
+                    "nodes": [
+                        {
+                            "anchors": {
+                                "0": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "1": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "2": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "3": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "4": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 1
+                                }
+                            },
+                            "colors": {
+                                "background": "#EFEFEF",
+                                "border": "#DCDCDC",
+                                "font": "#2B2B2B"
+                            },
+                            "compactVerticalLinks": false,
+                            "icon": {
+                                "drawInside": false,
+                                "name": "",
+                                "padding": {
+                                    "horizontal": 0,
+                                    "vertical": 0
+                                },
+                                "size": {
+                                    "height": 0,
+                                    "width": 0
+                                },
+                                "src": ""
+                            },
+                            "id": "f4ae00ed-043f-4359-a531-ea917b420437",
+                            "label": "Test Label",
+                            "padding": {
+                                "horizontal": 10,
+                                "vertical": 4
+                            },
+                            "position": [
+                                0,
+                                0
+                            ],
+                            "useConstantSpacing": false
+                        },
+                        {
+                            "anchors": {
+                                "0": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "1": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "2": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                },
+                                "3": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 1
+                                },
+                                "4": {
+                                    "numFilledLinks": 0,
+                                    "numLinks": 0
+                                }
+                            },
+                            "colors": {
+                                "background": "#EFEFEF",
+                                "border": "#DCDCDC",
+                                "font": "#2B2B2B"
+                            },
+                            "compactVerticalLinks": false,
+                            "icon": {
+                                "drawInside": false,
+                                "name": "",
+                                "padding": {
+                                    "horizontal": 0,
+                                    "vertical": 0
+                                },
+                                "size": {
+                                    "height": 0,
+                                    "width": 0
+                                },
+                                "src": ""
+                            },
+                            "id": "b1d74102-1680-44c0-9ee3-2eb249d730ca",
+                            "label": "Test Label",
+                            "padding": {
+                                "horizontal": 10,
+                                "vertical": 4
+                            },
+                            "position": [
+                                220,
+                                0
+                            ],
+                            "useConstantSpacing": false
+                        }
+                    ],
+                    "scale": {
+                        "10": "green",
+                        "20": "yellow",
+                        "30": "orange",
+                        "40": "red",
+                        "50": "darkred",
+                        "75": "violet"
+                    },
+                    "settings": {
+                        "fontSizing": {
+                            "link": 7,
+                            "node": 10
+                        },
+                        "linkArrow": {
+                            "height": 10,
+                            "offset": 2,
+                            "width": 8
+                        },
+                        "linkSpacingHorizontal": 25,
+                        "linkSpacingVertical": 5,
+                        "linkStrokeWidth": 8,
+                        "panel": {
+                            "backgroundColor": "#ffffff",
+                            "grid": {
+                                "enabled": true,
+                                "guidesEnabled": true,
+                                "size": 10
+                            },
+                            "offset": {
+                                "x": 190.06739445307176,
+                                "y": 289.75446527916597
+                            },
+                            "panelSize": {
+                                "height": 600,
+                                "width": 600
+                            },
+                            "zoomScale": -5
+                        }
+                    }
+                }
+            },
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "wm_bandwidth_data",
+                    "interval": "",
+                    "legendFormat": "{{type}}",
+                    "refId": "A"
+                }
+            ],
+            "title": "Panel Title",
+            "type": "knightss27-weathermap-panel"
+        }
+    ],
+    "refresh": "",
+    "schemaVersion": 30,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-6h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "DEV",
+    "uid": "xJnQ0Qgnk",
+    "version": 1
+}

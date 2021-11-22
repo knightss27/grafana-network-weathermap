@@ -2,6 +2,16 @@ ARG GRAFANA_VERSION="latest"
 
 FROM grafana/grafana:${GRAFANA_VERSION}
 
+# new stuff
+ENV GF_AUTH_DISABLE_LOGIN_FORM "true"
+ENV GF_AUTH_ANONYMOUS_ENABLED "true"
+ENV GF_AUTH_ANONYMOUS_ORG_ROLE "Admin"
+ENV GF_DEFAULT_APP_MODE "development"
+ENV GF_PATHS_PROVISIONING "/etc/grafana/provisioning"
+
+ADD provisioning /etc/grafana/provisioning
+ADD dashboards /var/lib/grafana/dashboards
+
 USER root
 
 ARG GF_INSTALL_IMAGE_RENDERER_PLUGIN="false"

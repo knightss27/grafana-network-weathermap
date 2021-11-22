@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+- name: 'dev'
+  org_id: 1
+  foleder: ''
+  type: 'file'
+  options:
+    path: '/var/lib/grafana/dashboards'

@@ -21,4 +21,4 @@ scrape_configs:
   static_configs:
   - targets:
     - localhost:9090
-    - 192.168.7.25:8080
+    - exporter:8080
