@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
-import { Button, Input, InlineField, InlineFieldRow, stylesFactory } from '@grafana/ui';
-import { StandardEditorProps } from '@grafana/data';
+import { Button, Input, InlineField, InlineFieldRow, stylesFactory, ColorPicker, Icon, useTheme2 } from '@grafana/ui';
+import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 
 interface Settings {
@@ -11,9 +11,8 @@ interface Settings {
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const ColorForm = (props: Props) => {
-  // const  = props;
-  // const theme = useTheme();
-  const styles = getStyles();
+  const theme = useTheme2();
+  const styles = getStyles(theme);
 
   const { value, onChange } = props;
 
@@ -26,9 +25,9 @@ export const ColorForm = (props: Props) => {
     setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
   };
 
-  const handleColorChange = (e: any, key: number) => {
+  const handleColorChange = (color: any, key: number) => {
     let weathermap: Weathermap = value;
-    weathermap.scale[key] = e.currentTarget.value;
+    weathermap.scale[key] = color;
     onChange(weathermap);
   };
 
@@ -71,40 +70,37 @@ export const ColorForm = (props: Props) => {
         Color Scale
       </h6>
       {Object.keys(value.scale).map((percent, i) => (
-        <InlineFieldRow key={i}>
-          <InlineField label="%">
-            <Input
-              id={`nw-input-${percent}`}
-              value={editedPercents[i]}
-              placeholder={'Percent Load'}
-              type={'number'}
-              className={styles.nodeLabel}
-              name={'percent'}
-              onChange={(e) => {
-                setEditedPercents((prev) => {
-                  let t = prev;
-                  t[i] = e.currentTarget.valueAsNumber;
-                  return t;
-                });
-                // TODO: find a way to not force an update to the panel here
-                onChange(value);
-              }}
-              onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}
-            ></Input>
-          </InlineField>
-          <InlineField label="Color">
-            <Input
-              value={value.scale[parseInt(percent, 10)]}
-              onChange={(e) => handleColorChange(e, parseInt(percent, 10))}
-              placeholder={'Percent Color'}
-              type={'string'}
-              className={styles.nodeLabel}
-              name={'color'}
-            ></Input>
-          </InlineField>
-          <Button icon="trash-alt" variant="destructive" onClick={(e) => handleDeletePercent(parseInt(percent, 10))} />
-        </InlineFieldRow>
-      ))}
+          <Input
+            className={styles.item}
+            type="number"
+            step="0.0001"
+            key={i}
+            onChange={(e) => {
+              setEditedPercents((prev) => {
+                let t = prev;
+                t[i] = e.currentTarget.valueAsNumber;
+                return t;
+              });
+              onChange(value);}
+            }
+            value={editedPercents[i]}
+            aria-label={`Weathermap Threshold ${percent}`}
+            onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}
+            prefix={
+              <div className={styles.inputPrefix}>
+                <div className={styles.colorPicker}>
+                  <ColorPicker
+                    color={value.scale[parseInt(percent, 10)]}
+                    onChange={(color) => handleColorChange(color, parseInt(percent, 10))}
+                  />
+                </div>
+              </div>
+            }
+            suffix={
+              <Icon className={styles.trashIcon} name="trash-alt" onClick={() => handleDeletePercent(parseInt(percent, 10))} />
+            }
+          />
+        ))}
 
       <Button variant="secondary" icon="plus" size="md" onClick={addNewValue} className={styles.addNew}>
         Add Scale Value
@@ -116,7 +112,7 @@ export const ColorForm = (props: Props) => {
   );
 };
 
-const getStyles = stylesFactory(() => {
+const getStyles = stylesFactory((theme: GrafanaTheme2) => {
   return {
     nodeLabel: css`
       margin: 0px 0px;
@@ -135,6 +131,26 @@ const getStyles = stylesFactory(() => {
     `,
     nodeSelect: css`
       margin: 5px 0px;
+    `,
+    inputPrefix: css`
+      display: flex;
+      align-items: center;
+    `,
+    colorPicker: css`
+      padding: 0 ${theme.spacing(1)};
+    `,
+    trashIcon: css`
+      color: ${theme.colors.text.secondary};
+      cursor: pointer;
+      &:hover {
+        color: ${theme.colors.text.primary};
+      }
+    `,
+    item: css`
+      margin-bottom: ${theme.spacing(1)};
+      &:last-child {
+        margin-bottom: 0;
+      }
     `,
   };
 });
