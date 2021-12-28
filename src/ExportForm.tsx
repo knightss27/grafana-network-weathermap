@@ -19,14 +19,21 @@ export const ExportForm = ({ value, onChange }: Props) => {
     document.body.removeChild(downloadLink);
   };
 
-  const handleSVGExport = () => {
+  const handleSVGExport = async () => {
     const svg = document.getElementById(`nw-${value.id}`);
 
-    const data = svg?.outerHTML || '';
+    let data = svg!.outerHTML || '';
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
 
-    // TODO: Need to somehow insert icons into SVG here?
-    // svg?.innerHTML.replace("<image")
+    const icons = svg!.getElementsByTagName('image')
+    for (let i = 0; i < icons.length; i++) {
+      const iconURL = document.location.origin + "/" + icons[i].href.baseVal;
+      const iconData = await fetch(iconURL);
+      const iconString = await iconData.text();
+      const base64String = "data:image/svg+xml;base64," + window.btoa(iconString);
+
+      data = data.replace(icons[i].href.baseVal, base64String);
+    }
 
     const svgBlob = new Blob([preface, data], { type: 'image/svg+xml;charset=utf-8' });
     const svgUrl = URL.createObjectURL(svgBlob);
