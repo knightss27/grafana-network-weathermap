@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
-import { Button, Input, InlineField, InlineFieldRow, stylesFactory, ColorPicker, Icon, useTheme2 } from '@grafana/ui';
+import { Button, Input, stylesFactory, ColorPicker, Icon, useTheme2 } from '@grafana/ui';
 import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 
