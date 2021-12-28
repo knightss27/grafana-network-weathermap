@@ -70,37 +70,41 @@ export const ColorForm = (props: Props) => {
         Color Scale
       </h6>
       {Object.keys(value.scale).map((percent, i) => (
-          <Input
-            className={styles.item}
-            type="number"
-            step="0.0001"
-            key={i}
-            onChange={(e) => {
-              setEditedPercents((prev) => {
-                let t = prev;
-                t[i] = e.currentTarget.valueAsNumber;
-                return t;
-              });
-              onChange(value);}
-            }
-            value={editedPercents[i]}
-            aria-label={`Weathermap Threshold ${percent}`}
-            onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}
-            prefix={
-              <div className={styles.inputPrefix}>
-                <div className={styles.colorPicker}>
-                  <ColorPicker
-                    color={value.scale[parseInt(percent, 10)]}
-                    onChange={(color) => handleColorChange(color, parseInt(percent, 10))}
-                  />
-                </div>
+        <Input
+          className={styles.item}
+          type="number"
+          step="0.0001"
+          key={i}
+          onChange={(e) => {
+            setEditedPercents((prev) => {
+              let t = prev;
+              t[i] = e.currentTarget.valueAsNumber;
+              return t;
+            });
+            onChange(value);
+          }}
+          value={editedPercents[i]}
+          aria-label={`Weathermap Threshold ${percent}`}
+          onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}
+          prefix={
+            <div className={styles.inputPrefix}>
+              <div className={styles.colorPicker}>
+                <ColorPicker
+                  color={value.scale[parseInt(percent, 10)]}
+                  onChange={(color) => handleColorChange(color, parseInt(percent, 10))}
+                />
               </div>
-            }
-            suffix={
-              <Icon className={styles.trashIcon} name="trash-alt" onClick={() => handleDeletePercent(parseInt(percent, 10))} />
-            }
-          />
-        ))}
+            </div>
+          }
+          suffix={
+            <Icon
+              className={styles.trashIcon}
+              name="trash-alt"
+              onClick={() => handleDeletePercent(parseInt(percent, 10))}
+            />
+          }
+        />
+      ))}
 
       <Button variant="secondary" icon="plus" size="md" onClick={addNewValue} className={styles.addNew}>
         Add Scale Value

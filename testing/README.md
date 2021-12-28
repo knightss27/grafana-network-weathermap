@@ -1,6 +1,6 @@
 This docker-compose provides three main containers, to be used while testing the network weathermap.
 
-1. Grafana (with the latest published version of the plugin installed)*
+1. Grafana (with the latest published version of the plugin installed)\*
 2. Prometheus (pointed to look at the exporter)
 3. Exporter (a prometheus exporter which generates fake varied and constant bandwidth data)
 

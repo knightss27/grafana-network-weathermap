@@ -187,7 +187,7 @@ export const LinkForm = (props: Props) => {
                           }}
                           // TODO: Unable to just pass a data frame or string here?
                           // This is fairly unoptimized if you have loads of data frames
-                          value={context.data.filter(p => p.name === side.query)[0]}
+                          value={context.data.filter((p) => p.name === side.query)[0]}
                           options={context.data}
                           getOptionLabel={(data) => data?.name || 'No label'}
                           getOptionValue={(data) => data?.name}
@@ -212,7 +212,7 @@ export const LinkForm = (props: Props) => {
                           onChange={(v) => {
                             handleBandwidthQueryChange(v.name, i, sName);
                           }}
-                          value={context.data.filter(p => p.name === side.bandwidthQuery)[0]}
+                          value={context.data.filter((p) => p.name === side.bandwidthQuery)[0]}
                           options={context.data}
                           getOptionLabel={(data) => data?.name || 'No label'}
                           getOptionValue={(data) => data?.name}

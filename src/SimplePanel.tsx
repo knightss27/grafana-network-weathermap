@@ -498,12 +498,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
           ''
         )}
         <div className={styles.colorScaleContainer}>
-          <div className={
-            cx(styles.colorBoxTitle,
+          <div
+            className={cx(
+              styles.colorBoxTitle,
               css`
                 color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
               `
-            )}>Traffic Load</div>
+            )}
+          >
+            Traffic Load
+          </div>
           {Object.keys(colors).map((percent, i) => (
             <div className={styles.colorScaleItem} key={i}>
               <span
@@ -515,12 +519,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   `
                 )}
               ></span>
-              <span className={
-                cx(styles.colorLabel,
+              <span
+                className={cx(
+                  styles.colorLabel,
                   css`
                     color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
                   `
-                )}>
+                )}
+              >
                 {percent +
                   '%' +
                   (Object.keys(colors)[i + 1] === undefined
@@ -904,12 +910,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
             </g>
           </g>
         </svg>
-        <div className={
-          cx(styles.timeText,
+        <div
+          className={cx(
+            styles.timeText,
             css`
               color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
             `
-          )}>{timeRange.from.toLocaleString()}</div>
+          )}
+        >
+          {timeRange.from.toLocaleString()}
+        </div>
       </div>
     );
   } else {

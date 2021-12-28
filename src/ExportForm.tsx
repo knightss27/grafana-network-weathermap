@@ -25,12 +25,12 @@ export const ExportForm = ({ value, onChange }: Props) => {
     let data = svg!.outerHTML || '';
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
 
-    const icons = svg!.getElementsByTagName('image')
+    const icons = svg!.getElementsByTagName('image');
     for (let i = 0; i < icons.length; i++) {
-      const iconURL = document.location.origin + "/" + icons[i].href.baseVal;
+      const iconURL = document.location.origin + '/' + icons[i].href.baseVal;
       const iconData = await fetch(iconURL);
       const iconString = await iconData.text();
-      const base64String = "data:image/svg+xml;base64," + window.btoa(iconString);
+      const base64String = 'data:image/svg+xml;base64,' + window.btoa(iconString);
 
       data = data.replace(icons[i].href.baseVal, base64String);
     }
