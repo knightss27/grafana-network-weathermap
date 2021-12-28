@@ -13,10 +13,7 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const LinkForm = (props: Props) => {
   const { value, onChange, context } = props;
-  // const theme = useTheme();
   const styles = getStyles();
-
-  // const dataOptions: DataFrame[] | undefined = ;
 
   const findNodeIndex = (n1: Node): number => {
     let nodeIndex = -1;
@@ -188,7 +185,7 @@ export const LinkForm = (props: Props) => {
                           onChange={(v) => {
                             handleDataChange(sName, i, v.name);
                           }}
-                          // Unable to just pass a data frame or string here?
+                          // TODO: Unable to just pass a data frame or string here?
                           // This is fairly unoptimized if you have loads of data frames
                           value={context.data.filter(p => p.name === side.query)[0]}
                           options={context.data}

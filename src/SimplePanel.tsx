@@ -13,7 +13,7 @@ import {
   HoveredLink,
 } from 'types';
 import { css, cx } from 'emotion';
-import { measureText, stylesFactory } from '@grafana/ui';
+import { measureText, stylesFactory, useTheme2 } from '@grafana/ui';
 import { DraggableCore } from 'react-draggable';
 
 interface Props extends PanelProps<SimpleOptions> {}
@@ -21,6 +21,8 @@ interface Props extends PanelProps<SimpleOptions> {}
 export const SimplePanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
   const styles = getStyles();
+
+  const theme = useTheme2();
 
   // Better variable name
   const wm = options.weathermap;
@@ -496,7 +498,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
           ''
         )}
         <div className={styles.colorScaleContainer}>
-          <div className={styles.colorBoxTitle}>Traffic Load</div>
+          <div className={
+            cx(styles.colorBoxTitle,
+              css`
+                color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
+              `
+            )}>Traffic Load</div>
           {Object.keys(colors).map((percent, i) => (
             <div className={styles.colorScaleItem} key={i}>
               <span
@@ -508,7 +515,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   `
                 )}
               ></span>
-              <span className={styles.colorLabel}>
+              <span className={
+                cx(styles.colorLabel,
+                  css`
+                    color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
+                  `
+                )}>
                 {percent +
                   '%' +
                   (Object.keys(colors)[i + 1] === undefined
@@ -892,7 +904,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
             </g>
           </g>
         </svg>
-        <div className={styles.timeText}>{timeRange.from.toLocaleString()}</div>
+        <div className={
+          cx(styles.timeText,
+            css`
+              color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
+            `
+          )}>{timeRange.from.toLocaleString()}</div>
       </div>
     );
   } else {

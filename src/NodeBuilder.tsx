@@ -6,6 +6,7 @@ import { LinkForm } from './LinkForm';
 import { ColorForm } from './ColorForm';
 import { PanelForm } from './PanelForm';
 import { v4 as uuidv4 } from 'uuid';
+import { useTheme2 } from '@grafana/ui';
 
 interface Settings {
   placeholder: string;
@@ -14,6 +15,9 @@ interface Settings {
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const NodeBuilder = (props: Props) => {
+  const theme = useTheme2();
+
+
   const defaultValue: Weathermap = {
     id: uuidv4(),
     nodes: [],
@@ -33,7 +37,7 @@ export const NodeBuilder = (props: Props) => {
         link: 7,
       },
       panel: {
-        backgroundColor: '#ffffff',
+        backgroundColor: theme.colors.background.primary,
         panelSize: {
           width: 600,
           height: 600,
