@@ -11,6 +11,7 @@ import {
   ControlledCollapse,
   InlineLabel,
   ColorPicker,
+  Slider,
 } from '@grafana/ui';
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,13 +35,15 @@ export const NodeForm = ({ value, onChange }: Props) => {
       weathermap.nodes[i].position[1] = e.currentTarget.valueAsNumber;
     } else if (e.currentTarget.name === 'label') {
       weathermap.nodes[i].label = e.currentTarget.value;
-    } else if (e.currentTarget.name === 'paddingHorizontal') {
-      weathermap.nodes[i].padding.horizontal = e.currentTarget.valueAsNumber;
-    } else if (e.currentTarget.name === 'paddingVertical') {
-      weathermap.nodes[i].padding.vertical = e.currentTarget.valueAsNumber;
     }
     onChange(weathermap);
   };
+
+  const handleNodePaddingChange = (num: number, i: number, type: 'vertical' | 'horizontal') => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].padding[type] = num;
+    onChange(weathermap);
+  }
 
   const handleSpacingChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
@@ -225,7 +228,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
         if (node.id === currentNode.id) {
           return (
             <React.Fragment>
-              <InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
                 <InlineField label={'X'}>
                   <Input
                     value={node.position[0]}
@@ -272,9 +275,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 className={styles.nodeSelect}
                 placeholder={'Select an icon'}
               ></Select>
-              <InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Icon">
-                  <InlineFieldRow>
+                  <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Width'}>
                       <Input
                         value={node.icon!.size.width}
@@ -296,29 +299,27 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       />
                     </InlineField>
                   </InlineFieldRow>
-                  <InlineFieldRow>
+                  <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Padding Horizontal'}>
-                      <Input
+                      <Slider
+                        min={0}
+                        max={40}
                         value={node.icon!.padding.horizontal}
-                        onChange={(e) => handleIconPaddingChange(e.currentTarget.valueAsNumber, i, 'horizontal')}
-                        placeholder={'Horizontal Padding'}
-                        type={'number'}
-                        className={styles.nodeLabel}
-                        name={'iconPaddingHorizontal'}
+                        step={1}
+                        onChange={(num) => handleIconPaddingChange(num, i, 'horizontal')}
                       />
                     </InlineField>
                     <InlineField label={'Padding Vertical'}>
-                      <Input
+                      <Slider
+                        min={0}
+                        max={40}
                         value={node.icon!.padding.vertical}
-                        onChange={(e) => handleIconPaddingChange(e.currentTarget.valueAsNumber, i, 'vertical')}
-                        placeholder={'Vertical Padding'}
-                        type={'number'}
-                        className={styles.nodeLabel}
-                        name={'iconPaddingVertical'}
+                        step={1}
+                        onChange={(num) => handleIconPaddingChange(num, i, 'vertical')}
                       />
                     </InlineField>
                   </InlineFieldRow>
-                  <InlineFieldRow>
+                  <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Draw Inside'}>
                       <InlineSwitch
                         value={node.icon!.drawInside}
@@ -328,35 +329,33 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   </InlineFieldRow>
                 </ControlledCollapse>
               </InlineFieldRow>
-              <InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Padding">
-                  <InlineFieldRow>
+                  <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Horizontal'}>
-                      <Input
+                      <Slider
+                        min={0}
+                        max={50}
                         value={node.padding.horizontal}
-                        onChange={(e) => handleChange(e, i)}
-                        placeholder={'Horizontal Padding'}
-                        type={'number'}
-                        className={styles.nodeLabel}
-                        name={'paddingHorizontal'}
+                        step={1}
+                        onChange={(num) => handleNodePaddingChange(num, i, 'horizontal')}
                       />
                     </InlineField>
                     <InlineField label={'Vertical'}>
-                      <Input
+                      <Slider
+                        min={0}
+                        max={50}
                         value={node.padding.vertical}
-                        onChange={(e) => handleChange(e, i)}
-                        placeholder={'Vertical Padding'}
-                        type={'number'}
-                        className={styles.nodeLabel}
-                        name={'paddingVertical'}
+                        step={1}
+                        onChange={(num) => handleNodePaddingChange(num, i, 'vertical')}
                       />
                     </InlineField>
                   </InlineFieldRow>
                 </ControlledCollapse>
               </InlineFieldRow>
-              <InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Advanced">
-                  <InlineFieldRow>
+                  <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Constant Spacing'}>
                       <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} />
                     </InlineField>
@@ -366,7 +365,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   </InlineFieldRow>
                 </ControlledCollapse>
               </InlineFieldRow>
-              <InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Colors">
                   {Object.keys(node.colors).map((colorType) => (
                     <InlineFieldRow key={colorType}>
@@ -389,7 +388,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   </Button>
                 </ControlledCollapse>
               </InlineFieldRow>
-              <InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
                 <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)}>
                   Remove Node
                 </Button>
@@ -429,6 +428,12 @@ const getStyles = stylesFactory(() => {
     `,
     nodeSelect: css`
       margin: 5px 0px;
+    `,
+    inlineField: css`
+      flex: 1 0 auto;
+    `,
+    inlineRow: css`
+      flex-flow: column;
     `,
   };
 });
