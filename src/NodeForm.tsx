@@ -12,6 +12,7 @@ import {
   InlineLabel,
   ColorPicker,
   Slider,
+  useTheme2,
 } from '@grafana/ui';
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +27,7 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const NodeForm = ({ value, onChange }: Props) => {
   const styles = getStyles();
+  const theme = useTheme2();
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>, i: number) => {
     let weathermap: Weathermap = value;
@@ -142,9 +144,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
         horizontal: 10,
       },
       colors: {
-        font: '#2B2B2B',
-        background: '#EFEFEF',
-        border: '#DCDCDC',
+        font: theme.colors.secondary.contrastText,
+        background: theme.colors.secondary.main,
+        border: theme.colors.secondary.border,
       },
       icon: {
         src: '',

@@ -15,6 +15,7 @@ import {
 import { css, cx } from 'emotion';
 import { measureText, stylesFactory, useTheme2 } from '@grafana/ui';
 import { DraggableCore } from 'react-draggable';
+import { getSolidFromAlphaColor } from 'utils';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -861,11 +862,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                           y={calculateRectY(d)}
                           width={calculateRectangleAutoWidth(d)}
                           height={calculateRectangleAutoHeight(d)}
-                          fill={d.colors.background}
-                          stroke={d.colors.border}
+                          fill={getSolidFromAlphaColor(d.colors.background, wm.settings.panel.backgroundColor)}
+                          stroke={getSolidFromAlphaColor(d.colors.border, wm.settings.panel.backgroundColor)}
                           strokeWidth={2}
                           rx={6}
                           ry={7}
+                          style={{paintOrder: 'stroke'}}
                         ></rect>
                         <text
                           x={0}
