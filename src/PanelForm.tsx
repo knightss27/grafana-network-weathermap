@@ -1,5 +1,15 @@
 import React from 'react';
-import { ColorPicker, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input, Slider, stylesFactory, useTheme2 } from '@grafana/ui';
+import {
+  ColorPicker,
+  InlineField,
+  InlineFieldRow,
+  InlineLabel,
+  InlineSwitch,
+  Input,
+  Slider,
+  stylesFactory,
+  useTheme2,
+} from '@grafana/ui';
 import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 import { FormDivider } from './FormDivider';
@@ -10,7 +20,6 @@ interface Settings {}
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const PanelForm = ({ value, onChange }: Props) => {
-
   const styles = getStyles(useTheme2());
 
   const handleColorChange = (color: string) => {
@@ -58,7 +67,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
         <FormDivider title="Link Options" />
         <InlineFieldRow className={styles.inlineRow}>
           <InlineField label="Link Stroke Width" className={styles.inlineField}>
-          <Slider
+            <Slider
               min={1}
               max={30}
               value={value.settings.linkStrokeWidth}
@@ -230,5 +239,5 @@ const getStyles = stylesFactory((theme: GrafanaTheme2) => {
     inlineRow: css`
       flex-flow: column;
     `,
-  }
-})
+  };
+});

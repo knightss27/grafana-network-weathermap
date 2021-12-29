@@ -869,7 +869,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                           strokeWidth={4}
                           rx={6}
                           ry={7}
-                          style={{paintOrder: 'stroke'}}
+                          style={{ paintOrder: 'stroke' }}
                         ></rect>
                         <text
                           x={0}

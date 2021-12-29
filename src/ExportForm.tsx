@@ -61,7 +61,9 @@ export const ExportForm = ({ value, onChange }: Props) => {
           <Button onClick={handleSVGExport} className={styles.exportButton}>
             Export SVG
           </Button>
-          <Button onClick={handleJSONExport} className={styles.exportJSONButton}>Export JSON</Button>
+          <Button onClick={handleJSONExport} className={styles.exportJSONButton}>
+            Export JSON
+          </Button>
         </InlineFieldRow>
       </React.Fragment>
     );
@@ -79,5 +81,5 @@ const getStyles = stylesFactory((theme: GrafanaTheme2) => {
     exportJSONButton: css`
       margin: ${theme.spacing(1)} 0;
     `,
-  }
-})
+  };
+});

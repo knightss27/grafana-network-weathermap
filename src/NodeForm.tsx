@@ -45,7 +45,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     let weathermap: Weathermap = value;
     weathermap.nodes[i].padding[type] = num;
     onChange(weathermap);
-  }
+  };
 
   const handleSpacingChange = (e: any, i: number) => {
     let weathermap: Weathermap = value;
@@ -391,7 +391,13 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 </ControlledCollapse>
               </InlineFieldRow>
               <InlineFieldRow className={styles.inlineRow}>
-                <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} style={{justifyContent: 'center'}}>
+                <Button
+                  variant="destructive"
+                  icon="trash-alt"
+                  size="md"
+                  onClick={() => removeNode(i)}
+                  style={{ justifyContent: 'center' }}
+                >
                   Remove Node
                 </Button>
               </InlineFieldRow>
