@@ -1,13 +1,16 @@
 import React from 'react';
-import { InlineFieldRow, Button } from '@grafana/ui';
-import { StandardEditorProps } from '@grafana/data';
+import { InlineFieldRow, Button, stylesFactory, useTheme2 } from '@grafana/ui';
+import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Link, Weathermap } from 'types';
+import { css } from 'emotion';
 
 interface Settings {}
 
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const ExportForm = ({ value, onChange }: Props) => {
+  const styles = getStyles(useTheme2());
+
   const generateDownloadLink = (href: string, download: string) => {
     let downloadLink = document.createElement('a');
     downloadLink.href = href;
@@ -55,10 +58,10 @@ export const ExportForm = ({ value, onChange }: Props) => {
     return (
       <React.Fragment>
         <InlineFieldRow>
-          <Button onClick={handleSVGExport} style={{ marginRight: '10px' }}>
+          <Button onClick={handleSVGExport} className={styles.exportButton}>
             Export SVG
           </Button>
-          <Button onClick={handleJSONExport}>Export JSON</Button>
+          <Button onClick={handleJSONExport} className={styles.exportJSONButton}>Export JSON</Button>
         </InlineFieldRow>
       </React.Fragment>
     );
@@ -66,3 +69,15 @@ export const ExportForm = ({ value, onChange }: Props) => {
     return <React.Fragment />;
   }
 };
+
+const getStyles = stylesFactory((theme: GrafanaTheme2) => {
+  return {
+    exportButton: css`
+      margin: ${theme.spacing(1)} 0;
+      margin-right: ${theme.spacing(1)};
+    `,
+    exportJSONButton: css`
+      margin: ${theme.spacing(1)} 0;
+    `,
+  }
+})
