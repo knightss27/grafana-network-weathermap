@@ -44,7 +44,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
-      return '#ddd';
+      return theme.colors.secondary.main;
     }
 
     const percent = Math.round((current / max) * 100);
@@ -747,8 +747,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={-5}
                       width={measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width + 12}
                       height={wm.settings.fontSizing.link + 8}
-                      fill={'#EFEFEF'}
-                      stroke={'#DCDCDC'}
+                      fill={getSolidFromAlphaColor(theme.colors.secondary.main, wm.settings.panel.backgroundColor)}
+                      stroke={getSolidFromAlphaColor(theme.colors.secondary.border, wm.settings.panel.backgroundColor)}
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
@@ -757,6 +757,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={wm.settings.fontSizing.link - wm.settings.fontSizing.link / 4}
                       textAnchor={'middle'}
                       fontSize={`${wm.settings.fontSizing.link}px`}
+                      fill={theme.colors.secondary.contrastText}
                     >
                       {`${d.sides.A.currentText}`}
                     </text>
@@ -774,8 +775,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={-5}
                       width={measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width + 12}
                       height={wm.settings.fontSizing.link + 8}
-                      fill={'#EFEFEF'}
-                      stroke={'#DCDCDC'}
+                      fill={getSolidFromAlphaColor(theme.colors.secondary.main, wm.settings.panel.backgroundColor)}
+                      stroke={getSolidFromAlphaColor(theme.colors.secondary.border, wm.settings.panel.backgroundColor)}
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
@@ -784,6 +785,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={wm.settings.fontSizing.link - 2}
                       textAnchor={'middle'}
                       fontSize={`${wm.settings.fontSizing.link}px`}
+                      fill={theme.colors.secondary.contrastText}
                     >
                       {`${d.sides.Z.currentText}`}
                     </text>
@@ -864,7 +866,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                           height={calculateRectangleAutoHeight(d)}
                           fill={getSolidFromAlphaColor(d.colors.background, wm.settings.panel.backgroundColor)}
                           stroke={getSolidFromAlphaColor(d.colors.border, wm.settings.panel.backgroundColor)}
-                          strokeWidth={2}
+                          strokeWidth={4}
                           rx={6}
                           ry={7}
                           style={{paintOrder: 'stroke'}}
