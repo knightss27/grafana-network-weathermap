@@ -1,14 +1,18 @@
 import React from 'react';
-import { ColorPicker, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input } from '@grafana/ui';
-import { StandardEditorProps } from '@grafana/data';
+import { ColorPicker, InlineField, InlineFieldRow, InlineLabel, InlineSwitch, Input, Slider, stylesFactory, useTheme2 } from '@grafana/ui';
+import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 import { FormDivider } from './FormDivider';
+import { css } from 'emotion';
 
 interface Settings {}
 
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
 export const PanelForm = ({ value, onChange }: Props) => {
+
+  const styles = getStyles(useTheme2());
+
   const handleColorChange = (color: string) => {
     let options = value;
     options.settings.panel.backgroundColor = color;
@@ -23,8 +27,8 @@ export const PanelForm = ({ value, onChange }: Props) => {
           Background Color:
           <ColorPicker color={value.settings.panel.backgroundColor} onChange={handleColorChange} />
         </InlineLabel>
-        <InlineFieldRow>
-          <InlineField label="Viewbox Width (px)">
+        <InlineFieldRow className={styles.inlineRow}>
+          <InlineField label="Viewbox Width (px)" className={styles.inlineField}>
             <Input
               value={value.settings.panel.panelSize.width}
               placeholder={'Panel Width'}
@@ -37,7 +41,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             ></Input>
           </InlineField>
-          <InlineField label="Viewbox Height (px)">
+          <InlineField label="Viewbox Height (px)" className={styles.inlineField}>
             <Input
               value={value.settings.panel.panelSize.height}
               placeholder={'Panel Height'}
@@ -52,92 +56,92 @@ export const PanelForm = ({ value, onChange }: Props) => {
           </InlineField>
         </InlineFieldRow>
         <FormDivider title="Link Options" />
-        <InlineFieldRow>
-          <InlineField label="Link Stroke Width">
-            <Input
+        <InlineFieldRow className={styles.inlineRow}>
+          <InlineField label="Link Stroke Width" className={styles.inlineField}>
+          <Slider
+              min={1}
+              max={30}
               value={value.settings.linkStrokeWidth}
-              placeholder={'Link Width'}
-              type={'number'}
-              name={'linkStrokeWidth'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.linkStrokeWidth = e.currentTarget.valueAsNumber;
+                options.settings.linkStrokeWidth = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
-          <InlineField label="Link Spacing Horizontal">
-            <Input
+          <InlineField label="Link Spacing Horizontal" className={styles.inlineField}>
+            <Slider
+              min={0}
+              max={30}
               value={value.settings.linkSpacingHorizontal}
-              placeholder={'Link Spacing Horizontal'}
-              type={'number'}
-              name={'linkSpacingHorizontal'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.linkSpacingHorizontal = e.currentTarget.valueAsNumber;
+                options.settings.linkSpacingHorizontal = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
-          <InlineField label="Link Spacing Vertical">
-            <Input
+          <InlineField label="Link Spacing Vertical" className={styles.inlineField}>
+            <Slider
+              min={0}
+              max={30}
               value={value.settings.linkSpacingVertical}
-              placeholder={'Link Spacing Horizontal'}
-              type={'number'}
-              name={'linkSpacingVertical'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.linkSpacingVertical = e.currentTarget.valueAsNumber;
+                options.settings.linkSpacingVertical = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
         </InlineFieldRow>
         <FormDivider title="Arrow Options" />
-        <InlineFieldRow>
-          <InlineField label="Arrow Width">
-            <Input
+        <InlineFieldRow className={styles.inlineRow}>
+          <InlineField label="Arrow Width" className={styles.inlineField}>
+            <Slider
+              min={0}
+              max={30}
               value={value.settings.linkArrow.width}
-              placeholder={'Arrow Width'}
-              type={'number'}
-              name={'arrowWidth'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.linkArrow.width = e.currentTarget.valueAsNumber;
+                options.settings.linkArrow.width = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
-          <InlineField label="Arrow Height">
-            <Input
+          <InlineField label="Arrow Height" className={styles.inlineField}>
+            <Slider
+              min={0}
+              max={30}
               value={value.settings.linkArrow.height}
-              placeholder={'Arrow Height'}
-              type={'number'}
-              name={'arrowHeight'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.linkArrow.height = e.currentTarget.valueAsNumber;
+                options.settings.linkArrow.height = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
-          <InlineField label="Arrow Offset">
-            <Input
+          <InlineField label="Arrow Offset" className={styles.inlineField}>
+            <Slider
+              min={0}
+              max={10}
               value={value.settings.linkArrow.offset}
-              placeholder={'Arrow Offset'}
-              type={'number'}
-              name={'arrowOffset'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.linkArrow.offset = e.currentTarget.valueAsNumber;
+                options.settings.linkArrow.offset = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
         </InlineFieldRow>
         <FormDivider title="Grid Options" />
-        <InlineFieldRow>
-          <InlineField label="Enable Node Grid Snapping">
+        <InlineFieldRow className={styles.inlineRow}>
+          <InlineField label="Enable Node Grid Snapping" className={styles.inlineField}>
             <InlineSwitch
               value={value.settings.panel.grid.enabled}
               onChange={(e) => {
@@ -149,26 +153,26 @@ export const PanelForm = ({ value, onChange }: Props) => {
             />
           </InlineField>
           {value.settings.panel.grid.enabled ? (
-            <InlineField label="Grid Size (px)">
-              <Input
+            <InlineField label="Grid Size (px)" className={styles.inlineField}>
+              <Slider
+                min={2}
+                max={50}
                 value={value.settings.panel.grid.size}
-                placeholder={'Grid Size (px)'}
-                type={'number'}
-                name={'gridSize'}
-                onChange={(e) => {
+                step={1}
+                onChange={(num) => {
                   let options = value;
-                  options.settings.panel.grid.size = e.currentTarget.valueAsNumber;
+                  options.settings.panel.grid.size = num;
                   onChange(options);
                 }}
-              ></Input>
+              />
             </InlineField>
           ) : (
             ''
           )}
         </InlineFieldRow>
         {value.settings.panel.grid.enabled ? (
-          <InlineFieldRow>
-            <InlineField label="Grid Guides">
+          <InlineFieldRow className={styles.inlineRow}>
+            <InlineField label="Grid Guides" className={styles.inlineField}>
               <InlineSwitch
                 value={value.settings.panel.grid.guidesEnabled}
                 onChange={(e) => {
@@ -183,32 +187,32 @@ export const PanelForm = ({ value, onChange }: Props) => {
           ''
         )}
         <FormDivider title="Font Options" />
-        <InlineFieldRow>
-          <InlineField label="Node Font Size">
-            <Input
+        <InlineFieldRow className={styles.inlineRow}>
+          <InlineField label="Node Font Size" className={styles.inlineField}>
+            <Slider
+              min={2}
+              max={40}
               value={value.settings.fontSizing.node}
-              placeholder={'Node Font Size'}
-              type={'number'}
-              name={'nodeFontSize'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.fontSizing.node = e.currentTarget.valueAsNumber;
+                options.settings.fontSizing.node = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
-          <InlineField label="Link Font Size">
-            <Input
+          <InlineField label="Link Font Size" className={styles.inlineField}>
+            <Slider
+              min={2}
+              max={40}
               value={value.settings.fontSizing.link}
-              placeholder={'Link Font Size'}
-              type={'number'}
-              name={'linkFontSize'}
-              onChange={(e) => {
+              step={1}
+              onChange={(num) => {
                 let options = value;
-                options.settings.fontSizing.link = e.currentTarget.valueAsNumber;
+                options.settings.fontSizing.link = num;
                 onChange(options);
               }}
-            ></Input>
+            />
           </InlineField>
         </InlineFieldRow>
       </React.Fragment>
@@ -217,3 +221,14 @@ export const PanelForm = ({ value, onChange }: Props) => {
     return <React.Fragment />;
   }
 };
+
+const getStyles = stylesFactory((theme: GrafanaTheme2) => {
+  return {
+    inlineField: css`
+      flex: 1 0 auto;
+    `,
+    inlineRow: css`
+      flex-flow: column;
+    `,
+  }
+})
