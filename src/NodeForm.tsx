@@ -369,7 +369,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 <ControlledCollapse label="Colors">
                   {Object.keys(node.colors).map((colorType) => (
                     <InlineFieldRow key={colorType}>
-                      <InlineLabel width="auto" style={{ marginBottom: '4px', textTransform: 'capitalize' }}>
+                      <InlineLabel style={{ marginBottom: '4px', textTransform: 'capitalize', flex: '1 0 auto' }}>
                         {colorType} Color:
                         <ColorPicker
                           color={node.colors[colorType as 'font' | 'background' | 'border']}
@@ -389,7 +389,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 </ControlledCollapse>
               </InlineFieldRow>
               <InlineFieldRow className={styles.inlineRow}>
-                <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)}>
+                <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeNode(i)} style={{justifyContent: 'center'}}>
                   Remove Node
                 </Button>
               </InlineFieldRow>
