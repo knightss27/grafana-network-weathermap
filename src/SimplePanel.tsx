@@ -44,7 +44,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
-      return theme.colors.secondary.main;
+      return getSolidFromAlphaColor(theme.colors.secondary.main, wm.settings.panel.backgroundColor);
     }
 
     const percent = Math.round((current / max) * 100);
@@ -887,7 +887,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     ) : (
                       ''
                     )}
-                    {d.icon ? (
+                    {d.icon && d.icon.src !== "" ? (
                       <image
                         x={-d.icon.size.width / 2}
                         y={
@@ -913,6 +913,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
               ))}
             </g>
           </g>
+          {//TODO: add this to SVG
+          /* <text
+            x={0}
+            y={options.weathermap.settings.panel.panelSize.height *
+              Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - 16 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}
+            fill="#fff"
+            fontSize={16 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}
+          >
+            {timeRange.from.toLocaleString()}
+          </text> */}
         </svg>
         <div
           className={cx(

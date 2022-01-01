@@ -29,6 +29,7 @@ export const ExportForm = ({ value, onChange }: Props) => {
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
 
     const icons = svg!.getElementsByTagName('image');
+    //TODO: fix exporting
     for (let i = 0; i < icons.length; i++) {
       const iconURL = document.location.origin + '/' + icons[i].href.baseVal;
       const iconData = await fetch(iconURL);
