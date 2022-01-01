@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { PanelProps, scaledUnits } from '@grafana/data';
 import {
   Anchor,
@@ -37,10 +37,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
 
   /** COLOR SCALES */
-  const colors: any = {};
-  Object.keys(options.weathermap ? options.weathermap.scale : {}).forEach((pct: string) => {
-    colors[parseInt(pct, 10)] = options.weathermap.scale[parseInt(pct, 10)];
-  });
+  const colors: any = useMemo(() => {
+    const c: any = {};
+    Object.keys(wm.scale).forEach((pct: string) => {
+      c[parseInt(pct, 10)] = options.weathermap.scale[parseInt(pct, 10)];
+    });
+    return c;
+  }, [options]);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -58,6 +61,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }
 
   // Calculate the height of a scale's sub-rectangle
+  const scaleHeights: {[num: number]: string} = useMemo(() => {
+    let c: {[num: number]: string} = {};
+    Object.keys(colors).forEach((percent, i) => {
+      c[i] = getScaleColorHeight(i);})
+    return c;
+  }, [options]);
+  
   function getScaleColorHeight(index: number) {
     const keys = Object.keys(colors);
     const current: number = parseInt(keys[index], 10);
@@ -104,13 +114,13 @@ export const SimplePanel: React.FC<Props> = (props) => {
   /* STATE */
 
   // Nodes
-  const [nodes, setNodes] = useState(
-    options.weathermap
-      ? options.weathermap.nodes.map((d, i) => {
-          return generateDrawnNode(d, i);
-        })
-      : []
-  );
+  const generatedNodes = useMemo(() => {
+    return options.weathermap.nodes.map((d, i) => {
+      return generateDrawnNode(d, i);
+    })
+  }, [options])
+
+  const [nodes, setNodes] = useState(generatedNodes);
 
   // To be used to calculate how many links we've drawn
   let tempNodes = nodes.slice();
@@ -154,7 +164,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // For use with nodeGrid
   function nearestMultiple(i: number, j: number = wm.settings.panel.grid.size): number {
-    // console.log('nearest', i, j);
     return Math.ceil(i / j) * j;
   }
 
@@ -220,8 +229,6 @@ export const SimplePanel: React.FC<Props> = (props) => {
       options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
         ? nearestMultiple(d.y)
         : y;
-
-    // y += calculateRectangleAutoHeight(d) / 2 - wm.settings.fontSizing.node / 2;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -462,7 +469,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     setHoveredLink((null as unknown) as HoveredLink);
   };
 
-  const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
+  // const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
+  let draggedNode: DrawnNode | null = null;
 
   if (options.weathermap) {
     return (
@@ -516,7 +524,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   styles.colorBox,
                   css`
                     background: ${colors[percent]};
-                    height: ${getScaleColorHeight(i)};
+                    height: ${scaleHeights[i]};
                   `
                 )}
               ></span>
@@ -799,7 +807,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   key={i}
                   disabled={!isEditMode}
                   onDrag={(e, position) => {
-                    setDraggedNode(d);
+                    draggedNode = d;
                     setNodes((prevState) =>
                       prevState.map((val, index) => {
                         if (index === i) {
@@ -827,14 +835,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   }}
                   onStop={(e, position) => {
                     // TODO: decide if i can just copy the nodes array
-                    setDraggedNode((null as unknown) as DrawnNode);
+                    draggedNode = null;
                     let current: Weathermap = options.weathermap;
                     current.nodes[i].position = [
                       options.weathermap.settings.panel.grid.enabled
-                        ? nearestMultiple(nodes[i].x, options.weathermap.settings.panel.grid.size)
+                        ? nearestMultiple(nodes[i].x)
                         : nodes[i].x,
                       options.weathermap.settings.panel.grid.enabled
-                        ? nearestMultiple(nodes[i].y, options.weathermap.settings.panel.grid.size)
+                        ? nearestMultiple(nodes[i].y)
                         : nodes[i].y,
                     ];
                     onOptionsChange({
@@ -848,12 +856,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     cursor={'move'}
                     transform={`translate(${
                       options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
-                        ? nearestMultiple(d.x, options.weathermap.settings.panel.grid.size)
+                        ? nearestMultiple(d.x)
                         : d.x
                     },
                       ${
                         options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
-                          ? nearestMultiple(d.y, options.weathermap.settings.panel.grid.size)
+                          ? nearestMultiple(d.y)
                           : d.y
                       })`}
                   >
