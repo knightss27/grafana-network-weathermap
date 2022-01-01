@@ -61,13 +61,14 @@ export const SimplePanel: React.FC<Props> = (props) => {
   }
 
   // Calculate the height of a scale's sub-rectangle
-  const scaleHeights: {[num: number]: string} = useMemo(() => {
-    let c: {[num: number]: string} = {};
+  const scaleHeights: { [num: number]: string } = useMemo(() => {
+    let c: { [num: number]: string } = {};
     Object.keys(colors).forEach((percent, i) => {
-      c[i] = getScaleColorHeight(i);})
+      c[i] = getScaleColorHeight(i);
+    });
     return c;
   }, [options]);
-  
+
   function getScaleColorHeight(index: number) {
     const keys = Object.keys(colors);
     const current: number = parseInt(keys[index], 10);
@@ -117,8 +118,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   const generatedNodes = useMemo(() => {
     return options.weathermap.nodes.map((d, i) => {
       return generateDrawnNode(d, i);
-    })
-  }, [options])
+    });
+  }, [options]);
 
   const [nodes, setNodes] = useState(generatedNodes);
 
@@ -838,12 +839,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     draggedNode = null;
                     let current: Weathermap = options.weathermap;
                     current.nodes[i].position = [
-                      options.weathermap.settings.panel.grid.enabled
-                        ? nearestMultiple(nodes[i].x)
-                        : nodes[i].x,
-                      options.weathermap.settings.panel.grid.enabled
-                        ? nearestMultiple(nodes[i].y)
-                        : nodes[i].y,
+                      options.weathermap.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
+                      options.weathermap.settings.panel.grid.enabled ? nearestMultiple(nodes[i].y) : nodes[i].y,
                     ];
                     onOptionsChange({
                       ...options,
@@ -895,7 +892,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     ) : (
                       ''
                     )}
-                    {d.icon && d.icon.src !== "" ? (
+                    {d.icon && d.icon.src !== '' ? (
                       <image
                         x={-d.icon.size.width / 2}
                         y={
@@ -921,8 +918,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
               ))}
             </g>
           </g>
-          {//TODO: add this to SVG
-          /* <text
+          {
+            //TODO: add this to SVG
+            /* <text
             x={0}
             y={options.weathermap.settings.panel.panelSize.height *
               Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - 16 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}
@@ -930,7 +928,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
             fontSize={16 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}
           >
             {timeRange.from.toLocaleString()}
-          </text> */}
+          </text> */
+          }
         </svg>
         <div
           className={cx(

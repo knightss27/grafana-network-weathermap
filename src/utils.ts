@@ -1,13 +1,13 @@
-let colorsCalculatedCache: {[colors: string]: string} = {};
+let colorsCalculatedCache: { [colors: string]: string } = {};
 
 export function getSolidFromAlphaColor(fg: string, bg: string) {
-  if (colorsCalculatedCache[fg+bg]) {
-    return colorsCalculatedCache[fg+bg];
+  if (colorsCalculatedCache[fg + bg]) {
+    return colorsCalculatedCache[fg + bg];
   }
-  
+
   let fgColor = parseColor(fg.toUpperCase());
   if (fgColor.length < 4) return fg;
-  
+
   let bgColor = parseColor(bg.toUpperCase());
   if (bgColor.length < 4) bgColor.push(1.0);
 
@@ -17,7 +17,7 @@ export function getSolidFromAlphaColor(fg: string, bg: string) {
     bgColor[2] + (fgColor[2] - bgColor[2]) * fgColor[3],
   ];
 
-  colorsCalculatedCache[fg+bg] = `rgb(${finalColor.join(',')})`;
+  colorsCalculatedCache[fg + bg] = `rgb(${finalColor.join(',')})`;
   return `rgb(${finalColor.join(',')})`;
 }
 
