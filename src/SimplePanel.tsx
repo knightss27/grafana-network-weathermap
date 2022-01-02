@@ -470,8 +470,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
     setHoveredLink((null as unknown) as HoveredLink);
   };
 
-  // const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
-  let draggedNode: DrawnNode | null = null;
+  const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
 
   if (options.weathermap) {
     return (
@@ -808,7 +807,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   key={i}
                   disabled={!isEditMode}
                   onDrag={(e, position) => {
-                    draggedNode = d;
+                    setDraggedNode(d);
                     setNodes((prevState) =>
                       prevState.map((val, index) => {
                         if (index === i) {
@@ -836,7 +835,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   }}
                   onStop={(e, position) => {
                     // TODO: decide if i can just copy the nodes array
-                    draggedNode = null;
+                    setDraggedNode((null as unknown) as DrawnNode);
                     let current: Weathermap = options.weathermap;
                     current.nodes[i].position = [
                       options.weathermap.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
