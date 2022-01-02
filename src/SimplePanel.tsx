@@ -194,20 +194,19 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return final;
   }
 
-  const calculatedRectHeights: {[key: string]: number} = useMemo(() => {
-    const c: {[key: string]: number} = {};
+  const calculatedRectHeights: { [key: string]: number } = useMemo(() => {
+    const c: { [key: string]: number } = {};
     for (let node of nodes) {
       c[node.id] = calculateRectangleAutoHeight(node);
     }
     return c;
   }, [options]);
 
-
   // Calculate the auto-determined height of a node's rectangle
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
     let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
-    console.log('calc height')
+    console.log('calc height');
     if (d.icon?.drawInside) {
       minHeight += d.icon.size.height + 2 * d.icon.padding.vertical;
     }
@@ -464,7 +463,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
           x: prev.x + e.nativeEvent.movementX * zoomAmt * aspectMultiplier,
           y: prev.y + e.nativeEvent.movementY * zoomAmt * aspectMultiplier,
         };
-      })
+      });
     }
   };
 
