@@ -146,7 +146,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find where to draw the rectangle for the node (top left y)
   function calculateRectY(d: DrawnNode) {
-    return -calculateRectangleAutoHeight(d) / 2;
+    return -calculatedRectHeights[d.id] / 2;
   }
 
   // Calculate the middle of the rectangle for text centering
@@ -194,11 +194,20 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return final;
   }
 
+  const calculatedRectHeights: {[key: string]: number} = useMemo(() => {
+    const c: {[key: string]: number} = {};
+    for (let node of nodes) {
+      c[node.id] = calculateRectangleAutoHeight(node);
+    }
+    return c;
+  }, [options]);
+
+
   // Calculate the auto-determined height of a node's rectangle
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
     let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
-
+    console.log('calc height')
     if (d.icon?.drawInside) {
       minHeight += d.icon.size.height + 2 * d.icon.padding.vertical;
     }
@@ -269,9 +278,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
       }
       // Add height if we are at the bottom;
       if (side.anchor === Anchor.Bottom) {
-        y += calculateRectangleAutoHeight(d) / 2 - wm.settings.linkStrokeWidth / 2;
+        y += calculatedRectHeights[d.id] / 2 - wm.settings.linkStrokeWidth / 2;
       } else if (side.anchor === Anchor.Top) {
-        y -= calculateRectangleAutoHeight(d) / 2;
+        y -= calculatedRectHeights[d.id] / 2;
         y += wm.settings.linkStrokeWidth / 2;
       }
     }
@@ -443,20 +452,19 @@ export const SimplePanel: React.FC<Props> = (props) => {
     aspectMultiplier = Math.max(aspectX, aspectY);
   };
 
+  const [offset, setOffset] = useState(wm.settings.panel.offset);
+
   const drag = (e: any) => {
     if (e.ctrlKey || e.buttons === 4) {
       e.nativeEvent.preventDefault();
-
-      const panned: Weathermap = wm;
-      const prev = wm.settings.panel.offset;
-
       const zoomAmt = Math.pow(1.2, wm.settings.panel.zoomScale);
 
-      panned.settings.panel.offset = {
-        x: prev.x + e.nativeEvent.movementX * zoomAmt * aspectMultiplier,
-        y: prev.y + e.nativeEvent.movementY * zoomAmt * aspectMultiplier,
-      };
-      onOptionsChange({ weathermap: panned });
+      setOffset((prev) => {
+        return {
+          x: prev.x + e.nativeEvent.movementX * zoomAmt * aspectMultiplier,
+          y: prev.y + e.nativeEvent.movementY * zoomAmt * aspectMultiplier,
+        };
+      })
     }
   };
 
@@ -583,6 +591,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
           }}
           onMouseUp={() => {
             setDragging(false);
+            let panned = wm;
+            panned.settings.panel.offset = offset;
+            onOptionsChange({ weathermap: panned });
           }}
         >
           {wm.settings.panel.grid.enabled ? (
@@ -610,12 +621,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
               (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
                 wm.settings.panel.panelSize.width) /
                 2 +
-              wm.settings.panel.offset.x
+              offset.x
             }, ${
               (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
                 wm.settings.panel.panelSize.height) /
                 2 +
-              wm.settings.panel.offset.y
+              offset.y
             })`}
             overflow="visible"
           >
@@ -627,7 +638,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
                       wm.settings.panel.panelSize.width) /
                       2 +
-                    wm.settings.panel.offset.x
+                    offset.x
                   ) -
                   (width2 - wm.settings.panel.panelSize.width) / 2
                 }
@@ -636,7 +647,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
                       wm.settings.panel.panelSize.height) /
                       2 +
-                    wm.settings.panel.offset.y
+                    offset.y
                   )
                 }
                 width={
@@ -645,7 +656,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
                       wm.settings.panel.panelSize.width) /
                       2 +
-                    wm.settings.panel.offset.x
+                    offset.x
                   ) -
                     (width2 - wm.settings.panel.panelSize.width) / 2)
                 }
@@ -655,7 +666,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
                       wm.settings.panel.panelSize.height) /
                       2 +
-                    wm.settings.panel.offset.y
+                    offset.y
                   )
                 }
                 fill="url(#smallGrid)"
@@ -669,12 +680,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
               (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
                 wm.settings.panel.panelSize.width) /
                 2 +
-              wm.settings.panel.offset.x
+              offset.x
             }, ${
               (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
                 wm.settings.panel.panelSize.height) /
                 2 +
-              wm.settings.panel.offset.y
+              offset.y
             })`}
           >
             <g>
@@ -867,7 +878,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                           x={calculateRectX(d)}
                           y={calculateRectY(d)}
                           width={calculateRectangleAutoWidth(d)}
-                          height={calculateRectangleAutoHeight(d)}
+                          height={calculatedRectHeights[d.id]}
                           fill={getSolidFromAlphaColor(d.colors.background, wm.settings.panel.backgroundColor)}
                           stroke={getSolidFromAlphaColor(d.colors.border, wm.settings.panel.backgroundColor)}
                           strokeWidth={4}
@@ -896,11 +907,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         x={-d.icon.size.width / 2}
                         y={
                           d.icon.drawInside
-                            ? -calculateRectangleAutoHeight(d) / 2 + d.icon.padding.vertical + d.padding.vertical
+                            ? -calculatedRectHeights[d.id] / 2 + d.icon.padding.vertical + d.padding.vertical
                             : d.label !== ''
                             ? calculateTextY(d) -
                               d.icon.size.height -
-                              calculateRectangleAutoHeight(d) / 2 -
+                              calculatedRectHeights[d.id] / 2 -
                               1 -
                               d.icon.padding.vertical
                             : -d.icon.size.height / 2
