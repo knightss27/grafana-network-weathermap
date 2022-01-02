@@ -6,8 +6,8 @@ services:
       context: grafana
       dockerfile: Dockerfile
       args:
-        GRAFANA_VERSION: 8.1.1
-        GF_INSTALL_PLUGINS: https://github.com/knightss27/grafana-network-weathermap/releases/download/v0.0.3/grafana-weathermap-plugin-v0.0.3.zip;network-weathermap
+        GRAFANA_VERSION: 8.1.8
+        GF_INSTALL_PLUGINS: https://github.com/knightss27/grafana-network-weathermap/releases/download/v0.0.4/grafana-weathermap-plugin-v0.0.4.zip;network-weathermap
     ports:
       - 3000:3000
   prometheus:

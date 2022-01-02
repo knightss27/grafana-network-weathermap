@@ -63,9 +63,9 @@
                     }
                   },
                   "colors": {
-                    "background": "#EFEFEF",
-                    "border": "#DCDCDC",
-                    "font": "#2B2B2B"
+                    "background": "rgba(204, 204, 220, 0.1)",
+                    "border": "rgba(204, 204, 220, 0.25)",
+                    "font": "rgb(204, 204, 220)"
                   },
                   "compactVerticalLinks": false,
                   "icon": {
@@ -114,9 +114,9 @@
                     }
                   },
                   "colors": {
-                    "background": "#EFEFEF",
-                    "border": "#DCDCDC",
-                    "font": "#2B2B2B"
+                    "background": "rgba(204, 204, 220, 0.1)",
+                    "border": "rgba(204, 204, 220, 0.25)",
+                    "font": "rgb(204, 204, 220)"
                   },
                   "compactVerticalLinks": false,
                   "icon": {
@@ -189,9 +189,9 @@
                 }
               },
               "colors": {
-                "background": "#EFEFEF",
-                "border": "#DCDCDC",
-                "font": "#2B2B2B"
+                "background": "rgba(204, 204, 220, 0.1)",
+                "border": "rgba(204, 204, 220, 0.25)",
+                "font": "rgb(204, 204, 220)"
               },
               "compactVerticalLinks": false,
               "icon": {
@@ -240,9 +240,9 @@
                 }
               },
               "colors": {
-                "background": "#EFEFEF",
-                "border": "#DCDCDC",
-                "font": "#2B2B2B"
+                "background": "rgba(204, 204, 220, 0.1)",
+                "border": "rgba(204, 204, 220, 0.25)",
+                "font": "rgb(204, 204, 220)"
               },
               "compactVerticalLinks": false,
               "icon": {
@@ -290,7 +290,7 @@
             "linkSpacingVertical": 5,
             "linkStrokeWidth": 8,
             "panel": {
-              "backgroundColor": "#ffffff",
+              "backgroundColor": "#181b1f",
               "grid": {
                 "enabled": false,
                 "guidesEnabled": false,
