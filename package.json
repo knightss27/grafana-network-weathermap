@@ -8,12 +8,12 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch"
   },
-  "repository": "github:grafana/simple-react-panel",
+  "repository": "github:knightss27/grafana-network-weathermap",
   "author": "knightss@catlin.edu",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/grafana/simple-react-panel/issues",
-    "email": "plugins@grafana.com"
+    "url": "https://github.com/knightss27/grafana-network-weathermap/issues",
+    "email": "seth@seth.cx"
   },
   "devDependencies": {
     "@grafana/data": "^8.2.5",
