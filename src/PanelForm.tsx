@@ -70,11 +70,11 @@ export const PanelForm = ({ value, onChange }: Props) => {
             <Slider
               min={1}
               max={30}
-              value={value.settings.linkStrokeWidth}
+              value={value.settings.link.stroke.width}
               step={1}
               onChange={(num) => {
                 let options = value;
-                options.settings.linkStrokeWidth = num;
+                options.settings.link.stroke.width = num;
                 onChange(options);
               }}
             />
@@ -83,11 +83,11 @@ export const PanelForm = ({ value, onChange }: Props) => {
             <Slider
               min={0}
               max={30}
-              value={value.settings.linkSpacingHorizontal}
+              value={value.settings.link.spacing.horizontal}
               step={1}
               onChange={(num) => {
                 let options = value;
-                options.settings.linkSpacingHorizontal = num;
+                options.settings.link.spacing.horizontal = num;
                 onChange(options);
               }}
             />
@@ -96,11 +96,11 @@ export const PanelForm = ({ value, onChange }: Props) => {
             <Slider
               min={0}
               max={30}
-              value={value.settings.linkSpacingVertical}
+              value={value.settings.link.spacing.vertical}
               step={1}
               onChange={(num) => {
                 let options = value;
-                options.settings.linkSpacingVertical = num;
+                options.settings.link.spacing.vertical = num;
                 onChange(options);
               }}
             />

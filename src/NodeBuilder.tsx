@@ -23,9 +23,16 @@ export const NodeBuilder = (props: Props) => {
     links: [],
     scale: {},
     settings: {
-      linkSpacingHorizontal: 10,
-      linkSpacingVertical: 5,
-      linkStrokeWidth: 8,
+      link: {
+        spacing: {
+          horizontal: 10,
+          vertical: 5,
+        },
+        stroke: {
+          width: 8,
+          color: theme.colors.secondary.main,
+        }
+      },
       linkArrow: {
         width: 8,
         height: 10,

@@ -171,8 +171,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
 
     const maxWidth =
-      wm.settings.linkStrokeWidth * (widerSideLinks - 1) +
-      wm.settings.linkSpacingHorizontal * (widerSideLinks - 1) +
+      wm.settings.link.stroke.width * (widerSideLinks - 1) +
+      wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
       d.padding.horizontal * 2;
 
     let final = 0;
@@ -214,8 +214,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
       minHeight -= wm.settings.fontSizing.node;
     }
 
-    const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical + 2 * d.padding.vertical;
-    const fullHeight = linkHeight * numLinks - wm.settings.linkSpacingVertical;
+    const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
+    const fullHeight = linkHeight * numLinks - wm.settings.link.spacing.vertical;
     // let final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
     let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
 
@@ -242,30 +242,30 @@ export const SimplePanel: React.FC<Props> = (props) => {
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
       // Align left/right
       if (side.anchor === Anchor.Left) {
-        x -= calculateRectangleAutoWidth(d) / 2 - wm.settings.linkStrokeWidth / 2;
+        x -= calculateRectangleAutoWidth(d) / 2 - wm.settings.link.stroke.width / 2;
       } else {
-        x += calculateRectangleAutoWidth(d) / 2 - wm.settings.linkStrokeWidth / 2;
+        x += calculateRectangleAutoWidth(d) / 2 - wm.settings.link.stroke.width / 2;
       }
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
-        const linkHeight = wm.settings.linkStrokeWidth + wm.settings.linkSpacingVertical;
+        const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical;
         const fullHeight =
-          linkHeight * d.anchors[side.anchor].numLinks - wm.settings.linkSpacingVertical - wm.settings.linkStrokeWidth;
+          linkHeight * d.anchors[side.anchor].numLinks - wm.settings.link.spacing.vertical - wm.settings.link.stroke.width;
         y -= fullHeight / 2;
         y +=
-          (d.anchors[side.anchor].numFilledLinks + 1) * wm.settings.linkStrokeWidth +
-          d.anchors[side.anchor].numFilledLinks * wm.settings.linkSpacingVertical -
-          wm.settings.linkStrokeWidth;
+          (d.anchors[side.anchor].numFilledLinks + 1) * wm.settings.link.stroke.width +
+          d.anchors[side.anchor].numFilledLinks * wm.settings.link.spacing.vertical -
+          wm.settings.link.stroke.width;
       }
     } else if (side.anchor !== Anchor.Center) {
       if (d.useConstantSpacing) {
         // To be used with constant-spacing
         const maxWidth =
-          wm.settings.linkStrokeWidth * (d.anchors[side.anchor].numLinks - 1) +
-          wm.settings.linkSpacingHorizontal * (d.anchors[side.anchor].numLinks - 1);
+          wm.settings.link.stroke.width * (d.anchors[side.anchor].numLinks - 1) +
+          wm.settings.link.spacing.horizontal * (d.anchors[side.anchor].numLinks - 1);
         x +=
           -maxWidth / 2 +
-          d.anchors[side.anchor].numFilledLinks * (wm.settings.linkStrokeWidth + wm.settings.linkSpacingHorizontal);
+          d.anchors[side.anchor].numFilledLinks * (wm.settings.link.stroke.width + wm.settings.link.spacing.horizontal);
       } else {
         // To be used with auto-spacing
         const paddedWidth = d.labelWidth + d.padding.horizontal * 2;
@@ -276,10 +276,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
       }
       // Add height if we are at the bottom;
       if (side.anchor === Anchor.Bottom) {
-        y += calculatedRectHeights[d.id] / 2 - wm.settings.linkStrokeWidth / 2;
+        y += calculatedRectHeights[d.id] / 2 - wm.settings.link.stroke.width / 2;
       } else if (side.anchor === Anchor.Top) {
         y -= calculatedRectHeights[d.id] / 2;
-        y += wm.settings.linkStrokeWidth / 2;
+        y += wm.settings.link.stroke.width / 2;
       }
     }
     // Mark that we've drawn another link
@@ -697,7 +697,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     height={Math.abs(d.target.y - d.source.y)}
                   >
                     <line
-                      strokeWidth={wm.settings.linkStrokeWidth}
+                      strokeWidth={wm.settings.link.stroke.width}
                       stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                       x1={d.lineStartA.x}
                       y1={d.lineStartA.y}
@@ -724,7 +724,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       onMouseOut={handleLinkHoverLoss}
                     ></polygon>
                     <line
-                      strokeWidth={wm.settings.linkStrokeWidth}
+                      strokeWidth={wm.settings.link.stroke.width}
                       stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
                       x1={d.lineStartZ.x}
                       y1={d.lineStartZ.y}
