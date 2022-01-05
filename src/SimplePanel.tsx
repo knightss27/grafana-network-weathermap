@@ -46,7 +46,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
-      return getSolidFromAlphaColor(theme.colors.secondary.main, wm.settings.panel.backgroundColor);
+      return getSolidFromAlphaColor(wm.settings.link.stroke.color, wm.settings.panel.backgroundColor);
     }
 
     const percent = Math.round((current / max) * 100);
