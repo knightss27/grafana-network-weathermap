@@ -145,6 +145,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find where to draw the rectangle for the node (top left y)
   function calculateRectY(d: DrawnNode) {
+    if (!calculatedRectHeights[d.id]) {
+      calculatedRectHeights = calculateRectHeights();
+    }
     return -calculatedRectHeights[d.id] / 2;
   }
 
@@ -193,13 +196,17 @@ export const SimplePanel: React.FC<Props> = (props) => {
     return final;
   }
 
-  const calculatedRectHeights: { [key: string]: number } = useMemo(() => {
+  let calculatedRectHeights: { [key: string]: number } = useMemo(() => {
+    return calculateRectHeights();
+  }, [options]);
+
+  function calculateRectHeights() {
     const c: { [key: string]: number } = {};
     for (let node of nodes) {
       c[node.id] = calculateRectangleAutoHeight(node);
     }
     return c;
-  }, [options]);
+  }
 
   // Calculate the auto-determined height of a node's rectangle
   function calculateRectangleAutoHeight(d: DrawnNode): number {
