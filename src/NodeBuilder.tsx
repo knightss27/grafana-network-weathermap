@@ -31,7 +31,7 @@ export const NodeBuilder = (props: Props) => {
         stroke: {
           width: 8,
           color: theme.colors.secondary.main,
-        }
+        },
       },
       linkArrow: {
         width: 8,

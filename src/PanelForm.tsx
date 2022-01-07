@@ -67,11 +67,14 @@ export const PanelForm = ({ value, onChange }: Props) => {
         <FormDivider title="Link Options" />
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
           Base Color:
-          <ColorPicker color={value.settings.link.stroke.color} onChange={(color) => {
-            let options = value;
-            options.settings.link.stroke.color = color;
-            onChange(options);
-          }} />
+          <ColorPicker
+            color={value.settings.link.stroke.color}
+            onChange={(color) => {
+              let options = value;
+              options.settings.link.stroke.color = color;
+              onChange(options);
+            }}
+          />
         </InlineLabel>
         <InlineFieldRow className={styles.inlineRow}>
           <InlineField label="Link Stroke Width" className={styles.inlineField}>

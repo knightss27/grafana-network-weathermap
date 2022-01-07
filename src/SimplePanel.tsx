@@ -227,7 +227,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
     let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
- 
+
     if (d.icon?.drawInside) {
       minHeight += d.icon.size.height + 2 * d.icon.padding.vertical;
     }
@@ -272,7 +272,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
         const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical;
         const fullHeight =
-          linkHeight * d.anchors[side.anchor].numLinks - wm.settings.link.spacing.vertical - wm.settings.link.stroke.width;
+          linkHeight * d.anchors[side.anchor].numLinks -
+          wm.settings.link.spacing.vertical -
+          wm.settings.link.stroke.width;
         y -= fullHeight / 2;
         y +=
           (d.anchors[side.anchor].numFilledLinks + 1) * wm.settings.link.stroke.width +

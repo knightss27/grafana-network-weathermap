@@ -148,8 +148,8 @@ export interface WeathermapSettings {
     stroke: {
       width: number;
       color: string;
-    }
-  }
+    };
+  };
   linkArrow: ArrowOptions;
   fontSizing: {
     node: number;
