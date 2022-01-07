@@ -136,8 +136,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Find where to draw the rectangle for the node (top left x)
   function calculateRectX(d: DrawnNode) {
+    if (!calculatedRectWidths[d.id]) {
+      calculatedRectWidths = calculateRectWidths();
+    }
     const offset = Math.min(
-      -calculateRectangleAutoWidth(d) / 2,
+      -calculatedRectWidths[d.id] / 2,
       d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0
     );
     return offset;
@@ -168,6 +171,18 @@ export const SimplePanel: React.FC<Props> = (props) => {
   // For use with nodeGrid
   function nearestMultiple(i: number, j: number = wm.settings.panel.grid.size): number {
     return Math.ceil(i / j) * j;
+  }
+
+  let calculatedRectWidths: { [key: string]: number } = useMemo(() => {
+    return calculateRectWidths();
+  }, [options]);
+
+  function calculateRectWidths() {
+    const c: { [key: string]: number } = {};
+    for (let node of nodes) {
+      c[node.id] = calculateRectangleAutoWidth(node);
+    }
+    return c;
   }
 
   function calculateRectangleAutoWidth(d: DrawnNode): number {
@@ -212,7 +227,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
   function calculateRectangleAutoHeight(d: DrawnNode): number {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
     let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
-    console.log('calc height');
+ 
     if (d.icon?.drawInside) {
       minHeight += d.icon.size.height + 2 * d.icon.padding.vertical;
     }
@@ -882,7 +897,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         <rect
                           x={calculateRectX(d)}
                           y={calculateRectY(d)}
-                          width={calculateRectangleAutoWidth(d)}
+                          width={calculatedRectWidths[d.id]}
                           height={calculatedRectHeights[d.id]}
                           fill={getSolidFromAlphaColor(d.colors.background, wm.settings.panel.backgroundColor)}
                           stroke={getSolidFromAlphaColor(d.colors.border, wm.settings.panel.backgroundColor)}
