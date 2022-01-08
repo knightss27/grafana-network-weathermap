@@ -117,6 +117,39 @@ export const PanelForm = ({ value, onChange }: Props) => {
             />
           </InlineField>
         </InlineFieldRow>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Label Background Color:
+          <ColorPicker
+            color={value.settings.link.label.background}
+            onChange={(color) => {
+              let options = value;
+              options.settings.link.label.background = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Label Border Color:
+          <ColorPicker
+            color={value.settings.link.label.border}
+            onChange={(color) => {
+              let options = value;
+              options.settings.link.label.border = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Label Font Color:
+          <ColorPicker
+            color={value.settings.link.label.font}
+            onChange={(color) => {
+              let options = value;
+              options.settings.link.label.font = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
         <FormDivider title="Arrow Options" />
         <InlineFieldRow className={styles.inlineRow}>
           <InlineField label="Arrow Width" className={styles.inlineField}>
