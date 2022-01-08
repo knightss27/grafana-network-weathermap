@@ -788,8 +788,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={-5}
                       width={measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width + 12}
                       height={wm.settings.fontSizing.link + 8}
-                      fill={getSolidFromAlphaColor(theme.colors.secondary.main, wm.settings.panel.backgroundColor)}
-                      stroke={getSolidFromAlphaColor(theme.colors.secondary.border, wm.settings.panel.backgroundColor)}
+                      fill={getSolidFromAlphaColor(wm.settings.link.label.background, wm.settings.panel.backgroundColor)}
+                      stroke={getSolidFromAlphaColor(wm.settings.link.label.border, wm.settings.panel.backgroundColor)}
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}
                     ></rect>
@@ -798,7 +798,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={wm.settings.fontSizing.link - wm.settings.fontSizing.link / 4}
                       textAnchor={'middle'}
                       fontSize={`${wm.settings.fontSizing.link}px`}
-                      fill={theme.colors.secondary.contrastText}
+                      fill={wm.settings.link.label.font}
                     >
                       {`${d.sides.A.currentText}`}
                     </text>

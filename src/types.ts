@@ -146,6 +146,11 @@ export interface WeathermapSettings {
       width: number;
       color: string;
     };
+    label: {
+      background: string;
+      border: string;
+      font: string;
+    }
   };
   linkArrow: ArrowOptions;
   fontSizing: {

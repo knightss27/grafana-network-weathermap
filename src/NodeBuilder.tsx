@@ -32,6 +32,11 @@ export const NodeBuilder = (props: Props) => {
           width: 8,
           color: theme.colors.secondary.main,
         },
+        label: {
+          background: theme.colors.secondary.main,
+          border: theme.colors.secondary.border,
+          font: theme.colors.secondary.contrastText,
+        }
       },
       linkArrow: {
         width: 8,
