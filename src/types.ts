@@ -137,9 +137,6 @@ export interface ArrowOptions {
 }
 
 export interface WeathermapSettings {
-  // linkSpacingHorizontal: number;
-  // linkSpacingVertical: number;
-  // linkStrokeWidth: number;
   link: {
     spacing: {
       horizontal: number;

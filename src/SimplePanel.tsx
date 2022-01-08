@@ -13,9 +13,9 @@ import {
   HoveredLink,
 } from 'types';
 import { css, cx } from 'emotion';
-import { measureText, stylesFactory, useTheme2 } from '@grafana/ui';
+import { stylesFactory, useTheme2 } from '@grafana/ui';
 import { DraggableCore } from 'react-draggable';
-import { getSolidFromAlphaColor } from 'utils';
+import { measureText, getSolidFromAlphaColor } from 'utils';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -115,7 +115,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Nodes
   const generatedNodes = useMemo(() => {
-    return options.weathermap.nodes.map((d, i) => {
+    return wm.nodes.map((d, i) => {
       return generateDrawnNode(d, i);
     });
   }, [options]);
@@ -127,8 +127,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   // Links
   const [links, setLinks] = useState(
-    options.weathermap
-      ? options.weathermap.links.map((d, i) => {
+    wm
+      ? wm.links.map((d, i) => {
           return generateDrawnLink(d, i);
         })
       : []
@@ -252,11 +252,11 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
     // Set x and y to the rounded value if we are using the grid
     x =
-      options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
         ? nearestMultiple(d.x)
         : x;
     y =
-      options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
         ? nearestMultiple(d.y)
         : y;
 
@@ -428,8 +428,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
       mounted.current = true;
     } else {
       setNodes(
-        options.weathermap.nodes
-          ? options.weathermap.nodes.map((d, i) => {
+        wm.nodes
+          ? wm.nodes.map((d, i) => {
               return generateDrawnNode(d, i);
             })
           : []
@@ -441,8 +441,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
   useEffect(() => {
     tempNodes = nodes.slice();
     setLinks(
-      options.weathermap
-        ? options.weathermap.links.map((d, i) => {
+      wm
+        ? wm.links.map((d, i) => {
             return generateDrawnLink(d, i);
           })
         : []
@@ -502,7 +502,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
 
   const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
 
-  if (options.weathermap) {
+  if (wm) {
     return (
       <div
         className={cx(
@@ -581,20 +581,20 @@ export const SimplePanel: React.FC<Props> = (props) => {
           className={cx(
             styles.svg,
             css`
-              background-color: ${options.weathermap.settings.panel.backgroundColor};
+              background-color: ${wm.settings.panel.backgroundColor};
             `
           )}
-          id={`nw-${options.weathermap.id}`}
+          id={`nw-${wm.id}`}
           width={width2}
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox={`0 0 ${
-            options.weathermap.settings.panel.panelSize.width *
-            Math.pow(1.2, options.weathermap.settings.panel.zoomScale)
+            wm.settings.panel.panelSize.width *
+            Math.pow(1.2, wm.settings.panel.zoomScale)
           } ${
-            options.weathermap.settings.panel.panelSize.height *
-            Math.pow(1.2, options.weathermap.settings.panel.zoomScale)
+            wm.settings.panel.panelSize.height *
+            Math.pow(1.2, wm.settings.panel.zoomScale)
           }`}
           shapeRendering="crispEdges"
           textRendering="geometricPrecision"
@@ -846,12 +846,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                         if (index === i) {
                           const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
                           val.x = Math.round(
-                            options.weathermap.settings.panel.grid.enabled
+                            wm.settings.panel.grid.enabled
                               ? wm.nodes[i].position[0] + (val.x + scaledPos.x - wm.nodes[i].position[0])
                               : val.x + scaledPos.x
                           );
                           val.y = Math.round(
-                            options.weathermap.settings.panel.grid.enabled
+                            wm.settings.panel.grid.enabled
                               ? wm.nodes[i].position[1] + (val.y + scaledPos.y - wm.nodes[i].position[1])
                               : val.y + scaledPos.y
                           );
@@ -861,7 +861,7 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     );
                     tempNodes = nodes.slice();
                     setLinks(
-                      options.weathermap.links.map((d, i) => {
+                      wm.links.map((d, i) => {
                         return generateDrawnLink(d, i);
                       })
                     );
@@ -869,10 +869,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                   onStop={(e, position) => {
                     // TODO: decide if i can just copy the nodes array
                     setDraggedNode((null as unknown) as DrawnNode);
-                    let current: Weathermap = options.weathermap;
+                    let current: Weathermap = wm;
                     current.nodes[i].position = [
-                      options.weathermap.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
-                      options.weathermap.settings.panel.grid.enabled ? nearestMultiple(nodes[i].y) : nodes[i].y,
+                      wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
+                      wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].y) : nodes[i].y,
                     ];
                     onOptionsChange({
                       ...options,
@@ -884,12 +884,12 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     display={d.label !== undefined ? 'inline' : 'none'}
                     cursor={'move'}
                     transform={`translate(${
-                      options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+                      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
                         ? nearestMultiple(d.x)
                         : d.x
                     },
                       ${
-                        options.weathermap.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+                        wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
                           ? nearestMultiple(d.y)
                           : d.y
                       })`}
@@ -954,10 +954,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
             //TODO: add this to SVG
             /* <text
             x={0}
-            y={options.weathermap.settings.panel.panelSize.height *
-              Math.pow(1.2, options.weathermap.settings.panel.zoomScale) - 16 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}
+            y={wm.settings.panel.panelSize.height *
+              Math.pow(1.2, wm.settings.panel.zoomScale) - 16 * Math.pow(1.2, wm.settings.panel.zoomScale)}
             fill="#fff"
-            fontSize={16 * Math.pow(1.2, options.weathermap.settings.panel.zoomScale)}
+            fontSize={16 * Math.pow(1.2, wm.settings.panel.zoomScale)}
           >
             {timeRange.from.toLocaleString()}
           </text> */

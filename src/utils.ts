@@ -43,3 +43,34 @@ function parseColor(input: string) {
       .map((x) => +x);
   }
 }
+
+// Taken from https://github.com/grafana/grafana/blob/main/packages/grafana-ui/src/utils/measureText.ts
+// I want to ensure this function remains available regardless of Grafana version
+const context = document.createElement('canvas').getContext('2d')!;
+const cache = new Map<string, TextMetrics>();
+const cacheLimit = 500;
+let ctxFontStyle = '';
+
+export function measureText(text: string, fontSize: number): TextMetrics {
+  const fontStyle = `${fontSize}px 'Roboto'`;
+  const cacheKey = text + fontStyle;
+  const fromCache = cache.get(cacheKey);
+
+  if (fromCache) {
+    return fromCache;
+  }
+
+  if (ctxFontStyle !== fontStyle) {
+    context.font = ctxFontStyle = fontStyle;
+  }
+
+  const metrics = context.measureText(text);
+
+  if (cache.size === cacheLimit) {
+    cache.clear();
+  }
+
+  cache.set(cacheKey, metrics);
+
+  return metrics;
+}
