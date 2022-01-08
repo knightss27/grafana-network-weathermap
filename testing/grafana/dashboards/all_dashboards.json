@@ -269,12 +269,12 @@
             }
           ],
           "scale": {
-            "10": "green",
-            "20": "yellow",
-            "30": "orange",
-            "40": "red",
-            "50": "darkred",
-            "75": "violet"
+            "10": "#73BF69",
+            "20": "#FADE2A",
+            "30": "#FF9830",
+            "40": "#F2495C",
+            "50": "#C4162A",
+            "75": "#B877D9"
           },
           "settings": {
             "fontSizing": {
@@ -286,9 +286,21 @@
               "offset": 2,
               "width": 8
             },
-            "linkSpacingHorizontal": 25,
-            "linkSpacingVertical": 5,
-            "linkStrokeWidth": 8,
+            "link": {
+              "label": {
+                "background": "rgba(204, 204, 220, 0.1)",
+                "border": "rgba(204, 204, 220, 0.25)",
+                "font": "rgb(204, 204, 220)"
+              },
+              "spacing": {
+                "horizontal": 10,
+                "vertical": 5
+              },
+              "stroke": {
+                "color": "rgba(204, 204, 220, 0.1)",
+                "width": 8
+              }
+            },
             "panel": {
               "backgroundColor": "#181b1f",
               "grid": {
