@@ -31,6 +31,3 @@ e2e-results/
 
 # Release
 grafana-weathermap-*.zip
-
-# Icons (for now)
-src/icons/
