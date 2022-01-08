@@ -774,10 +774,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 return (
                   <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
                     <rect
-                      x={-measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width / 2 - wm.settings.fontSizing.link*1.5 / 2}
+                      x={
+                        -measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width / 2 -
+                        (wm.settings.fontSizing.link * 1.5) / 2
+                      }
                       y={-wm.settings.fontSizing.link}
-                      width={measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width + wm.settings.fontSizing.link*1.5}
-                      height={wm.settings.fontSizing.link*2}
+                      width={
+                        measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width +
+                        wm.settings.fontSizing.link * 1.5
+                      }
+                      height={wm.settings.fontSizing.link * 2}
                       fill={getSolidFromAlphaColor(
                         wm.settings.link.label.background,
                         wm.settings.panel.backgroundColor
@@ -788,7 +794,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     ></rect>
                     <text
                       x={0}
-                      y={measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).actualBoundingBoxAscent / 2}
+                      y={
+                        measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).actualBoundingBoxAscent / 2
+                      }
                       textAnchor={'middle'}
                       fontSize={`${wm.settings.fontSizing.link}px`}
                       fill={wm.settings.link.label.font}
@@ -805,10 +813,16 @@ export const SimplePanel: React.FC<Props> = (props) => {
                 return (
                   <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
                     <rect
-                      x={-measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width / 2 - wm.settings.fontSizing.link*1.5 / 2}
+                      x={
+                        -measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width / 2 -
+                        (wm.settings.fontSizing.link * 1.5) / 2
+                      }
                       y={-wm.settings.fontSizing.link}
-                      width={measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width + wm.settings.fontSizing.link*1.5}
-                      height={wm.settings.fontSizing.link*2}
+                      width={
+                        measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width +
+                        wm.settings.fontSizing.link * 1.5
+                      }
+                      height={wm.settings.fontSizing.link * 2}
                       fill={getSolidFromAlphaColor(
                         wm.settings.link.label.background,
                         wm.settings.panel.backgroundColor
@@ -819,7 +833,9 @@ export const SimplePanel: React.FC<Props> = (props) => {
                     ></rect>
                     <text
                       x={0}
-                      y={measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).actualBoundingBoxAscent / 2}
+                      y={
+                        measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).actualBoundingBoxAscent / 2
+                      }
                       textAnchor={'middle'}
                       fontSize={`${wm.settings.fontSizing.link}px`}
                       fill={wm.settings.link.label.font}
