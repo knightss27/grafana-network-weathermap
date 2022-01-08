@@ -251,14 +251,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
     let y = d.y;
 
     // Set x and y to the rounded value if we are using the grid
-    x =
-      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
-        ? nearestMultiple(d.x)
-        : x;
-    y =
-      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
-        ? nearestMultiple(d.y)
-        : y;
+    x = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.x) : x;
+    y = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.y) : y;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -589,12 +583,8 @@ export const SimplePanel: React.FC<Props> = (props) => {
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          viewBox={`0 0 ${
-            wm.settings.panel.panelSize.width *
-            Math.pow(1.2, wm.settings.panel.zoomScale)
-          } ${
-            wm.settings.panel.panelSize.height *
-            Math.pow(1.2, wm.settings.panel.zoomScale)
+          viewBox={`0 0 ${wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale)} ${
+            wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale)
           }`}
           shapeRendering="crispEdges"
           textRendering="geometricPrecision"
@@ -788,7 +778,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={-5}
                       width={measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width + 12}
                       height={wm.settings.fontSizing.link + 8}
-                      fill={getSolidFromAlphaColor(wm.settings.link.label.background, wm.settings.panel.backgroundColor)}
+                      fill={getSolidFromAlphaColor(
+                        wm.settings.link.label.background,
+                        wm.settings.panel.backgroundColor
+                      )}
                       stroke={getSolidFromAlphaColor(wm.settings.link.label.border, wm.settings.panel.backgroundColor)}
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}
@@ -816,7 +809,10 @@ export const SimplePanel: React.FC<Props> = (props) => {
                       y={-5}
                       width={measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width + 12}
                       height={wm.settings.fontSizing.link + 8}
-                      fill={getSolidFromAlphaColor(wm.settings.link.label.background, wm.settings.panel.backgroundColor)}
+                      fill={getSolidFromAlphaColor(
+                        wm.settings.link.label.background,
+                        wm.settings.panel.backgroundColor
+                      )}
                       stroke={getSolidFromAlphaColor(wm.settings.link.label.border, wm.settings.panel.backgroundColor)}
                       strokeWidth={2}
                       rx={(wm.settings.fontSizing.link + 8) / 2}

@@ -150,7 +150,7 @@ export interface WeathermapSettings {
       background: string;
       border: string;
       font: string;
-    }
+    };
   };
   linkArrow: ArrowOptions;
   fontSizing: {

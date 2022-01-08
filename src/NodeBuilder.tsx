@@ -36,7 +36,7 @@ export const NodeBuilder = (props: Props) => {
           background: theme.colors.secondary.main,
           border: theme.colors.secondary.border,
           font: theme.colors.secondary.contrastText,
-        }
+        },
       },
       linkArrow: {
         width: 8,
