@@ -114,9 +114,11 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   /* STATE */
 
   // Nodes
-  const [nodes, setNodes] = useState(wm.nodes.map((d, i) => {
-    return generateDrawnNode(d, i);
-  }));
+  const [nodes, setNodes] = useState(
+    wm.nodes.map((d, i) => {
+      return generateDrawnNode(d, i);
+    })
+  );
 
   // To be used to calculate how many links we've drawn
   let tempNodes = nodes.slice();
@@ -207,8 +209,8 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     return final;
   }
 
-  let calculatedRectHeights: { [key: string]: number } = calculateRectHeights()
-  
+  let calculatedRectHeights: { [key: string]: number } = calculateRectHeights();
+
   function calculateRectHeights() {
     const c: { [key: string]: number } = {};
     for (let node of nodes) {
@@ -572,7 +574,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
               background-color: ${wm.settings.panel.backgroundColor};
             `
           )}
-          id={`nw-${wm.id}${isEditMode ? "_" : ""}`}
+          id={`nw-${wm.id}${isEditMode ? '_' : ''}`}
           width={width2}
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
