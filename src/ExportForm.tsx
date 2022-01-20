@@ -23,7 +23,7 @@ export const ExportForm = ({ value, onChange }: Props) => {
   };
 
   const handleSVGExport = async () => {
-    const svg = document.getElementById(`nw-${value.id}`);
+    const svg = document.getElementById(`nw-${value.id}_`);
 
     let data = svg!.outerHTML || '';
     const preface = '<?xml version="1.0" standalone="no"?>\r\n';

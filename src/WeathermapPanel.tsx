@@ -572,7 +572,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
               background-color: ${wm.settings.panel.backgroundColor};
             `
           )}
-          id={`nw-${wm.id}`}
+          id={`nw-${wm.id}${isEditMode ? "_" : ""}`}
           width={width2}
           height={height2}
           xmlns="http://www.w3.org/2000/svg"
