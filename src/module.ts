@@ -1,17 +1,17 @@
 import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
-import { SimplePanel } from './SimplePanel';
-import { NodeBuilder } from 'NodeBuilder';
+import { WeathermapPanel } from './WeathermapPanel';
+import { WeathermapBuilder } from 'WeathermapBuilder';
 import { ExportForm } from './ExportForm';
 
-export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<SimpleOptions>(WeathermapPanel).setPanelOptions((builder) => {
   return builder
     .addCustomEditor({
       id: 'weathermapEditor',
       path: 'weathermap',
       name: 'Edit Weathermap',
       description: 'Add, remove, and edit weathermap nodes and links.',
-      editor: NodeBuilder,
+      editor: WeathermapBuilder,
       settings: {
         placeholder: 'This is my placeholder.',
       },

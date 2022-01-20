@@ -14,7 +14,7 @@ interface Settings {
 
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
-export const NodeBuilder = (props: Props) => {
+export const WeathermapBuilder = (props: Props) => {
   const theme = useTheme2();
 
   const defaultValue: Weathermap = {
