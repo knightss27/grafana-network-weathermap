@@ -937,7 +937,13 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
                         x={-d.icon.size.width / 2}
                         y={
                           d.icon.drawInside
-                            ? d.label!.length > 0 ? -(d.icon.size.height + d.icon.padding.vertical + measureText(d.label!, wm.settings.fontSizing.node).actualBoundingBoxAscent)/2 : -d.icon.size.height/2
+                            ? d.label!.length > 0
+                              ? -(
+                                  d.icon.size.height +
+                                  d.icon.padding.vertical +
+                                  measureText(d.label!, wm.settings.fontSizing.node).actualBoundingBoxAscent
+                                ) / 2
+                              : -d.icon.size.height / 2
                             : d.label!.length > 0
                             ? calculateTextY(d) -
                               d.icon.size.height -

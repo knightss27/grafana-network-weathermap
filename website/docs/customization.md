@@ -23,7 +23,7 @@ You can also pan and zoom on the panel. Zooming works with just your mousewheel,
 
 One of the most important parts of creating a weathermap is arranging the links between nodes. Depending on the orientation of these links, some specific settings may work best.
 
-**PLEASE NOTE:** *Links are drawn in the order in which they are added to a node, meaning some may overlap if you aren't careful when adding them. While a future version may make some easier way to deal with this, for now you can just remove the relevant links and re-add them in the necessary order.*
+**PLEASE NOTE:** _Links are drawn in the order in which they are added to a node, meaning some may overlap if you aren't careful when adding them. While a future version may make some easier way to deal with this, for now you can just remove the relevant links and re-add them in the necessary order._
 
 ## Link Options
 
@@ -59,6 +59,7 @@ These options are set on all arrows.
 ## Node Options:
 
 #### Icon
+
 - Select one of the icons from the existing library to attach it to a node.
 - Width (`number`): Icon bounding box width.
 - Height (`numer`): Icon bounding box height.
@@ -67,9 +68,11 @@ These options are set on all arrows.
   ![Drawn inside example](/img/customization/2-icon-0.png)
 
 #### Padding
+
 - Padding, Horizontal & Vertical (`number`, `number`): represents the spacing between the text and the border.
 
 #### Advanced
+
 - In the `Advanced` section of the `Nodes` editor, there are two toggles:
   - Constant Spacing: Should links be a certain `Link Spacing Horizontal (px)` apart?
     - This setting is useful if you have two nodes with signficant differences in text length, as by default the plugin will space links evenly across a `Top | Bottom` anchor. Switching to a constant spacing forces these links to be the same pixel distance apart.
@@ -77,6 +80,7 @@ These options are set on all arrows.
     - This setting lets you decide whether an individual node will grow when there is more than one link attached to either `Left | Right` anchor. When on, a node will always only be the size of its text and padding. When off, a node will grow so that links going left to right do not overlap (these links will be `Link Spacing Vertical (px)` apart).
 
 #### Colors
+
 - Background (`picker`): Node background color.
 - Border (`picker`): Node border color.
 - Font (`picker`): Node font color.
