@@ -23,6 +23,8 @@ You can also pan and zoom on the panel. Zooming works with just your mousewheel,
 
 One of the most important parts of creating a weathermap is arranging the links between nodes. Depending on the orientation of these links, some specific settings may work best.
 
+**PLEASE NOTE: Links are drawn in the order in which they are added to a node, meaning some may overlap if you aren't careful when adding them. While a future version may make some easier way to deal with this, for now you can just remove the relevant links and re-add them in the necessary order.**
+
 ## Link Options
 
 - Anchors:
