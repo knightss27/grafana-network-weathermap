@@ -47,10 +47,15 @@ These options are set on all arrows.
 - Height (`number`): The height of the arrow in pixels (how long it looks).
 - Offset (`number`): The distance from the meeting point of the two links the point of the arrow will reach to. This is the offset for _one_ side of the link, meaning the actual space between two arrows will be twice this number.
 
-## Node options:
+## Node Options:
 
 - In the `Advanced` section of the `Nodes` editor, there are two toggles:
   - Constant Spacing: Should links be a certain `Link Spacing Horizontal (px)` apart?
     - This setting is useful if you have two nodes with signficant differences in text length, as by default the plugin will space links evenly across a `Top | Bottom` anchor. Switching to a constant spacing forces these links to be the same pixel distance apart.
   - Compact Vertical Links: Should nodes ignore the number of links attached to their sides?
     - This setting lets you decide whether an individual node will grow when there is more than one link attached to either `Left | Right` anchor. When on, a node will always only be the size of its text and padding. When off, a node will grow so that links going left to right do not overlap (these links will be `Link Spacing Vertical (px)` apart).
+
+## Font Options:
+
+- Node Font Size (`number`): All nodes' font size;
+- Link Font Size (`number`): All links' label font size;
