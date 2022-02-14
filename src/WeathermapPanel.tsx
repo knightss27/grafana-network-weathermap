@@ -702,6 +702,9 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
           >
             <g>
               {links.map((d, i) => {
+                if (d.nodes[0].id == d.nodes[1].id) {
+                  return;
+                }
                 return (
                   <g
                     key={i}
@@ -770,6 +773,9 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
             </g>
             <g>
               {links.map((d, i) => {
+                if (d.nodes[0].id == d.nodes[1].id) {
+                  return;
+                }
                 const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
                 return (
                   <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
@@ -809,6 +815,9 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
             </g>
             <g>
               {links.map((d, i) => {
+                if (d.nodes[0].id == d.nodes[1].id) {
+                  return;
+                }
                 const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
                 return (
                   <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
