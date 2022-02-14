@@ -19,6 +19,23 @@ import { measureText, getSolidFromAlphaColor } from 'utils';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
+// Calculate node position, width, etc.
+function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
+  let toReturn: DrawnNode = Object.create(d);
+  toReturn.index = i;
+  toReturn.x = toReturn.position[0];
+  toReturn.y = toReturn.position[1];
+  toReturn.labelWidth = measureText(d.label ? d.label : '', wm.settings.fontSizing.node).width;
+  toReturn.anchors = {
+    0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
+    1: { numLinks: toReturn.anchors[1].numLinks, numFilledLinks: 0 },
+    2: { numLinks: toReturn.anchors[2].numLinks, numFilledLinks: 0 },
+    3: { numLinks: toReturn.anchors[3].numLinks, numFilledLinks: 0 },
+    4: { numLinks: toReturn.anchors[4].numLinks, numFilledLinks: 0 },
+  };
+  return toReturn;
+}
+
 export const WeathermapPanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
   const styles = getStyles();
@@ -42,7 +59,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
       c[parseInt(pct, 10)] = options.weathermap.scale[parseInt(pct, 10)];
     });
     return c;
-  }, [options]);
+  }, [wm.scale, options]);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -63,18 +80,14 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   const scaleHeights: { [num: number]: string } = useMemo(() => {
     let c: { [num: number]: string } = {};
     Object.keys(colors).forEach((percent, i) => {
-      c[i] = getScaleColorHeight(i);
+      const keys = Object.keys(colors);
+      const current: number = parseInt(keys[i], 10);
+      const next: number = keys[i + 1] !== undefined ? parseInt(keys[i + 1], 10) : 101;
+      let height: number = ((next - current) / 100) * 200;
+      c[i] = height.toString() + 'px';
     });
     return c;
-  }, [options]);
-
-  function getScaleColorHeight(index: number) {
-    const keys = Object.keys(colors);
-    const current: number = parseInt(keys[index], 10);
-    const next: number = keys[index + 1] !== undefined ? parseInt(keys[index + 1], 10) : 101;
-    let height: number = ((next - current) / 100) * 200;
-    return height.toString() + 'px';
-  }
+  }, [colors, options]);
 
   /** LINK AND ARROW RENDERING */
 
@@ -116,7 +129,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   // Nodes
   const [nodes, setNodes] = useState(
     wm.nodes.map((d, i) => {
-      return generateDrawnNode(d, i);
+      return generateDrawnNode(d, i, wm);
     })
   );
 
@@ -203,7 +216,10 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
       final = 0;
     }
 
-    if (d.nodeIcon?.drawInside && final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2) {
+    if (
+      d.nodeIcon?.drawInside &&
+      final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
+    ) {
       final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
     }
     return final;
@@ -242,6 +258,10 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
 
   // Calculate the position of a link given the node and side information
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
+    if (!calculatedRectHeights || !calculatedRectHeights[d.id]) {
+      calculatedRectHeights = calculateRectHeights();
+    }
+
     // Set initial x and y values for links. Defaults to center x of the node, and the middle y.
     let x = d.x;
     let y = d.y;
@@ -369,8 +389,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
         return n;
       });
     }
-    
-    console.log('before error')
+
     toReturn.lineStartA = getMultiLinkPosition(tempNodes[toReturn.source.index], toReturn.sides.A);
     toReturn.lineStartZ = getMultiLinkPosition(tempNodes[toReturn.target.index], toReturn.sides.Z);
 
@@ -393,23 +412,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     return toReturn;
   }
 
-  // Calculate node position, width, etc.
-  function generateDrawnNode(d: Node, i: number): DrawnNode {
-    let toReturn: DrawnNode = Object.create(d);
-    toReturn.index = i;
-    toReturn.x = toReturn.position[0];
-    toReturn.y = toReturn.position[1];
-    toReturn.labelWidth = measureText(d.label ? d.label : '', wm.settings.fontSizing.node).width;
-    toReturn.anchors = {
-      0: { numLinks: toReturn.anchors[0].numLinks, numFilledLinks: 0 },
-      1: { numLinks: toReturn.anchors[1].numLinks, numFilledLinks: 0 },
-      2: { numLinks: toReturn.anchors[2].numLinks, numFilledLinks: 0 },
-      3: { numLinks: toReturn.anchors[3].numLinks, numFilledLinks: 0 },
-      4: { numLinks: toReturn.anchors[4].numLinks, numFilledLinks: 0 },
-    };
-    return toReturn;
-  }
-
   // Minimize uneeded state changes
   const mounted = useRef(false);
 
@@ -419,18 +421,19 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
       mounted.current = true;
     } else {
       setNodes(
-        wm.nodes
+        wm
           ? wm.nodes.map((d, i) => {
-              return generateDrawnNode(d, i);
+              return generateDrawnNode(d, i, wm);
             })
           : []
       );
     }
-  }, [props]);
+  }, [props, wm]);
+
+  tempNodes = nodes.slice();
 
   // Update links on nodes change
   useEffect(() => {
-    tempNodes = nodes.slice();
     setLinks(
       wm
         ? wm.links.map((d, i) => {
