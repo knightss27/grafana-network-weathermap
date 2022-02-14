@@ -222,8 +222,8 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   }
 
   let calculatedRectWidths: { [key: string]: number } = useMemo(() => {
-    return calculateRectWidths(nodes, wm);
-  }, [options]);
+    return calculateRectWidths(nodes, options.weathermap);
+  }, [nodes, options]);
 
   let calculatedRectHeights: { [key: string]: number } = calculateRectHeights();
 
