@@ -36,6 +36,43 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
   return toReturn;
 }
 
+function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): number {
+  const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
+
+  const maxWidth =
+    wm.settings.link.stroke.width * (widerSideLinks - 1) +
+    wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
+    d.padding.horizontal * 2;
+
+  let final = 0;
+  if (d.label !== undefined) {
+    const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
+    if (!d.useConstantSpacing) {
+      final = labeledWidth;
+    } else {
+      final = Math.max(labeledWidth, maxWidth);
+    }
+  } else {
+    final = 0;
+  }
+
+  if (
+    d.nodeIcon?.drawInside &&
+    final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
+  ) {
+    final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
+  }
+  return final;
+}
+
+function calculateRectWidths(nodes: DrawnNode[], wm: Weathermap) {
+  const c: { [key: string]: number } = {};
+  for (let node of nodes) {
+    c[node.id] = calculateRectangleAutoWidth(node, wm);
+  }
+  return c;
+}
+
 export const WeathermapPanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
   const styles = getStyles();
@@ -87,7 +124,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
       c[i] = height.toString() + 'px';
     });
     return c;
-  }, [colors, options]);
+  }, [colors]);
 
   /** LINK AND ARROW RENDERING */
 
@@ -148,7 +185,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   // Find where to draw the rectangle for the node (top left x)
   function calculateRectX(d: DrawnNode) {
     if (!calculatedRectWidths[d.id]) {
-      calculatedRectWidths = calculateRectWidths();
+      calculatedRectWidths = calculateRectWidths(nodes, wm);
     }
     const offset = Math.min(
       -calculatedRectWidths[d.id] / 2,
@@ -185,45 +222,8 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   }
 
   let calculatedRectWidths: { [key: string]: number } = useMemo(() => {
-    return calculateRectWidths();
+    return calculateRectWidths(nodes, wm);
   }, [options]);
-
-  function calculateRectWidths() {
-    const c: { [key: string]: number } = {};
-    for (let node of nodes) {
-      c[node.id] = calculateRectangleAutoWidth(node);
-    }
-    return c;
-  }
-
-  function calculateRectangleAutoWidth(d: DrawnNode): number {
-    const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
-
-    const maxWidth =
-      wm.settings.link.stroke.width * (widerSideLinks - 1) +
-      wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
-      d.padding.horizontal * 2;
-
-    let final = 0;
-    if (d.label !== undefined) {
-      const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
-      if (!d.useConstantSpacing) {
-        final = labeledWidth;
-      } else {
-        final = Math.max(labeledWidth, maxWidth);
-      }
-    } else {
-      final = 0;
-    }
-
-    if (
-      d.nodeIcon?.drawInside &&
-      final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
-    ) {
-      final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
-    }
-    return final;
-  }
 
   let calculatedRectHeights: { [key: string]: number } = calculateRectHeights();
 
@@ -274,9 +274,9 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
       // Align left/right
       if (side.anchor === Anchor.Left) {
-        x -= calculateRectangleAutoWidth(d) / 2 - wm.settings.link.stroke.width / 2;
+        x -= calculateRectangleAutoWidth(d, wm) / 2 - wm.settings.link.stroke.width / 2;
       } else {
-        x += calculateRectangleAutoWidth(d) / 2 - wm.settings.link.stroke.width / 2;
+        x += calculateRectangleAutoWidth(d, wm) / 2 - wm.settings.link.stroke.width / 2;
       }
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
@@ -421,27 +421,26 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
       mounted.current = true;
     } else {
       setNodes(
-        wm
-          ? wm.nodes.map((d, i) => {
-              return generateDrawnNode(d, i, wm);
-            })
-          : []
+        options.weathermap.nodes.map((d, i) => {
+          return generateDrawnNode(d, i, options.weathermap);
+        })
       );
     }
-  }, [props, wm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
 
   tempNodes = nodes.slice();
 
   // Update links on nodes change
   useEffect(() => {
     setLinks(
-      wm
-        ? wm.links.map((d, i) => {
-            return generateDrawnLink(d, i);
-          })
-        : []
+      options.weathermap.links.map((d, i) => {
+        return generateDrawnLink(d, i);
+      })
     );
-  }, [nodes]);
+    // Yes, technically this allows for stale if it were to updated in any way other than being passed down. But it's not.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
 
   const zoom = (e: WheelEvent) => {
     let zoomed: Weathermap = wm;
@@ -702,7 +701,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
           >
             <g>
               {links.map((d, i) => {
-                if (d.nodes[0].id == d.nodes[1].id) {
+                if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
                 return (
@@ -773,7 +772,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
             </g>
             <g>
               {links.map((d, i) => {
-                if (d.nodes[0].id == d.nodes[1].id) {
+                if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
                 const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
@@ -815,7 +814,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
             </g>
             <g>
               {links.map((d, i) => {
-                if (d.nodes[0].id == d.nodes[1].id) {
+                if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
                 const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
