@@ -440,7 +440,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     );
     // Yes, technically this allows for stale if it were to updated in any way other than being passed down. But it's not.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
+  }, [nodes]);
 
   const zoom = (e: WheelEvent) => {
     let zoomed: Weathermap = wm;
