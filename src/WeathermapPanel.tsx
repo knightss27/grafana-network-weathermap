@@ -154,7 +154,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
 
   // Calculate the middle of the rectangle for text centering
   function calculateTextY(d: DrawnNode) {
-    return d.icon?.drawInside ? d.icon.size.height / 2 + d.icon.padding.vertical : 0;
+    return d.nodeIcon?.drawInside ? d.nodeIcon.size.height / 2 + d.nodeIcon.padding.vertical : 0;
   }
 
   // Calculate aspect-ratio corrected drag positions
@@ -203,8 +203,8 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
       final = 0;
     }
 
-    if (d.icon?.drawInside && final < d.icon.padding.horizontal + d.icon.size.width + d.padding.horizontal * 2) {
-      final += d.icon.padding.horizontal + d.icon.size.width + d.padding.horizontal * 2 - final;
+    if (d.nodeIcon?.drawInside && final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2) {
+      final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
     }
     return final;
   }
@@ -224,11 +224,11 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
     let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
 
-    if (d.icon?.drawInside) {
-      minHeight += d.icon.size.height + 2 * d.icon.padding.vertical;
+    if (d.nodeIcon?.drawInside) {
+      minHeight += d.nodeIcon.size.height + 2 * d.nodeIcon.padding.vertical;
     }
 
-    if (d.icon && d.label === '') {
+    if (d.nodeIcon && d.label === '') {
       minHeight -= wm.settings.fontSizing.node;
     }
 
@@ -369,7 +369,8 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
         return n;
       });
     }
-
+    
+    console.log('before error')
     toReturn.lineStartA = getMultiLinkPosition(tempNodes[toReturn.source.index], toReturn.sides.A);
     toReturn.lineStartZ = getMultiLinkPosition(tempNodes[toReturn.target.index], toReturn.sides.Z);
 
@@ -902,7 +903,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
                           : d.y
                       })`}
                   >
-                    {d.label !== '' || d.icon?.drawInside ? (
+                    {d.label !== '' || d.nodeIcon?.drawInside ? (
                       <React.Fragment>
                         <rect
                           x={calculateRectX(d)}
@@ -932,29 +933,29 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
                     ) : (
                       ''
                     )}
-                    {d.icon && d.icon.src !== '' ? (
+                    {d.nodeIcon && d.nodeIcon.src !== '' ? (
                       <image
-                        x={-d.icon.size.width / 2}
+                        x={-d.nodeIcon.size.width / 2}
                         y={
-                          d.icon.drawInside
+                          d.nodeIcon.drawInside
                             ? d.label!.length > 0
                               ? -(
-                                  d.icon.size.height +
-                                  d.icon.padding.vertical +
+                                  d.nodeIcon.size.height +
+                                  d.nodeIcon.padding.vertical +
                                   measureText(d.label!, wm.settings.fontSizing.node).actualBoundingBoxAscent
                                 ) / 2
-                              : -d.icon.size.height / 2
+                              : -d.nodeIcon.size.height / 2
                             : d.label!.length > 0
                             ? calculateTextY(d) -
-                              d.icon.size.height -
+                              d.nodeIcon.size.height -
                               calculatedRectHeights[d.id] / 2 -
                               1 -
-                              d.icon.padding.vertical
-                            : -d.icon.size.height / 2
+                              d.nodeIcon.padding.vertical
+                            : -d.nodeIcon.size.height / 2
                         }
-                        width={d.icon.size.width}
-                        height={d.icon.size.height}
-                        href={d.icon.src}
+                        width={d.nodeIcon.size.width}
+                        height={d.nodeIcon.size.height}
+                        href={d.nodeIcon.src}
                       />
                     ) : (
                       ''

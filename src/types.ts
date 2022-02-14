@@ -65,7 +65,7 @@ export interface Node {
     background: string;
     border: string;
   };
-  icon: Icon | null;
+  nodeIcon: Icon | null;
 }
 
 export interface LinkSide {

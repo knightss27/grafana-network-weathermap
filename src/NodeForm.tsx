@@ -77,7 +77,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     let weathermap: Weathermap = value;
 
     if (icon === null) {
-      weathermap.nodes[i].icon = {
+      weathermap.nodes[i].nodeIcon = {
         src: '',
         name: '',
         size: {
@@ -91,11 +91,11 @@ export const NodeForm = ({ value, onChange }: Props) => {
         drawInside: false,
       };
     } else {
-      weathermap.nodes[i].icon!.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
-      weathermap.nodes[i].icon!.name = icon;
+      weathermap.nodes[i].nodeIcon!.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
+      weathermap.nodes[i].nodeIcon!.name = icon;
 
-      if (weathermap.nodes[i].icon!.size.width === 0) {
-        weathermap.nodes[i].icon!.size = { width: 40, height: 40 };
+      if (weathermap.nodes[i].nodeIcon!.size.width === 0) {
+        weathermap.nodes[i].nodeIcon!.size = { width: 40, height: 40 };
       }
     }
 
@@ -104,19 +104,19 @@ export const NodeForm = ({ value, onChange }: Props) => {
 
   const handleIconSizeChange = (amt: number, i: number, type: 'width' | 'height') => {
     let weathermap: Weathermap = value;
-    weathermap.nodes[i].icon!.size[type] = amt;
+    weathermap.nodes[i].nodeIcon!.size[type] = amt;
     onChange(weathermap);
   };
 
   const handleIconPaddingChange = (amt: number, i: number, type: 'vertical' | 'horizontal') => {
     let weathermap: Weathermap = value;
-    weathermap.nodes[i].icon!.padding[type] = amt;
+    weathermap.nodes[i].nodeIcon!.padding[type] = amt;
     onChange(weathermap);
   };
 
   const handleIconDrawChange = (checked: boolean, i: number) => {
     let weathermap: Weathermap = value;
-    weathermap.nodes[i].icon!.drawInside = checked;
+    weathermap.nodes[i].nodeIcon!.drawInside = checked;
     onChange(weathermap);
   };
 
@@ -148,7 +148,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
         background: theme.colors.secondary.main,
         border: theme.colors.secondary.border,
       },
-      icon: {
+      nodeIcon: {
         src: '',
         name: '',
         size: {
@@ -266,7 +266,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                 onChange={(v) => {
                   handleIconChange(v.value!, i);
                 }}
-                value={node.icon?.name}
+                value={node.nodeIcon?.name}
                 options={[
                   { label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted },
                   { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
@@ -282,7 +282,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Width'}>
                       <Input
-                        value={node.icon!.size.width}
+                        value={node.nodeIcon!.size.width}
                         onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'width')}
                         placeholder={'Width'}
                         type={'number'}
@@ -292,7 +292,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     </InlineField>
                     <InlineField label={'Height'}>
                       <Input
-                        value={node.icon!.size.height}
+                        value={node.nodeIcon!.size.height}
                         onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'height')}
                         placeholder={'Height'}
                         type={'number'}
@@ -306,7 +306,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       <Slider
                         min={0}
                         max={40}
-                        value={node.icon!.padding.horizontal}
+                        value={node.nodeIcon!.padding.horizontal}
                         step={1}
                         onChange={(num) => handleIconPaddingChange(num, i, 'horizontal')}
                       />
@@ -315,7 +315,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       <Slider
                         min={0}
                         max={40}
-                        value={node.icon!.padding.vertical}
+                        value={node.nodeIcon!.padding.vertical}
                         step={1}
                         onChange={(num) => handleIconPaddingChange(num, i, 'vertical')}
                       />
@@ -324,7 +324,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Draw Inside'}>
                       <InlineSwitch
-                        value={node.icon!.drawInside}
+                        value={node.nodeIcon!.drawInside}
                         onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
                       />
                     </InlineField>
