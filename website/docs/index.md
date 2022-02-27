@@ -47,6 +47,13 @@ By default, the panel will start completely blank, looking something like this:
   - Bandwidth Query (`Query`): A query representing the bandwidth of this side in `bits`.
 - Select `A` and `B` side nodes from their respective dropdowns.
 
+## Adding Data
+
+- The weathermap expects a data frame with two fields, a time and a number.
+- This number should always be in `bits/s` (or just `bits` if you have a query for bandwidth).
+- The weathermap works best with 'instant' queries, which just use the most recent value retrieved. (Otherwise, the weathermap will always choose the most recent data point possible).
+- Once you have added a query in the panel editor, you can can see all queries and select one from the dropdown in the Query fields of the links.
+
 ## Setting Thresholds
 
 - The weathermap color scale allows you to color links based on their bandwidth usage.
