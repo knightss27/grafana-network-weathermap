@@ -467,17 +467,17 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     }
   };
 
-  const [hoveredLink, setHoveredLink] = useState((null as unknown) as HoveredLink);
+  const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
 
   const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
     setHoveredLink({ link: d, side, mouseEvent: e });
   };
 
   const handleLinkHoverLoss = () => {
-    setHoveredLink((null as unknown) as HoveredLink);
+    setHoveredLink(null as unknown as HoveredLink);
   };
 
-  const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
+  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
 
   if (wm) {
     return (
@@ -871,7 +871,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
                     );
                   }}
                   onStop={(e, position) => {
-                    setDraggedNode((null as unknown) as DrawnNode);
+                    setDraggedNode(null as unknown as DrawnNode);
                     let current: Weathermap = wm;
                     current.nodes[i].position = [
                       wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
