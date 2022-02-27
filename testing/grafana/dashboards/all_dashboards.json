@@ -68,7 +68,7 @@
                     "font": "rgb(204, 204, 220)"
                   },
                   "compactVerticalLinks": false,
-                  "icon": {
+                  "nodeIcon": {
                     "drawInside": false,
                     "name": "",
                     "padding": {
@@ -119,7 +119,7 @@
                     "font": "rgb(204, 204, 220)"
                   },
                   "compactVerticalLinks": false,
-                  "icon": {
+                  "nodeIcon": {
                     "drawInside": false,
                     "name": "",
                     "padding": {
@@ -194,7 +194,7 @@
                 "font": "rgb(204, 204, 220)"
               },
               "compactVerticalLinks": false,
-              "icon": {
+              "nodeIcon": {
                 "drawInside": false,
                 "name": "",
                 "padding": {
@@ -245,7 +245,7 @@
                 "font": "rgb(204, 204, 220)"
               },
               "compactVerticalLinks": false,
-              "icon": {
+              "nodeIcon": {
                 "drawInside": false,
                 "name": "",
                 "padding": {
@@ -325,6 +325,7 @@
         {
           "exemplar": true,
           "expr": "wm_bandwidth_data",
+          "instant": true,
           "interval": "",
           "legendFormat": "{{type}}",
           "refId": "A"
