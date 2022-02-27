@@ -73,23 +73,17 @@ function calculateRectWidths(nodes: DrawnNode[], wm: Weathermap) {
   return c;
 }
 
+const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
+
 export const WeathermapPanel: React.FC<Props> = (props) => {
   const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
   const styles = getStyles();
   const theme = useTheme2();
-
-  // Better variable name
   const wm = options.weathermap;
 
-  // Get edit mode
   const isEditMode = window.location.search.includes('editPanel');
 
-  /** FIELDS */
-
-  // Things to use multiple times
-  const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
-
-  /** COLOR SCALES */
+  // Color scales
   const colors: any = useMemo(() => {
     const c: any = {};
     Object.keys(wm.scale).forEach((pct: string) => {
@@ -126,8 +120,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     return c;
   }, [colors]);
 
-  /** LINK AND ARROW RENDERING */
-
   // Get the middle point between two nodes
   function getMiddlePoint(source: Position, target: Position, offset: number): Position {
     const x = (source.x + target.x) / 2;
@@ -161,9 +153,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     return { p1: v1, p2: v2 };
   }
 
-  /* STATE */
-
-  // Nodes
   const [nodes, setNodes] = useState(
     wm.nodes.map((d, i) => {
       return generateDrawnNode(d, i, wm);
@@ -173,7 +162,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
   // To be used to calculate how many links we've drawn
   let tempNodes = nodes.slice();
 
-  // Links
   const [links, setLinks] = useState(
     wm
       ? wm.links.map((d, i) => {
@@ -216,7 +204,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     };
   }
 
-  // For use with nodeGrid
+  // Find the nearest place to snap to on the grid
   function nearestMultiple(i: number, j: number = wm.settings.panel.grid.size): number {
     return Math.ceil(i / j) * j;
   }
@@ -250,7 +238,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
 
     const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
     const fullHeight = linkHeight * numLinks - wm.settings.link.spacing.vertical;
-    // let final = !d.compactVerticalLinks && numLinks > 1 ? fullHeight : minHeight;
     let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
 
     return final;
@@ -326,8 +313,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
 
-    // Set the link's source and target Node
-    // TODO: optimize this
+    // Set the link's source and target node
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
     toReturn.target = nodes.filter((n) => n.id === toReturn.nodes[1].id)[0];
 
@@ -375,8 +361,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
     }
 
     // Calculate positions for links and arrow polygons. Not included above to help with typing.
-    // TODO: type this properly, using the DrawnLinkSide interface
-
     if (i === 0) {
       tempNodes = tempNodes.map((n) => {
         n.anchors = {
@@ -438,7 +422,7 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
         return generateDrawnLink(d, i);
       })
     );
-    // Yes, technically this allows for stale if it were to updated in any way other than being passed down. But it's not.
+    // Yes, technically this allows for stale states if it were to updated in any way other than being passed down. But it's not.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes]);
 
@@ -887,7 +871,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
                     );
                   }}
                   onStop={(e, position) => {
-                    // TODO: decide if i can just copy the nodes array
                     setDraggedNode((null as unknown) as DrawnNode);
                     let current: Weathermap = wm;
                     current.nodes[i].position = [
@@ -976,18 +959,6 @@ export const WeathermapPanel: React.FC<Props> = (props) => {
               ))}
             </g>
           </g>
-          {
-            //TODO: add this to SVG
-            /* <text
-            x={0}
-            y={wm.settings.panel.panelSize.height *
-              Math.pow(1.2, wm.settings.panel.zoomScale) - 16 * Math.pow(1.2, wm.settings.panel.zoomScale)}
-            fill="#fff"
-            fontSize={16 * Math.pow(1.2, wm.settings.panel.zoomScale)}
-          >
-            {timeRange.from.toLocaleString()}
-          </text> */
-          }
         </svg>
         <div
           className={cx(
