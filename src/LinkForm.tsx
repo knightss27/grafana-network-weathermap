@@ -132,7 +132,7 @@ export const LinkForm = (props: Props) => {
     props.onChange(weathermap);
   };
 
-  const [currentLink, setCurrentLink] = useState('null' as unknown as Link);
+  const [currentLink, setCurrentLink] = useState(('null' as unknown) as Link);
 
   return (
     <React.Fragment>
@@ -169,10 +169,10 @@ export const LinkForm = (props: Props) => {
                       <InlineField label={`${sName} Side`} labelWidth={'auto'} style={{ maxWidth: '100%' }}>
                         <Select
                           onChange={(v) => {
-                            handleNodeChange(v as unknown as Node, sName, i);
+                            handleNodeChange((v as unknown) as Node, sName, i);
                           }}
                           value={link.nodes[sideIndex]?.label || 'No label'}
-                          options={value.nodes as unknown as Array<SelectableValue<String>>}
+                          options={(value.nodes as unknown) as Array<SelectableValue<String>>}
                           getOptionLabel={(node) => node?.label || 'No label'}
                           getOptionValue={(node) => node.id}
                           className={styles.nodeSelect}

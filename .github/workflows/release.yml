@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*" # Run workflow on version tags, e.g. v1.0.0.
+      - 'v*.*.*' # Run workflow on version tags, e.g. v1.0.0.
 
 jobs:
   release:
@@ -15,12 +15,12 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.2
         with:
-          node-version: "14.x"
+          node-version: '14.x'
 
       - name: Setup Go environment
         uses: actions/setup-go@v2
         with:
-          go-version: "1.16"
+          go-version: '1.16'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -50,10 +50,10 @@ jobs:
       - name: Build and test frontend
         run: yarn build
 
-#       - name: Sign plugin
-#         run: yarn sign
-#         env:
-#           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
+      #       - name: Sign plugin
+      #         run: yarn sign
+      #         env:
+      #           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
 
       - name: Get plugin metadata
         id: metadata
@@ -85,14 +85,14 @@ jobs:
           zip ${{ steps.metadata.outputs.archive }} ${{ steps.metadata.outputs.plugin-id }} -r
           md5sum ${{ steps.metadata.outputs.archive }} > ${{ steps.metadata.outputs.archive-checksum }}
           echo "::set-output name=checksum::$(cat ./${{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)"
-#       to use when actually signed
-#       - name: Lint plugin
-#         run: |
-#           git clone https://github.com/grafana/plugin-validator
-#           pushd ./plugin-validator/pkg/cmd/plugincheck
-#           go install
-#           popd
-#           plugincheck ${{ steps.metadata.outputs.archive }}
+      #       to use when actually signed
+      #       - name: Lint plugin
+      #         run: |
+      #           git clone https://github.com/grafana/plugin-validator
+      #           pushd ./plugin-validator/pkg/cmd/plugincheck
+      #           go install
+      #           popd
+      #           plugincheck ${{ steps.metadata.outputs.archive }}
       - name: Create release
         id: create_release
         uses: actions/create-release@v1

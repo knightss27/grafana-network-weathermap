@@ -188,7 +188,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : ('null' as unknown as Node));
+  const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : (('null' as unknown) as Node));
 
   const ciscoIconsFormatted = CiscoIcons.map((t) => {
     return { label: t, value: 'cisco/' + t };
@@ -216,10 +216,10 @@ export const NodeForm = ({ value, onChange }: Props) => {
       </h6>
       <Select
         onChange={(v) => {
-          setCurrentNode(v as unknown as Node);
+          setCurrentNode((v as unknown) as Node);
         }}
         value={currentNode}
-        options={value.nodes as unknown as Array<SelectableValue<Node>>}
+        options={(value.nodes as unknown) as Array<SelectableValue<Node>>}
         getOptionLabel={(node) => node.label}
         getOptionValue={(node) => node.id}
         className={styles.nodeSelect}

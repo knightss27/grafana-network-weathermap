@@ -77,7 +77,7 @@ function calculateRectWidths(nodes: DrawnNode[], wm: Weathermap) {
 const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
 
 /**
- * Weathermap panel component. 
+ * Weathermap panel component.
  */
 export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: PanelProps<SimpleOptions>) => {
   const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
@@ -471,17 +471,17 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     }
   };
 
-  const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
+  const [hoveredLink, setHoveredLink] = useState((null as unknown) as HoveredLink);
 
   const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
     setHoveredLink({ link: d, side, mouseEvent: e });
   };
 
   const handleLinkHoverLoss = () => {
-    setHoveredLink(null as unknown as HoveredLink);
+    setHoveredLink((null as unknown) as HoveredLink);
   };
 
-  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+  const [draggedNode, setDraggedNode] = useState((null as unknown) as DrawnNode);
 
   if (wm) {
     return (
@@ -875,7 +875,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     );
                   }}
                   onStop={(e, position) => {
-                    setDraggedNode(null as unknown as DrawnNode);
+                    setDraggedNode((null as unknown) as DrawnNode);
                     let current: Weathermap = wm;
                     current.nodes[i].position = [
                       wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
