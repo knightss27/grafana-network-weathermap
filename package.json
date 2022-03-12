@@ -1,6 +1,6 @@
 {
   "name": "knightss-27-d-3-weathermap",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Network weathermap",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
