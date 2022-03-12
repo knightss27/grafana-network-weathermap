@@ -1,5 +1,11 @@
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
+/**
+ * Creates a solid color from an translucent foreground.
+ * @param fg foreground color
+ * @param bg background color
+ * @returns calculated solid color
+ */
 export function getSolidFromAlphaColor(fg: string, bg: string) {
   if (colorsCalculatedCache[fg + bg]) {
     return colorsCalculatedCache[fg + bg];
@@ -25,6 +31,11 @@ export function getSolidFromAlphaColor(fg: string, bg: string) {
   return `rgb(${finalColor.join(',')})`;
 }
 
+/**
+ * Parses a given color into a useable rgb array.
+ * @param input rgb or hex css string
+ * @returns color as rgb array
+ */
 function parseColor(input: string) {
   if (input.substring(0, 1) === '#') {
     let collen = (input.length - 1) / 3;

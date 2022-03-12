@@ -17,8 +17,6 @@ import { stylesFactory, useTheme2 } from '@grafana/ui';
 import { DraggableCore } from 'react-draggable';
 import { measureText, getSolidFromAlphaColor } from 'utils';
 
-interface Props extends PanelProps<SimpleOptions> {}
-
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
   let toReturn: DrawnNode = Object.create(d);
@@ -36,6 +34,7 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
   return toReturn;
 }
 
+// Calculate the automatically determined widths for nodes with multiple links.
 function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): number {
   const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
 
@@ -65,6 +64,7 @@ function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): number {
   return final;
 }
 
+// Calculate all the widths to be cached for lighter rendering computation.
 function calculateRectWidths(nodes: DrawnNode[], wm: Weathermap) {
   const c: { [key: string]: number } = {};
   for (let node of nodes) {
@@ -73,9 +73,13 @@ function calculateRectWidths(nodes: DrawnNode[], wm: Weathermap) {
   return c;
 }
 
+// Format link values as the proper prefix of bits
 const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
 
-export const WeathermapPanel: React.FC<Props> = (props) => {
+/**
+ * Weathermap panel component. 
+ */
+export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: PanelProps<SimpleOptions>) => {
   const { options, data, width: width2, height: height2, onOptionsChange, timeRange } = props;
   const styles = getStyles();
   const theme = useTheme2();

@@ -15,8 +15,12 @@
     },
     "links": [
       {
-        "name": "Website",
+        "name": "Github",
         "url": "https://github.com/knightss27/grafana-network-weathermap"
+      },
+      {
+        "name": "Wiki",
+        "url": "https://grafana-weathermap.seth.cx/"
       },
       {
         "name": "License",

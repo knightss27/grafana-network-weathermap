@@ -1,7 +1,3 @@
-export interface SimpleOptions {
-  weathermap: Weathermap;
-}
-
 export interface PanelOptions {
   backgroundColor: string;
   panelSize: AreaSize;
@@ -166,4 +162,8 @@ export interface Weathermap {
   links: Link[];
   scale: { [propName: number]: string };
   settings: WeathermapSettings;
+}
+
+export interface SimpleOptions {
+  weathermap: Weathermap;
 }
