@@ -16,4 +16,4 @@ The Grafana instance will be pointed to `localhost:3000`. Upon opening, you will
 
 The exporter uses Perlin noise to alternate between 0Mb/s and 1Mb/s smoothly for the `varied` metric. The `constant` metric remains at 700Kb/s.
 
-\* This currently builds using Grafana v8.1.8, as the plugin was originally developed on that version, and I have yet to do more testing to ensure compatability with earlier and later versions.
+\* This currently builds using Grafana v8.1.8, as the plugin was originally developed on that version. It should work forwards from there however, so feel free to change the docker-compose.
