@@ -14,8 +14,14 @@ import {
 } from 'types';
 import { css, cx } from 'emotion';
 import { stylesFactory, useTheme2 } from '@grafana/ui';
-import { measureText, getSolidFromAlphaColor, nearestMultiple, calculateRectangleAutoWidth, calculateRectangleAutoHeight } from 'utils';
-import MapNode from "./components/MapNode";
+import {
+  measureText,
+  getSolidFromAlphaColor,
+  nearestMultiple,
+  calculateRectangleAutoWidth,
+  calculateRectangleAutoHeight,
+} from 'utils';
+import MapNode from './components/MapNode';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
@@ -33,8 +39,6 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
   };
   return toReturn;
 }
-
-
 
 // Format link values as the proper prefix of bits
 const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
@@ -148,14 +152,19 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   // Calculate the position of a link given the node and side information
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
-
     // Set initial x and y values for links. Defaults to center x of the node, and the middle y.
     let x = d.x;
     let y = d.y;
 
     // Set x and y to the rounded value if we are using the grid
-    x = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.x, wm.settings.panel.grid.size) : x;
-    y = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.y, wm.settings.panel.grid.size) : y;
+    x =
+      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+        ? nearestMultiple(d.x, wm.settings.panel.grid.size)
+        : x;
+    y =
+      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+        ? nearestMultiple(d.y, wm.settings.panel.grid.size)
+        : y;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -742,9 +751,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             </g>
             <g>
               {nodes.map((d, i) => (
-                  <MapNode {...{
-                    node: d, 
-                    draggedNode: draggedNode, 
+                <MapNode
+                  {...{
+                    node: d,
+                    draggedNode: draggedNode,
                     wm: wm,
                     onDrag: (e, position) => {
                       // Return early if we actually want to just pan the whole weathermap.
@@ -784,8 +794,12 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       draggedNode = null as unknown as DrawnNode;
                       let current: Weathermap = wm;
                       current.nodes[i].position = [
-                        wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x, wm.settings.panel.grid.size) : nodes[i].x,
-                        wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].y, wm.settings.panel.grid.size) : nodes[i].y,
+                        wm.settings.panel.grid.enabled
+                          ? nearestMultiple(nodes[i].x, wm.settings.panel.grid.size)
+                          : nodes[i].x,
+                        wm.settings.panel.grid.enabled
+                          ? nearestMultiple(nodes[i].y, wm.settings.panel.grid.size)
+                          : nodes[i].y,
                       ];
                       onOptionsChange({
                         ...options,
@@ -793,7 +807,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       });
                     },
                     disabled: !isEditMode,
-                    }} />
+                  }}
+                />
               ))}
             </g>
           </g>

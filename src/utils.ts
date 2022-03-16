@@ -1,4 +1,4 @@
-import { Anchor, DrawnNode, Weathermap } from "types";
+import { Anchor, DrawnNode, Weathermap } from 'types';
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -98,27 +98,27 @@ export function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): numbe
   const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
 
   const maxWidth =
-      wm.settings.link.stroke.width * (widerSideLinks - 1) +
-      wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
-      d.padding.horizontal * 2;
+    wm.settings.link.stroke.width * (widerSideLinks - 1) +
+    wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
+    d.padding.horizontal * 2;
 
   let final = 0;
   if (d.label !== undefined) {
-      const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
-      if (!d.useConstantSpacing) {
+    const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
+    if (!d.useConstantSpacing) {
       final = labeledWidth;
-      } else {
+    } else {
       final = Math.max(labeledWidth, maxWidth);
-      }
+    }
   } else {
-      final = 0;
+    final = 0;
   }
 
   if (
-      d.nodeIcon?.drawInside &&
-      final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
+    d.nodeIcon?.drawInside &&
+    final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
   ) {
-      final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
+    final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
   }
   return final;
 }
@@ -129,11 +129,11 @@ export function calculateRectangleAutoHeight(d: DrawnNode, wm: Weathermap): numb
   let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
 
   if (d.nodeIcon?.drawInside) {
-      minHeight += d.nodeIcon.size.height + 2 * d.nodeIcon.padding.vertical;
+    minHeight += d.nodeIcon.size.height + 2 * d.nodeIcon.padding.vertical;
   }
 
   if (d.nodeIcon && d.label === '') {
-      minHeight -= wm.settings.fontSizing.node;
+    minHeight -= wm.settings.fontSizing.node;
   }
 
   const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
