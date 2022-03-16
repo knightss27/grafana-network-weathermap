@@ -1,0 +1,5 @@
+.cicleci
+.github
+coverage
+dist
+node_modules
