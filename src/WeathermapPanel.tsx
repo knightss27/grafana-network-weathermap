@@ -752,6 +752,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             <g>
               {nodes.map((d, i) => (
                 <MapNode
+                  key={d.id}
                   {...{
                     node: d,
                     draggedNode: draggedNode,

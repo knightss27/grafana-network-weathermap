@@ -47,10 +47,10 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   const rectY = useMemo(() => calculateRectY(node, wm), [node, wm]);
   const rectWidth = useMemo(() => calculateRectangleAutoWidth(node, wm), [node, wm]);
   const rectHeight = useMemo(() => calculateRectangleAutoHeight(node, wm), [node, wm]);
-  const textY = useMemo(() => calculateTextY(node), [node, wm]);
+  const textY = useMemo(() => calculateTextY(node), [node]);
 
   return (
-    <DraggableCore key={node.index} disabled={disabled} onDrag={onDrag} onStop={onStop}>
+    <DraggableCore disabled={disabled} onDrag={onDrag} onStop={onStop}>
       <g
         display={node.label !== undefined ? 'inline' : 'none'}
         cursor={'move'}
