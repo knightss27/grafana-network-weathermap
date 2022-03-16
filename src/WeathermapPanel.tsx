@@ -14,8 +14,8 @@ import {
 } from 'types';
 import { css, cx } from 'emotion';
 import { stylesFactory, useTheme2 } from '@grafana/ui';
-import { DraggableCore } from 'react-draggable';
-import { measureText, getSolidFromAlphaColor } from 'utils';
+import { measureText, getSolidFromAlphaColor, nearestMultiple, calculateRectangleAutoWidth, calculateRectangleAutoHeight } from 'utils';
+import MapNode from "./components/MapNode";
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
@@ -34,44 +34,7 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
   return toReturn;
 }
 
-// Calculate the automatically determined widths for nodes with multiple links.
-function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): number {
-  const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
 
-  const maxWidth =
-    wm.settings.link.stroke.width * (widerSideLinks - 1) +
-    wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
-    d.padding.horizontal * 2;
-
-  let final = 0;
-  if (d.label !== undefined) {
-    const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
-    if (!d.useConstantSpacing) {
-      final = labeledWidth;
-    } else {
-      final = Math.max(labeledWidth, maxWidth);
-    }
-  } else {
-    final = 0;
-  }
-
-  if (
-    d.nodeIcon?.drawInside &&
-    final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
-  ) {
-    final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
-  }
-  return final;
-}
-
-// Calculate all the widths to be cached for lighter rendering computation.
-function calculateRectWidths(nodes: DrawnNode[], wm: Weathermap) {
-  const c: { [key: string]: number } = {};
-  for (let node of nodes) {
-    c[node.id] = calculateRectangleAutoWidth(node, wm);
-  }
-  return c;
-}
 
 // Format link values as the proper prefix of bits
 const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
@@ -174,31 +137,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       : []
   );
 
-  // Find where to draw the rectangle for the node (top left x)
-  function calculateRectX(d: DrawnNode) {
-    if (!calculatedRectWidths[d.id]) {
-      calculatedRectWidths = calculateRectWidths(nodes, wm);
-    }
-    const offset = Math.min(
-      -calculatedRectWidths[d.id] / 2,
-      d.label !== undefined ? -(measureText(d.label, wm.settings.fontSizing.node).width / 2 + d.padding.horizontal) : 0
-    );
-    return offset;
-  }
-
-  // Find where to draw the rectangle for the node (top left y)
-  function calculateRectY(d: DrawnNode) {
-    if (!calculatedRectHeights[d.id]) {
-      calculatedRectHeights = calculateRectHeights();
-    }
-    return -calculatedRectHeights[d.id] / 2;
-  }
-
-  // Calculate the middle of the rectangle for text centering
-  function calculateTextY(d: DrawnNode) {
-    return d.nodeIcon?.drawInside ? d.nodeIcon.size.height / 2 + d.nodeIcon.padding.vertical : 0;
-  }
-
   // Calculate aspect-ratio corrected drag positions
   function getScaledMousePos(pos: { x: number; y: number }): { x: number; y: number } {
     const zoomAmt = Math.pow(1.2, wm.settings.panel.zoomScale);
@@ -208,58 +146,16 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     };
   }
 
-  // Find the nearest place to snap to on the grid
-  function nearestMultiple(i: number, j: number = wm.settings.panel.grid.size): number {
-    return Math.ceil(i / j) * j;
-  }
-
-  let calculatedRectWidths: { [key: string]: number } = useMemo(() => {
-    return calculateRectWidths(nodes, options.weathermap);
-  }, [nodes, options]);
-
-  let calculatedRectHeights: { [key: string]: number } = calculateRectHeights();
-
-  function calculateRectHeights() {
-    const c: { [key: string]: number } = {};
-    for (let node of nodes) {
-      c[node.id] = calculateRectangleAutoHeight(node);
-    }
-    return c;
-  }
-
-  // Calculate the auto-determined height of a node's rectangle
-  function calculateRectangleAutoHeight(d: DrawnNode): number {
-    const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
-    let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
-
-    if (d.nodeIcon?.drawInside) {
-      minHeight += d.nodeIcon.size.height + 2 * d.nodeIcon.padding.vertical;
-    }
-
-    if (d.nodeIcon && d.label === '') {
-      minHeight -= wm.settings.fontSizing.node;
-    }
-
-    const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
-    const fullHeight = linkHeight * numLinks - wm.settings.link.spacing.vertical;
-    let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
-
-    return final;
-  }
-
   // Calculate the position of a link given the node and side information
   function getMultiLinkPosition(d: DrawnNode, side: LinkSide): Position {
-    if (!calculatedRectHeights || !calculatedRectHeights[d.id]) {
-      calculatedRectHeights = calculateRectHeights();
-    }
 
     // Set initial x and y values for links. Defaults to center x of the node, and the middle y.
     let x = d.x;
     let y = d.y;
 
     // Set x and y to the rounded value if we are using the grid
-    x = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.x) : x;
-    y = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.y) : y;
+    x = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.x, wm.settings.panel.grid.size) : x;
+    y = wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index ? nearestMultiple(d.y, wm.settings.panel.grid.size) : y;
 
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
@@ -301,9 +197,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       }
       // Add height if we are at the bottom;
       if (side.anchor === Anchor.Bottom) {
-        y += calculatedRectHeights[d.id] / 2 - wm.settings.link.stroke.width / 2;
+        y += calculateRectangleAutoHeight(d, wm) / 2 - wm.settings.link.stroke.width / 2;
       } else if (side.anchor === Anchor.Top) {
-        y -= calculatedRectHeights[d.id] / 2;
+        y -= calculateRectangleAutoHeight(d, wm) / 2;
         y += wm.settings.link.stroke.width / 2;
       }
     }
@@ -481,7 +377,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     setHoveredLink(null as unknown as HoveredLink);
   };
 
-  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+  // const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+
+  let draggedNode: DrawnNode = null as unknown as DrawnNode;
 
   if (wm) {
     return (
@@ -844,122 +742,58 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             </g>
             <g>
               {nodes.map((d, i) => (
-                <DraggableCore
-                  key={i}
-                  disabled={!isEditMode}
-                  onDrag={(e, position) => {
-                    setDraggedNode(d);
-                    setNodes((prevState) =>
-                      prevState.map((val, index) => {
-                        if (index === i) {
-                          const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
-                          val.x = Math.round(
-                            wm.settings.panel.grid.enabled
-                              ? wm.nodes[i].position[0] + (val.x + scaledPos.x - wm.nodes[i].position[0])
-                              : val.x + scaledPos.x
-                          );
-                          val.y = Math.round(
-                            wm.settings.panel.grid.enabled
-                              ? wm.nodes[i].position[1] + (val.y + scaledPos.y - wm.nodes[i].position[1])
-                              : val.y + scaledPos.y
-                          );
-                        }
-                        return val;
-                      })
-                    );
-                    tempNodes = nodes.slice();
-                    setLinks(
-                      wm.links.map((d, i) => {
-                        return generateDrawnLink(d, i);
-                      })
-                    );
-                  }}
-                  onStop={(e, position) => {
-                    setDraggedNode(null as unknown as DrawnNode);
-                    let current: Weathermap = wm;
-                    current.nodes[i].position = [
-                      wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x) : nodes[i].x,
-                      wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].y) : nodes[i].y,
-                    ];
-                    onOptionsChange({
-                      ...options,
-                      weathermap: current,
-                    });
-                  }}
-                >
-                  <g
-                    display={d.label !== undefined ? 'inline' : 'none'}
-                    cursor={'move'}
-                    transform={`translate(${
-                      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
-                        ? nearestMultiple(d.x)
-                        : d.x
+                  <MapNode {...{
+                    node: d, 
+                    draggedNode: draggedNode, 
+                    wm: wm,
+                    onDrag: (e, position) => {
+                      // Return early if we actually want to just pan the whole weathermap.
+                      if (e.ctrlKey) {
+                        return;
+                      }
+
+                      // Otherwise set our currently dragged node and manage scaling and grid settings.
+                      draggedNode = d;
+                      setNodes((prevState) =>
+                        prevState.map((val, index) => {
+                          if (index === i) {
+                            const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
+                            val.x = Math.round(
+                              wm.settings.panel.grid.enabled
+                                ? wm.nodes[i].position[0] + (val.x + scaledPos.x - wm.nodes[i].position[0])
+                                : val.x + scaledPos.x
+                            );
+                            val.y = Math.round(
+                              wm.settings.panel.grid.enabled
+                                ? wm.nodes[i].position[1] + (val.y + scaledPos.y - wm.nodes[i].position[1])
+                                : val.y + scaledPos.y
+                            );
+                          }
+                          return val;
+                        })
+                      );
+                      tempNodes = nodes.slice();
+                      setLinks(
+                        wm.links.map((d, i) => {
+                          return generateDrawnLink(d, i);
+                        })
+                      );
                     },
-                      ${
-                        wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
-                          ? nearestMultiple(d.y)
-                          : d.y
-                      })`}
-                  >
-                    {d.label !== '' || d.nodeIcon?.drawInside ? (
-                      <React.Fragment>
-                        <rect
-                          x={calculateRectX(d)}
-                          y={calculateRectY(d)}
-                          width={calculatedRectWidths[d.id]}
-                          height={calculatedRectHeights[d.id]}
-                          fill={getSolidFromAlphaColor(d.colors.background, wm.settings.panel.backgroundColor)}
-                          stroke={getSolidFromAlphaColor(d.colors.border, wm.settings.panel.backgroundColor)}
-                          strokeWidth={4}
-                          rx={6}
-                          ry={7}
-                          style={{ paintOrder: 'stroke' }}
-                        ></rect>
-                        <text
-                          x={0}
-                          y={calculateTextY(d)}
-                          textAnchor={'middle'}
-                          alignmentBaseline={'central'}
-                          dominantBaseline={'central'}
-                          fill={d.colors.font}
-                          className={styles.nodeText}
-                          fontSize={`${wm.settings.fontSizing.node}px`}
-                        >
-                          {d.label !== undefined ? d.label : ''}
-                        </text>
-                      </React.Fragment>
-                    ) : (
-                      ''
-                    )}
-                    {d.nodeIcon && d.nodeIcon.src !== '' ? (
-                      <image
-                        x={-d.nodeIcon.size.width / 2}
-                        y={
-                          d.nodeIcon.drawInside
-                            ? d.label!.length > 0
-                              ? -(
-                                  d.nodeIcon.size.height +
-                                  d.nodeIcon.padding.vertical +
-                                  measureText(d.label!, wm.settings.fontSizing.node).actualBoundingBoxAscent
-                                ) / 2
-                              : -d.nodeIcon.size.height / 2
-                            : d.label!.length > 0
-                            ? calculateTextY(d) -
-                              d.nodeIcon.size.height -
-                              calculatedRectHeights[d.id] / 2 -
-                              1 -
-                              d.nodeIcon.padding.vertical
-                            : -d.nodeIcon.size.height / 2
-                        }
-                        width={d.nodeIcon.size.width}
-                        height={d.nodeIcon.size.height}
-                        href={d.nodeIcon.src}
-                      />
-                    ) : (
-                      ''
-                    )}
-                  </g>
-                </DraggableCore>
+                    onStop: (e, position) => {
+                      // setDraggedNode(null as unknown as DrawnNode);
+                      draggedNode = null as unknown as DrawnNode;
+                      let current: Weathermap = wm;
+                      current.nodes[i].position = [
+                        wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].x, wm.settings.panel.grid.size) : nodes[i].x,
+                        wm.settings.panel.grid.enabled ? nearestMultiple(nodes[i].y, wm.settings.panel.grid.size) : nodes[i].y,
+                      ];
+                      onOptionsChange({
+                        ...options,
+                        weathermap: current,
+                      });
+                    },
+                    disabled: !isEditMode,
+                    }} />
               ))}
             </g>
           </g>

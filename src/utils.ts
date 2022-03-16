@@ -1,3 +1,5 @@
+import { Anchor, DrawnNode, Weathermap } from "types";
+
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
 /**
@@ -84,4 +86,59 @@ export function measureText(text: string, fontSize: number): TextMetrics {
   cache.set(cacheKey, metrics);
 
   return metrics;
+}
+
+// Find the nearest place to snap to on the grid
+export function nearestMultiple(input: number, grid: number): number {
+  return Math.ceil(input / grid) * grid;
+}
+
+// Calculate the automatically determined widths for nodes with multiple links.
+export function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): number {
+  const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
+
+  const maxWidth =
+      wm.settings.link.stroke.width * (widerSideLinks - 1) +
+      wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
+      d.padding.horizontal * 2;
+
+  let final = 0;
+  if (d.label !== undefined) {
+      const labeledWidth = d.labelWidth + d.padding.horizontal * 2;
+      if (!d.useConstantSpacing) {
+      final = labeledWidth;
+      } else {
+      final = Math.max(labeledWidth, maxWidth);
+      }
+  } else {
+      final = 0;
+  }
+
+  if (
+      d.nodeIcon?.drawInside &&
+      final < d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2
+  ) {
+      final += d.nodeIcon.padding.horizontal + d.nodeIcon.size.width + d.padding.horizontal * 2 - final;
+  }
+  return final;
+}
+
+// Calculate the auto-determined height of a node's rectangle
+export function calculateRectangleAutoHeight(d: DrawnNode, wm: Weathermap): number {
+  const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
+  let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
+
+  if (d.nodeIcon?.drawInside) {
+      minHeight += d.nodeIcon.size.height + 2 * d.nodeIcon.padding.vertical;
+  }
+
+  if (d.nodeIcon && d.label === '') {
+      minHeight -= wm.settings.fontSizing.node;
+  }
+
+  const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
+  const fullHeight = linkHeight * numLinks - wm.settings.link.spacing.vertical;
+  let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
+
+  return final;
 }
