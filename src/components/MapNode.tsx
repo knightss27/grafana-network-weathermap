@@ -49,7 +49,7 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   const rectHeight = useMemo(() => calculateRectangleAutoHeight(node, wm), [node, wm]);
   const textY = useMemo(() => calculateTextY(node), [node]);
 
-  console.log('rendering node')
+  console.log('rendering node');
 
   return (
     <DraggableCore disabled={disabled} onDrag={onDrag} onStop={onStop}>
