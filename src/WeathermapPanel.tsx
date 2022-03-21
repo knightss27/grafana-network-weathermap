@@ -374,9 +374,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     setHoveredLink(null as unknown as HoveredLink);
   };
 
-  // const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
-
-  let draggedNode: DrawnNode = null as unknown as DrawnNode;
+  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
 
   if (wm) {
     return (
@@ -712,7 +710,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       }
 
                       // Otherwise set our currently dragged node and manage scaling and grid settings.
-                      draggedNode = d;
+                      setDraggedNode(d);
                       setNodes((prevState) =>
                         prevState.map((val, index) => {
                           if (index === i) {
@@ -740,7 +738,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     },
                     onStop: (e, position) => {
                       // setDraggedNode(null as unknown as DrawnNode);
-                      draggedNode = null as unknown as DrawnNode;
+                      setDraggedNode(null as unknown as DrawnNode);
                       let current: Weathermap = wm;
                       current.nodes[i].position = [
                         wm.settings.panel.grid.enabled
