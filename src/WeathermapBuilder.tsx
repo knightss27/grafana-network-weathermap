@@ -1,12 +1,13 @@
 import React from 'react';
 import { StandardEditorProps } from '@grafana/data';
-import { Weathermap } from 'types';
+import { Anchor, Weathermap } from 'types';
 import { NodeForm } from './NodeForm';
 import { LinkForm } from './LinkForm';
 import { ColorForm } from './ColorForm';
 import { PanelForm } from './PanelForm';
 import { v4 as uuidv4 } from 'uuid';
 import { useTheme2 } from '@grafana/ui';
+import { generateBasicNode } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -17,10 +18,37 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {}
 export const WeathermapBuilder = (props: Props) => {
   const theme = useTheme2();
 
+  const defaultNodes = [
+    generateBasicNode("Node A", [200, 300], theme),
+    generateBasicNode("Node B", [400, 300], theme),  
+  ]
+
   const defaultValue: Weathermap = {
     id: uuidv4(),
-    nodes: [],
-    links: [],
+    nodes: defaultNodes,
+    links: [
+      {
+        "id": uuidv4(),
+        "nodes": [defaultNodes[0], defaultNodes[1]],
+        "sides": {
+          A: {
+            bandwidth: 0,
+            bandwidthQuery: undefined,
+            query: undefined,
+            labelOffset: 55,
+            anchor: Anchor.Right,
+          },
+          Z: {
+            bandwidth: 0,
+            bandwidthQuery: undefined,
+            query: undefined,
+            labelOffset: 55,
+            anchor: Anchor.Left,
+          },
+        },
+        units: undefined
+      }
+    ],
     scale: {},
     settings: {
       link: {

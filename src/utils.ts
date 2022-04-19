@@ -1,4 +1,6 @@
-import { Anchor, DrawnNode, Weathermap } from 'types';
+import { GrafanaTheme2 } from '@grafana/data';
+import { Anchor, DrawnNode, Node, Weathermap } from 'types';
+import { v4 as uuidv4 } from 'uuid';
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -141,4 +143,44 @@ export function calculateRectangleAutoHeight(d: DrawnNode, wm: Weathermap): numb
   let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
 
   return final;
+}
+
+// Generate a basic Node at a certain position and with a certain label.
+export function generateBasicNode(label: string, position: [number, number], theme: GrafanaTheme2): Node {
+  return {
+    id: uuidv4(),
+    position,
+    label,
+    anchors: {
+      0: { numLinks: 0, numFilledLinks: 0 },
+      1: { numLinks: 0, numFilledLinks: 0 },
+      2: { numLinks: 0, numFilledLinks: 0 },
+      3: { numLinks: 0, numFilledLinks: 0 },
+      4: { numLinks: 0, numFilledLinks: 0 },
+    },
+    useConstantSpacing: false,
+    compactVerticalLinks: false,
+    padding: {
+      vertical: 4,
+      horizontal: 10,
+    },
+    colors: {
+      font: theme.colors.secondary.contrastText,
+      background: theme.colors.secondary.main,
+      border: theme.colors.secondary.border,
+    },
+    nodeIcon: {
+      src: '',
+      name: '',
+      size: {
+        width: 0,
+        height: 0,
+      },
+      padding: {
+        vertical: 0,
+        horizontal: 0,
+      },
+      drawInside: false,
+    },
+  };
 }
