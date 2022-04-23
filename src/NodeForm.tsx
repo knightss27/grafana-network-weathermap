@@ -142,11 +142,14 @@ export const NodeForm = ({ value, onChange }: Props) => {
         vertical: 4,
         horizontal: 10,
       },
-      colors: {
-        font: theme.colors.secondary.contrastText,
-        background: theme.colors.secondary.main,
-        border: theme.colors.secondary.border,
-      },
+      colors:
+        weathermap.nodes.length > 0
+          ? weathermap.nodes[0].colors
+          : {
+              font: theme.colors.secondary.contrastText,
+              background: theme.colors.secondary.main,
+              border: theme.colors.secondary.border,
+            },
       nodeIcon: {
         src: '',
         name: '',
