@@ -18,19 +18,16 @@ interface Props extends StandardEditorProps<Weathermap, Settings> {}
 export const WeathermapBuilder = (props: Props) => {
   const theme = useTheme2();
 
-  const defaultNodes = [
-    generateBasicNode("Node A", [200, 300], theme),
-    generateBasicNode("Node B", [400, 300], theme),  
-  ]
+  const defaultNodes = [generateBasicNode('Node A', [200, 300], theme), generateBasicNode('Node B', [400, 300], theme)];
 
   const defaultValue: Weathermap = {
     id: uuidv4(),
     nodes: defaultNodes,
     links: [
       {
-        "id": uuidv4(),
-        "nodes": [defaultNodes[0], defaultNodes[1]],
-        "sides": {
+        id: uuidv4(),
+        nodes: [defaultNodes[0], defaultNodes[1]],
+        sides: {
           A: {
             bandwidth: 0,
             bandwidthQuery: undefined,
@@ -46,8 +43,8 @@ export const WeathermapBuilder = (props: Props) => {
             anchor: Anchor.Left,
           },
         },
-        units: undefined
-      }
+        units: undefined,
+      },
     ],
     scale: {},
     settings: {

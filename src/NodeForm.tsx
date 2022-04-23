@@ -125,8 +125,8 @@ export const NodeForm = ({ value, onChange }: Props) => {
     const node: Node = {
       id: uuidv4(),
       position: [
-        (-weathermap.settings.panel.offset.x + weathermap.settings.panel.panelSize.width / 2),
-        (-weathermap.settings.panel.offset.y + weathermap.settings.panel.panelSize.height / 2),
+        -weathermap.settings.panel.offset.x + weathermap.settings.panel.panelSize.width / 2,
+        -weathermap.settings.panel.offset.y + weathermap.settings.panel.panelSize.height / 2,
       ],
       label: 'Test Label',
       anchors: {

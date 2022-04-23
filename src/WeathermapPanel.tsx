@@ -55,7 +55,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   const isEditMode = window.location.search.includes('editPanel');
 
-
   // Color scales
   const colors: any = useMemo(() => {
     const c: any = {};
@@ -337,7 +336,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     });
   };
 
-  console.log(wm.settings.panel.zoomScale)
+  console.log(wm.settings.panel.zoomScale);
 
   const [isDragging, setDragging] = useState(false);
 
@@ -490,11 +489,23 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             {wm.settings.panel.grid.guidesEnabled ? (
               <>
                 <rect
-                  x={wm.nodes.length > 0 ? wm.nodes[0].position[0] - wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) * 2 : 0}
-                  y={wm.nodes.length > 0 ? wm.nodes[0].position[1] - wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) * 2 : 0}
+                  x={
+                    wm.nodes.length > 0
+                      ? wm.nodes[0].position[0] -
+                        wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) * 2
+                      : 0
+                  }
+                  y={
+                    wm.nodes.length > 0
+                      ? wm.nodes[0].position[1] -
+                        wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) * 2
+                      : 0
+                  }
                   width={wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) * 4}
                   height={wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) * 4}
-                  fill="url(#smallGrid)" /></>
+                  fill="url(#smallGrid)"
+                />
+              </>
             ) : (
               ''
             )}
