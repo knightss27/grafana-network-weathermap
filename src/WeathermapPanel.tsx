@@ -55,6 +55,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   const isEditMode = window.location.search.includes('editPanel');
 
+
   // Color scales
   const colors: any = useMemo(() => {
     const c: any = {};
@@ -336,6 +337,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     });
   };
 
+  console.log(wm.settings.panel.zoomScale)
+
   const [isDragging, setDragging] = useState(false);
 
   let aspectX = wm.settings.panel.panelSize.width / width2;
@@ -375,6 +378,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   };
 
   const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+
+  // const extraWidthOffset = ((width2/height2) * wm.settings.panel.panelSize.height - wm.settings.panel.panelSize.width) / 2;
 
   if (wm) {
     return (
@@ -460,8 +465,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   d={`M ${wm.settings.panel.grid.size} 0 L 0 0 0 ${wm.settings.panel.grid.size}`}
                   fill="none"
                   stroke="gray"
-                  strokeWidth="1"
-                  opacity={0.5}
+                  strokeWidth="2"
+                  opacity={1}
                 />
               </pattern>
             </defs>
@@ -483,46 +488,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             overflow="visible"
           >
             {wm.settings.panel.grid.guidesEnabled ? (
-              // TODO: Figure out how to get this width to be 100% of the window all the time (while still ining up).
-              <rect
-                x={
-                  -(
-                    (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
-                      wm.settings.panel.panelSize.width) /
-                      2 +
-                    offset.x
-                  ) -
-                  (width2 - wm.settings.panel.panelSize.width) / 2
-                }
-                y={
-                  -(
-                    (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
-                      wm.settings.panel.panelSize.height) /
-                      2 +
-                    offset.y
-                  )
-                }
-                width={
-                  Math.max(width2, wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale)) -
-                  (-(
-                    (wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) -
-                      wm.settings.panel.panelSize.width) /
-                      2 +
-                    offset.x
-                  ) -
-                    (width2 - wm.settings.panel.panelSize.width) / 2)
-                }
-                height={
-                  Math.max(height2, wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale)) -
-                  -(
-                    (wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) -
-                      wm.settings.panel.panelSize.height) /
-                      2 +
-                    offset.y
-                  )
-                }
-                fill="url(#smallGrid)"
-              />
+              <>
+                <rect
+                  x={wm.nodes.length > 0 ? wm.nodes[0].position[0] - wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) * 2 : 0}
+                  y={wm.nodes.length > 0 ? wm.nodes[0].position[1] - wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) * 2 : 0}
+                  width={wm.settings.panel.panelSize.width * Math.pow(1.2, wm.settings.panel.zoomScale) * 4}
+                  height={wm.settings.panel.panelSize.height * Math.pow(1.2, wm.settings.panel.zoomScale) * 4}
+                  fill="url(#smallGrid)" /></>
             ) : (
               ''
             )}
