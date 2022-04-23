@@ -1,6 +1,6 @@
 {
   "name": "knightss-27-d-3-weathermap",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Network weathermap",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
@@ -16,9 +16,9 @@
     "email": "seth@seth.cx"
   },
   "devDependencies": {
-    "@grafana/data": "^8.4.2",
-    "@grafana/toolkit": "^8.4.2",
-    "@grafana/ui": "^8.4.3",
+    "@grafana/data": "^8.5.0",
+    "@grafana/toolkit": "^8.5.0",
+    "@grafana/ui": "^8.5.0",
     "@types/d3": "^6.3.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
