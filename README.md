@@ -2,7 +2,7 @@
 
 This plugin brings customizeable and modern looking network weathermaps to Grafana. The design remains similar to the well known [PHP Network Weathermap](https://www.network-weathermap.com/), well allowing for interoperability with Grafana, and easy customization.
 
-[Link to the wiki! (WIP)](https://grafana-weathermap.seth.cx/)
+[Link to the wiki! (WIP)](https://grafana-weathermap.seth.cx/) or [download the latest version.](https://github.com/knightss27/grafana-network-weathermap/releases/latest/)
 
 This project is still a work in progress. It is currently not yet signed for use in Grafana (coming soon), and also may have some bugs or inefficiences that need to be worked out. My roadmap to a 1.0 release is filled out, I am now hoping to do some more significant beta testing, including general bugs and stress tests. If you are interested in testing this plugin (and leaving some feedback), please let me know!
 
