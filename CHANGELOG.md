@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.4...v0.2.5) (2022-05-04)
+
+
+### Bug Fixes
+
+* update plugin.json grafanaDependency ([6c3505e](https://github.com/knightss27/grafana-network-weathermap/commit/6c3505efc271f41c3f6394cdb8505b7df810344e))
+
 ### [0.2.4](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.3...v0.2.4) (2022-04-23)
 
 
