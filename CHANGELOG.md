@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.5...v0.2.6) (2022-05-10)
+
+
+### Bug Fixes
+
+* JSON export no longer breaks map state ([35eac8d](https://github.com/knightss27/grafana-network-weathermap/commit/35eac8df211c3f8264f18d7becd9e9ff1dea812c))
+
 ### [0.2.5](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.4...v0.2.5) (2022-05-04)
 
 
