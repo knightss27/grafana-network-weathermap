@@ -20,7 +20,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(WeathermapPanel).setPanelOp
       id: 'exportForm',
       path: 'weathermap',
       name: 'Export Weathermap',
-      description: `Export an SVG snapshot or JSON definition of the weathermap. The SVG exports show only links and nodes, for the entire panel please use Grafana's image renderer plugin.`,
+      description: `Export an SVG snapshot of the weathermap. The SVG exports show only links and nodes, for the entire panel please use Grafana's image renderer plugin.`,
       editor: ExportForm,
     });
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { InlineFieldRow, Button, stylesFactory, useTheme2 } from '@grafana/ui';
 import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
-import { Link, Weathermap } from 'types';
+import { Weathermap } from 'types';
 import { css } from 'emotion';
 
 interface Settings {}
@@ -45,15 +45,15 @@ export const ExportForm = ({ value, onChange }: Props) => {
     generateDownloadLink(svgUrl, `network-weathermap-${new Date().toISOString()}.svg`);
   };
 
-  const handleJSONExport = () => {
-    let weathermap: any = value;
-    weathermap.links = value.links.map((link: Link) => {
-      return [link.nodes[0].id, link.nodes[1].id];
-    });
+  // const handleJSONExport = () => {
+  //   let weathermap: any = Object.assign({}, value);
+  //   weathermap.links = weathermap.links.map((link: Link) => {
+  //     return [link.nodes[0].id, link.nodes[1].id];
+  //   });
 
-    const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(weathermap));
-    generateDownloadLink(data, 'network-weathermap.json');
-  };
+  //   const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(weathermap));
+  //   generateDownloadLink(data, 'network-weathermap.json');
+  // };
 
   if (value) {
     return (
@@ -62,9 +62,9 @@ export const ExportForm = ({ value, onChange }: Props) => {
           <Button onClick={handleSVGExport} className={styles.exportButton}>
             Export SVG
           </Button>
-          <Button onClick={handleJSONExport} className={styles.exportJSONButton}>
+          {/* <Button onClick={handleJSONExport} className={styles.exportJSONButton}>
             Export JSON
-          </Button>
+          </Button> */}
         </InlineFieldRow>
       </React.Fragment>
     );
