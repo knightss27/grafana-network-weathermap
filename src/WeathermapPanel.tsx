@@ -416,12 +416,20 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         )}
         <ColorScale colors={colors} settings={wm.settings} />
         <svg
-          className={cx(
-            styles.svg,
-            css`
-              background-color: ${wm.settings.panel.backgroundColor};
-            `
-          )}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            backgroundImage: wm.settings.panel.backgroundColor.startsWith('image')
+              ? `url(${wm.settings.panel.backgroundColor.split('|')[2]})`
+              : 'none',
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: wm.settings.panel.backgroundColor.startsWith('image')
+              ? 'none'
+              : wm.settings.panel.backgroundColor,
+          }}
           id={`nw-${wm.id}${isEditMode ? '_' : ''}`}
           width={width2}
           height={height2}
@@ -747,7 +755,11 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
           className={cx(
             styles.timeText,
             css`
-              color: ${theme.colors.getContrastText(wm.settings.panel.backgroundColor)};
+              color: ${theme.colors.getContrastText(
+                wm.settings.panel.backgroundColor.startsWith('image')
+                  ? wm.settings.panel.backgroundColor.split('|')[1]
+                  : wm.settings.panel.backgroundColor
+              )};
             `
           )}
         >
@@ -766,11 +778,6 @@ const getStyles = stylesFactory(() => {
       position: relative;
       font-size: 10px;
       font-family: sans-serif;
-    `,
-    svg: css`
-      position: absolute;
-      top: 0;
-      left: 0;
     `,
     textBox: css`
       position: absolute;

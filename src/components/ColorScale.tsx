@@ -32,7 +32,11 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
         className={cx(
           styles.colorBoxTitle,
           css`
-            color: ${theme.colors.getContrastText(settings.panel.backgroundColor)};
+            color: ${theme.colors.getContrastText(
+              settings.panel.backgroundColor.startsWith('image')
+                ? settings.panel.backgroundColor.split('|')[1]
+                : settings.panel.backgroundColor
+            )};
           `
         )}
       >
@@ -53,7 +57,11 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
             className={cx(
               styles.colorLabel,
               css`
-                color: ${theme.colors.getContrastText(settings.panel.backgroundColor)};
+                color: ${theme.colors.getContrastText(
+                  settings.panel.backgroundColor.startsWith('image')
+                    ? settings.panel.backgroundColor.split('|')[1]
+                    : settings.panel.backgroundColor
+                )};
               `
             )}
           >

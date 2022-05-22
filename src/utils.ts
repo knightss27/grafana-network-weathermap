@@ -10,7 +10,11 @@ let colorsCalculatedCache: { [colors: string]: string } = {};
  * @param bg background color
  * @returns calculated solid color
  */
-export function getSolidFromAlphaColor(fg: string, bg: string) {
+export function getSolidFromAlphaColor(fg: string, bg: string): string {
+  if (bg.startsWith('image')) {
+    return getSolidFromAlphaColor(fg, bg.split('|')[1]);
+  }
+
   if (colorsCalculatedCache[fg + bg]) {
     return colorsCalculatedCache[fg + bg];
   }

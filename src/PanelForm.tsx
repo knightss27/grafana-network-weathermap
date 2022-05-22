@@ -1,6 +1,8 @@
 import React from 'react';
 import {
+  Button,
   ColorPicker,
+  FileUpload,
   InlineField,
   InlineFieldRow,
   InlineLabel,
@@ -24,7 +26,12 @@ export const PanelForm = ({ value, onChange }: Props) => {
 
   const handleColorChange = (color: string) => {
     let options = value;
-    options.settings.panel.backgroundColor = color;
+    if (!color.startsWith('image') && options.settings.panel.backgroundColor.startsWith('image')) {
+      options.settings.panel.backgroundColor =
+        'image|' + color + '|' + options.settings.panel.backgroundColor.split('|')[2];
+    } else {
+      options.settings.panel.backgroundColor = color;
+    }
     onChange(options);
   };
 
@@ -32,9 +39,54 @@ export const PanelForm = ({ value, onChange }: Props) => {
     return (
       <React.Fragment>
         <FormDivider title="Panel" />
-        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
-          Background Color:
-          <ColorPicker color={value.settings.panel.backgroundColor} onChange={handleColorChange} />
+        <InlineField label="Background:" className={styles.inlineField}>
+          <React.Fragment></React.Fragment>
+        </InlineField>
+        <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
+          - Color:
+          <ColorPicker
+            color={
+              value.settings.panel.backgroundColor.startsWith('image')
+                ? value.settings.panel.backgroundColor.split('|')[1]
+                : value.settings.panel.backgroundColor
+            }
+            onChange={handleColorChange}
+          />
+        </InlineLabel>
+        <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
+          - Image:
+          <FileUpload
+            size="sm"
+            onFileUpload={({ currentTarget }) => {
+              if (currentTarget.files && currentTarget.files[0] && currentTarget.files[0].type.startsWith('image')) {
+                console.log('Reading file: ' + currentTarget.files[0].name);
+                const reader = new FileReader();
+                reader.onload = (e: any) => {
+                  if (value.settings.panel.backgroundColor.startsWith('image')) {
+                    handleColorChange(
+                      'image|' + value.settings.panel.backgroundColor.split('|')[1] + '|' + e.target.result
+                    );
+                  } else {
+                    handleColorChange('image|' + value.settings.panel.backgroundColor + '|' + e.target.result);
+                  }
+                };
+                reader.readAsDataURL(currentTarget.files[0]);
+              }
+            }}
+          />
+          {value.settings.panel.backgroundColor.startsWith('image') ? (
+            <Button
+              variant="destructive"
+              icon="trash-alt"
+              size="sm"
+              onClick={() => {
+                handleColorChange(value.settings.panel.backgroundColor.split('|')[1]);
+              }}
+              style={{ justifyContent: 'center' }}
+            ></Button>
+          ) : (
+            ''
+          )}
         </InlineLabel>
         <InlineFieldRow className={styles.inlineRow}>
           <InlineField label="Viewbox Width (px)" className={styles.inlineField}>
