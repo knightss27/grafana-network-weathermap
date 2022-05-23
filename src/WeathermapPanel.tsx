@@ -336,8 +336,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     });
   };
 
-  console.log(wm.settings.panel.zoomScale);
-
   const [isDragging, setDragging] = useState(false);
 
   let aspectX = wm.settings.panel.panelSize.width / width2;
@@ -421,7 +419,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             top: 0,
             left: 0,
             backgroundImage: wm.settings.panel.backgroundColor.startsWith('image')
-              ? `url(${wm.settings.panel.backgroundColor.split('|')[2]})`
+              ? `url(${wm.settings.panel.backgroundColor.split('|', 3)[2]})`
               : 'none',
             backgroundSize: 'contain',
             backgroundPosition: 'center',
@@ -757,7 +755,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             css`
               color: ${theme.colors.getContrastText(
                 wm.settings.panel.backgroundColor.startsWith('image')
-                  ? wm.settings.panel.backgroundColor.split('|')[1]
+                  ? wm.settings.panel.backgroundColor.split('|', 3)[1]
                   : wm.settings.panel.backgroundColor
               )};
             `

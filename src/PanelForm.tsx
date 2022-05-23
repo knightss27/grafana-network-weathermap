@@ -28,7 +28,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
     let options = value;
     if (!color.startsWith('image') && options.settings.panel.backgroundColor.startsWith('image')) {
       options.settings.panel.backgroundColor =
-        'image|' + color + '|' + options.settings.panel.backgroundColor.split('|')[2];
+        'image|' + color + '|' + options.settings.panel.backgroundColor.split('|', 3)[2];
     } else {
       options.settings.panel.backgroundColor = color;
     }
@@ -47,7 +47,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           <ColorPicker
             color={
               value.settings.panel.backgroundColor.startsWith('image')
-                ? value.settings.panel.backgroundColor.split('|')[1]
+                ? value.settings.panel.backgroundColor.split('|', 3)[1]
                 : value.settings.panel.backgroundColor
             }
             onChange={handleColorChange}
@@ -64,7 +64,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
                 reader.onload = (e: any) => {
                   if (value.settings.panel.backgroundColor.startsWith('image')) {
                     handleColorChange(
-                      'image|' + value.settings.panel.backgroundColor.split('|')[1] + '|' + e.target.result
+                      'image|' + value.settings.panel.backgroundColor.split('|', 3)[1] + '|' + e.target.result
                     );
                   } else {
                     handleColorChange('image|' + value.settings.panel.backgroundColor + '|' + e.target.result);
@@ -80,7 +80,9 @@ export const PanelForm = ({ value, onChange }: Props) => {
               icon="trash-alt"
               size="sm"
               onClick={() => {
-                handleColorChange(value.settings.panel.backgroundColor.split('|')[1]);
+                let options = value;
+                options.settings.panel.backgroundColor = value.settings.panel.backgroundColor.split('|', 3)[1];
+                onChange(options);
               }}
               style={{ justifyContent: 'center' }}
             ></Button>

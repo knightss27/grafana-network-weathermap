@@ -13,6 +13,7 @@ import {
   ColorPicker,
   Slider,
   useTheme2,
+  FileUpload,
 } from '@grafana/ui';
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
@@ -264,23 +265,50 @@ export const NodeForm = ({ value, onChange }: Props) => {
                   />
                 </InlineField>
               </InlineFieldRow>
-              <Select
-                onChange={(v) => {
-                  handleIconChange(v.value!, i);
-                }}
-                value={node.nodeIcon?.name}
-                options={[
-                  { label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted },
-                  { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
-                  { label: 'Database Icons', value: 'databases', options: databaseIconsFormatted },
-                  { label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted },
-                  { label: 'None', value: null },
-                ]}
-                className={styles.nodeSelect}
-                placeholder={'Select an icon'}
-              ></Select>
               <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Icon">
+                  <Select
+                    onChange={(v) => {
+                      handleIconChange(v.value!, i);
+                    }}
+                    value={node.nodeIcon?.name}
+                    options={[
+                      { label: 'Cisco Icons', value: 'cisco', options: ciscoIconsFormatted },
+                      { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
+                      { label: 'Database Icons', value: 'databases', options: databaseIconsFormatted },
+                      { label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted },
+                      { label: 'None', value: null },
+                    ]}
+                    className={styles.nodeSelect}
+                    placeholder={'Select an icon'}
+                  ></Select>
+                  <InlineLabel className={styles.nodeSelect}>
+                    <FileUpload
+                      size="sm"
+                      className={styles.nodeSelect}
+                      onFileUpload={({ currentTarget }) => {
+                        if (
+                          currentTarget.files &&
+                          currentTarget.files[0] &&
+                          currentTarget.files[0].type.startsWith('image')
+                        ) {
+                          const reader = new FileReader();
+                          reader.onload = (e: any) => {
+                            let weathermap: Weathermap = value;
+                            weathermap.nodes[i].nodeIcon!.src = e.target.result;
+                            // @ts-ignore
+                            weathermap.nodes[i].nodeIcon!.name = currentTarget.files[0].name;
+                            if (weathermap.nodes[i].nodeIcon!.size.width === 0) {
+                              weathermap.nodes[i].nodeIcon!.size = { width: 40, height: 40 };
+                            }
+                            onChange(weathermap);
+                          };
+                          reader.readAsDataURL(currentTarget.files[0]);
+                        }
+                      }}
+                    />
+                    {node.nodeIcon?.name}
+                  </InlineLabel>
                   <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Width'}>
                       <Input

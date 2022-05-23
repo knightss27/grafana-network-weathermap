@@ -34,7 +34,7 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
           css`
             color: ${theme.colors.getContrastText(
               settings.panel.backgroundColor.startsWith('image')
-                ? settings.panel.backgroundColor.split('|')[1]
+                ? settings.panel.backgroundColor.split('|', 3)[1]
                 : settings.panel.backgroundColor
             )};
           `
@@ -59,7 +59,7 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
               css`
                 color: ${theme.colors.getContrastText(
                   settings.panel.backgroundColor.startsWith('image')
-                    ? settings.panel.backgroundColor.split('|')[1]
+                    ? settings.panel.backgroundColor.split('|', 3)[1]
                     : settings.panel.backgroundColor
                 )};
               `
