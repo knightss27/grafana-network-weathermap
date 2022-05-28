@@ -1,12 +1,13 @@
 {
   "name": "knightss-27-d-3-weathermap",
-  "version": "0.2.7",
+  "version": "0.2.6",
   "description": "Network weathermap",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
-    "watch": "grafana-toolkit plugin:dev --watch"
+    "watch": "grafana-toolkit plugin:dev --watch",
+    "sign": "grafana-toolkit plugin:sign"
   },
   "repository": "github:knightss27/grafana-network-weathermap",
   "author": "knightss@catlin.edu",
