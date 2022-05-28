@@ -38,10 +38,10 @@ jobs:
       - name: Build and test frontend
         run: npm run build
 
-      #       - name: Sign plugin
-      #         run: yarn sign
-      #         env:
-      #           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
+      - name: Sign plugin
+        run: npm sign
+        env:
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }}
 
       - name: Get plugin metadata
         id: metadata
