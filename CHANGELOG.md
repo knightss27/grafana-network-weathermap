@@ -4,17 +4,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.2.7](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.6...v0.2.7) (2022-05-28)
 
-
 ### Features
 
-* ability to set background images ([b21185f](https://github.com/knightss27/grafana-network-weathermap/commit/b21185fe98d5e6dd17418646a67062b8cd4785ac))
-* add issue templates ([b134495](https://github.com/knightss27/grafana-network-weathermap/commit/b1344959b3e4e396d766bac7366a66d23d4b74b6))
-* custom node images ([a72cd31](https://github.com/knightss27/grafana-network-weathermap/commit/a72cd316995a522f6e15ec8481be3d5a56986d6f))
-
+- ability to set background images ([b21185f](https://github.com/knightss27/grafana-network-weathermap/commit/b21185fe98d5e6dd17418646a67062b8cd4785ac))
+- add issue templates ([b134495](https://github.com/knightss27/grafana-network-weathermap/commit/b1344959b3e4e396d766bac7366a66d23d4b74b6))
+- custom node images ([a72cd31](https://github.com/knightss27/grafana-network-weathermap/commit/a72cd316995a522f6e15ec8481be3d5a56986d6f))
 
 ### Bug Fixes
 
-* update bug report template ([9729460](https://github.com/knightss27/grafana-network-weathermap/commit/9729460085f0d44196c7486915da9ca74c417537))
+- update bug report template ([9729460](https://github.com/knightss27/grafana-network-weathermap/commit/9729460085f0d44196c7486915da9ca74c417537))
 
 ### [0.2.6](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.5...v0.2.6) (2022-05-10)
 
