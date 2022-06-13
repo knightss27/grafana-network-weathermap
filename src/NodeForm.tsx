@@ -19,6 +19,7 @@ import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
 import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from 'iconOptions';
+import { handleFileUploadErrors } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -306,6 +307,8 @@ export const NodeForm = ({ value, onChange }: Props) => {
                             onChange(weathermap);
                           };
                           reader.readAsDataURL(currentTarget.files[0]);
+                        } else {
+                          handleFileUploadErrors(currentTarget.files);
                         }
                       }}
                     />

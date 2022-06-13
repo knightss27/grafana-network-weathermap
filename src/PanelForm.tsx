@@ -16,6 +16,7 @@ import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 import { FormDivider } from './FormDivider';
 import { css } from 'emotion';
+import { handleFileUploadErrors } from 'utils';
 
 interface Settings {}
 
@@ -57,8 +58,14 @@ export const PanelForm = ({ value, onChange }: Props) => {
           - Image:
           <FileUpload
             size="sm"
+            accept="image/*"
             onFileUpload={({ currentTarget }) => {
-              if (currentTarget.files && currentTarget.files[0] && currentTarget.files[0].type.startsWith('image')) {
+              if (
+                currentTarget.files &&
+                currentTarget.files[0] &&
+                currentTarget.files[0].type.startsWith('image') &&
+                currentTarget.files[0].size <= 1000000
+              ) {
                 console.log('Reading file: ' + currentTarget.files[0].name);
                 const reader = new FileReader();
                 reader.onload = (e: any) => {
@@ -71,6 +78,8 @@ export const PanelForm = ({ value, onChange }: Props) => {
                   }
                 };
                 reader.readAsDataURL(currentTarget.files[0]);
+              } else {
+                handleFileUploadErrors(currentTarget.files);
               }
             }}
           />

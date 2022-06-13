@@ -188,3 +188,15 @@ export function generateBasicNode(label: string, position: [number, number], the
     },
   };
 }
+
+// Handle file uploading errors consistently
+export function handleFileUploadErrors(files: FileList | null): void {
+  if (files && files[0]) {
+    if (files[0].size > 1000000) {
+      throw new Error('File must be less than 1MB in size.');
+    }
+    if (!files[0].type.startsWith('image')) {
+      throw new Error('File type must be an image format.');
+    }
+  }
+}
