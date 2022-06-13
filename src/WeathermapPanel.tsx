@@ -324,6 +324,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   }, [nodes]);
 
   const zoom = (e: WheelEvent) => {
+    if (!isEditMode) {
+      return;
+    }
+
     let zoomed: Weathermap = wm;
 
     if (e.deltaY > 0) {

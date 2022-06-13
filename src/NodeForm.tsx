@@ -286,11 +286,13 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     <FileUpload
                       size="sm"
                       className={styles.nodeSelect}
+                      accept="image/*"
                       onFileUpload={({ currentTarget }) => {
                         if (
                           currentTarget.files &&
                           currentTarget.files[0] &&
-                          currentTarget.files[0].type.startsWith('image')
+                          currentTarget.files[0].type.startsWith('image') &&
+                          currentTarget.files[0].size <= 1000000
                         ) {
                           const reader = new FileReader();
                           reader.onload = (e: any) => {
