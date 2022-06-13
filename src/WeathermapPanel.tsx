@@ -324,6 +324,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   }, [nodes]);
 
   const zoom = (e: WheelEvent) => {
+    // Just don't allow zooming when not in edit mode
     if (!isEditMode) {
       return;
     }
