@@ -56,7 +56,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   const wm = options.weathermap;
 
   if (wm && (!wm.version || wm.version !== CURRENT_VERSION)) {
-    onOptionsChange({ weathermap: handleVersionedStateUpdates(wm) });
+    onOptionsChange({ weathermap: handleVersionedStateUpdates(wm, theme) });
   }
 
   const isEditMode = window.location.search.includes('editPanel');

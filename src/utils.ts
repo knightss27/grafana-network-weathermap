@@ -1,5 +1,4 @@
 import { GrafanaTheme2 } from '@grafana/data';
-import { useTheme2 } from '@grafana/ui';
 import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
@@ -230,8 +229,7 @@ export function handleFileUploadErrors(files: FileList | null): void {
   }
 }
 
-export function handleVersionedStateUpdates(wm: Weathermap): Weathermap {
-  const theme = useTheme2();
+export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2): Weathermap {
   const modelWeathermap: Weathermap = {
     version: CURRENT_VERSION,
     id: '',
