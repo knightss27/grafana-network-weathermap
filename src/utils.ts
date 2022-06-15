@@ -234,7 +234,7 @@ export function handleVersionedStateUpdates(wm: Weathermap): Weathermap {
   const theme = useTheme2();
   const modelWeathermap: Weathermap = {
     version: CURRENT_VERSION,
-    id: "",
+    id: '',
     nodes: [],
     links: [],
     scale: {},
@@ -280,13 +280,13 @@ export function handleVersionedStateUpdates(wm: Weathermap): Weathermap {
           guidesEnabled: false,
         },
       },
-    }
-  }
+    },
+  };
 
   wm.version = CURRENT_VERSION;
-  wm.nodes = wm.nodes.map(n => merge(generateBasicNode('Node A', [200, 300], theme), n));
-  wm.links = wm.links.map(l => merge(generateBasicLink(), l));
+  wm.nodes = wm.nodes.map((n) => merge(generateBasicNode('Node A', [200, 300], theme), n));
+  wm.links = wm.links.map((l) => merge(generateBasicLink(), l));
   wm = merge(modelWeathermap, wm);
-  console.log("updated weathermap state version", wm);
+  console.log('updated weathermap state version', wm);
   return wm;
 }
