@@ -1,6 +1,10 @@
 import { GrafanaTheme2 } from '@grafana/data';
-import { Anchor, DrawnNode, Node, Weathermap } from 'types';
+import { useTheme2 } from '@grafana/ui';
+import merge from 'lodash.merge';
+import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
+
+export const CURRENT_VERSION = 1;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -189,6 +193,31 @@ export function generateBasicNode(label: string, position: [number, number], the
   };
 }
 
+export function generateBasicLink(nodes?: [Node, Node]): Link {
+  return {
+    id: uuidv4(),
+    // @ts-ignore
+    nodes: nodes ? nodes : [],
+    sides: {
+      A: {
+        bandwidth: 0,
+        bandwidthQuery: undefined,
+        query: undefined,
+        labelOffset: 55,
+        anchor: Anchor.Right,
+      },
+      Z: {
+        bandwidth: 0,
+        bandwidthQuery: undefined,
+        query: undefined,
+        labelOffset: 55,
+        anchor: Anchor.Left,
+      },
+    },
+    units: undefined,
+  };
+}
+
 // Handle file uploading errors consistently
 export function handleFileUploadErrors(files: FileList | null): void {
   if (files && files[0]) {
@@ -199,4 +228,65 @@ export function handleFileUploadErrors(files: FileList | null): void {
       throw new Error('File type must be an image format.');
     }
   }
+}
+
+export function handleVersionedStateUpdates(wm: Weathermap): Weathermap {
+  const theme = useTheme2();
+  const modelWeathermap: Weathermap = {
+    version: CURRENT_VERSION,
+    id: "",
+    nodes: [],
+    links: [],
+    scale: {},
+    settings: {
+      link: {
+        spacing: {
+          horizontal: 10,
+          vertical: 5,
+        },
+        stroke: {
+          width: 8,
+          color: theme.colors.secondary.main,
+        },
+        label: {
+          background: theme.colors.secondary.main,
+          border: theme.colors.secondary.border,
+          font: theme.colors.secondary.contrastText,
+        },
+      },
+      linkArrow: {
+        width: 8,
+        height: 10,
+        offset: 2,
+      },
+      fontSizing: {
+        node: 10,
+        link: 7,
+      },
+      panel: {
+        backgroundColor: theme.colors.background.primary,
+        panelSize: {
+          width: 600,
+          height: 600,
+        },
+        zoomScale: 0,
+        offset: {
+          x: 0,
+          y: 0,
+        },
+        grid: {
+          enabled: false,
+          size: 10,
+          guidesEnabled: false,
+        },
+      },
+    }
+  }
+
+  wm.version = CURRENT_VERSION;
+  wm.nodes = wm.nodes.map(n => merge(generateBasicNode('Node A', [200, 300], theme), n));
+  wm.links = wm.links.map(l => merge(generateBasicLink(), l));
+  wm = merge(modelWeathermap, wm);
+  console.log("updated weathermap state version", wm);
+  return wm;
 }

@@ -157,6 +157,7 @@ export interface WeathermapSettings {
 }
 
 export interface Weathermap {
+  version: number;
   id: string;
   nodes: Node[];
   links: Link[];

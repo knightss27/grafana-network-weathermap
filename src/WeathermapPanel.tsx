@@ -20,6 +20,8 @@ import {
   nearestMultiple,
   calculateRectangleAutoWidth,
   calculateRectangleAutoHeight,
+  CURRENT_VERSION,
+  handleVersionedStateUpdates,
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
@@ -52,6 +54,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   const styles = getStyles();
   const theme = useTheme2();
   const wm = options.weathermap;
+
+  if (wm && (!wm.version || wm.version !== CURRENT_VERSION)) {
+    onOptionsChange({ weathermap: handleVersionedStateUpdates(wm)});
+  }
 
   const isEditMode = window.location.search.includes('editPanel');
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import {
-  Button,
   ColorPicker,
-  FileUpload,
   InlineField,
   InlineFieldRow,
   InlineLabel,
@@ -16,7 +14,7 @@ import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 import { FormDivider } from './FormDivider';
 import { css } from 'emotion';
-import { handleFileUploadErrors } from 'utils';
+// import { handleFileUploadErrors } from 'utils';
 
 interface Settings {}
 
@@ -54,7 +52,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             onChange={handleColorChange}
           />
         </InlineLabel>
-        <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
+        {/* <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
           - Image:
           <FileUpload
             size="sm"
@@ -98,7 +96,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           ) : (
             ''
           )}
-        </InlineLabel>
+        </InlineLabel> */}
         <InlineFieldRow className={styles.inlineRow}>
           <InlineField label="Viewbox Width (px)" className={styles.inlineField}>
             <Input

@@ -13,13 +13,11 @@ import {
   ColorPicker,
   Slider,
   useTheme2,
-  FileUpload,
 } from '@grafana/ui';
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
 import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from 'iconOptions';
-import { handleFileUploadErrors } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -283,7 +281,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     className={styles.nodeSelect}
                     placeholder={'Select an icon'}
                   ></Select>
-                  <InlineLabel className={styles.nodeSelect}>
+                  {/* <InlineLabel className={styles.nodeSelect}>
                     <FileUpload
                       size="sm"
                       className={styles.nodeSelect}
@@ -313,7 +311,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       }}
                     />
                     {node.nodeIcon?.name}
-                  </InlineLabel>
+                  </InlineLabel> */}
                   <InlineFieldRow className={styles.inlineRow}>
                     <InlineField label={'Width'}>
                       <Input

@@ -1,13 +1,13 @@
 import React from 'react';
 import { StandardEditorProps } from '@grafana/data';
-import { Anchor, Weathermap } from 'types';
+import { Weathermap } from 'types';
 import { NodeForm } from './NodeForm';
 import { LinkForm } from './LinkForm';
 import { ColorForm } from './ColorForm';
 import { PanelForm } from './PanelForm';
 import { v4 as uuidv4 } from 'uuid';
 import { useTheme2 } from '@grafana/ui';
-import { generateBasicNode } from 'utils';
+import { generateBasicNode, CURRENT_VERSION, generateBasicLink, handleVersionedStateUpdates } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -21,30 +21,11 @@ export const WeathermapBuilder = (props: Props) => {
   const defaultNodes = [generateBasicNode('Node A', [200, 300], theme), generateBasicNode('Node B', [400, 300], theme)];
 
   const defaultValue: Weathermap = {
+    version: CURRENT_VERSION,
     id: uuidv4(),
     nodes: defaultNodes,
     links: [
-      {
-        id: uuidv4(),
-        nodes: [defaultNodes[0], defaultNodes[1]],
-        sides: {
-          A: {
-            bandwidth: 0,
-            bandwidthQuery: undefined,
-            query: undefined,
-            labelOffset: 55,
-            anchor: Anchor.Right,
-          },
-          Z: {
-            bandwidth: 0,
-            bandwidthQuery: undefined,
-            query: undefined,
-            labelOffset: 55,
-            anchor: Anchor.Left,
-          },
-        },
-        units: undefined,
-      },
+      generateBasicLink([defaultNodes[0], defaultNodes[1]])
     ],
     scale: {},
     settings: {
@@ -95,6 +76,10 @@ export const WeathermapBuilder = (props: Props) => {
   if (!props.value) {
     console.log('Initializing weathermap plugin.');
     props.onChange(defaultValue);
+  } else if (!props.value.version || props.value.version != CURRENT_VERSION) {
+    // State versioning and merging to deal with missing properties.
+    let wm = props.value;
+    props.onChange(handleVersionedStateUpdates(wm));
   }
 
   if (props.value) {
