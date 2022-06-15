@@ -80,6 +80,12 @@ export const LinkForm = (props: Props) => {
     onChange(weathermap);
   };
 
+  const handleDashboardLinkChange = (val: string, i: number, side: 'A' | 'Z') => {
+    let weathermap: Weathermap = value;
+    weathermap.links[i].sides[side].dashboardLink = val;
+    onChange(weathermap);
+  };
+
   const addNewLink = () => {
     if (value.nodes.length === 0) {
       throw new Error('There must be >= 1 Nodes to create a link.');
@@ -95,6 +101,7 @@ export const LinkForm = (props: Props) => {
           query: undefined,
           labelOffset: 55,
           anchor: Anchor.Center,
+          dashboardLink: '',
         },
         Z: {
           bandwidth: 0,
@@ -102,6 +109,7 @@ export const LinkForm = (props: Props) => {
           query: undefined,
           labelOffset: 55,
           anchor: Anchor.Center,
+          dashboardLink: '',
         },
       },
       units: undefined,
@@ -248,6 +256,18 @@ export const LinkForm = (props: Props) => {
                           className={styles.bandwidthSelect}
                           placeholder={'Select Anchor'}
                         ></Select>
+                      </InlineField>
+                    </InlineFieldRow>
+                    <InlineFieldRow className={styles.row2}>
+                      <InlineField label={`${sName} Dashboard Link`} style={{ width: '100%' }}>
+                        <Input
+                          value={side.dashboardLink}
+                          onChange={(e) => handleDashboardLinkChange(e.currentTarget.value, i, sName)}
+                          placeholder={'Link specific dashboard'}
+                          type={'text'}
+                          className={styles.nodeLabel}
+                          name={`${sName}dashboardLink`}
+                        />
                       </InlineField>
                     </InlineFieldRow>
                   </React.Fragment>

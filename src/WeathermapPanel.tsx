@@ -418,7 +418,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             `}
           >
             <div>Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}</div>
-            Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
+            <div>Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}</div>
+            <div>{hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}</div>
           </div>
         ) : (
           ''
@@ -564,6 +565,12 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                         handleLinkHover(d, 'A', e);
                       }}
                       onMouseOut={handleLinkHoverLoss}
+                      onClick={() => {
+                        if (d.sides.A.dashboardLink.length > 0) {
+                          window.location.href = d.sides.A.dashboardLink;
+                        }
+                      }}
+                      style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></line>
                     <polygon
                       points={`
@@ -579,6 +586,12 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                         handleLinkHover(d, 'A', e);
                       }}
                       onMouseOut={handleLinkHoverLoss}
+                      onClick={() => {
+                        if (d.sides.A.dashboardLink.length > 0) {
+                          window.location.href = d.sides.A.dashboardLink;
+                        }
+                      }}
+                      style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></polygon>
                     <line
                       strokeWidth={wm.settings.link.stroke.width}
@@ -591,6 +604,12 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                         handleLinkHover(d, 'Z', e);
                       }}
                       onMouseOut={handleLinkHoverLoss}
+                      onClick={() => {
+                        if (d.sides.Z.dashboardLink.length > 0) {
+                          window.location.href = d.sides.Z.dashboardLink;
+                        }
+                      }}
+                      style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></line>
                     <polygon
                       points={`
@@ -606,6 +625,12 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                         handleLinkHover(d, 'Z', e);
                       }}
                       onMouseOut={handleLinkHoverLoss}
+                      onClick={() => {
+                        if (d.sides.Z.dashboardLink.length > 0) {
+                          window.location.href = d.sides.Z.dashboardLink;
+                        }
+                      }}
+                      style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></polygon>
                   </g>
                 );

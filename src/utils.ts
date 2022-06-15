@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 1;
+export const CURRENT_VERSION = 2;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -204,6 +204,7 @@ export function generateBasicLink(nodes?: [Node, Node]): Link {
         query: undefined,
         labelOffset: 55,
         anchor: Anchor.Right,
+        dashboardLink: '',
       },
       Z: {
         bandwidth: 0,
@@ -211,6 +212,7 @@ export function generateBasicLink(nodes?: [Node, Node]): Link {
         query: undefined,
         labelOffset: 55,
         anchor: Anchor.Left,
+        dashboardLink: '',
       },
     },
     units: undefined,

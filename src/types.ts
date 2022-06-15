@@ -70,6 +70,7 @@ export interface LinkSide {
   query: string | undefined;
   labelOffset: number;
   anchor: Anchor;
+  dashboardLink: string;
 }
 
 export interface Link {
