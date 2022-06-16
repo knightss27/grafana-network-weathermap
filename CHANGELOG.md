@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.7...v0.2.8) (2022-06-16)
+
+
+### Features
+
+* dashboard linking on link click ([#9](https://github.com/knightss27/grafana-network-weathermap/issues/9)) ([74005ed](https://github.com/knightss27/grafana-network-weathermap/commit/74005ed234498d44fcc7d5f510fd59e452a425f9))
+
+
+### Bug Fixes
+
+* file upload limits ([d1f5d48](https://github.com/knightss27/grafana-network-weathermap/commit/d1f5d48ae4a8c1f4bf6bd81d816eeb53c811837a))
+* image upload error handling ([a26ce9b](https://github.com/knightss27/grafana-network-weathermap/commit/a26ce9bf57951d2db12877ca83a56b5de4cbd33b))
+* state changes merged for backwards compatability ([cdc8957](https://github.com/knightss27/grafana-network-weathermap/commit/cdc89578fb91d2f53c231bbb02155ba91c7c5d65))
+* stop zooming outside of edit mode ([29a7439](https://github.com/knightss27/grafana-network-weathermap/commit/29a7439960f9c1d7dc2ea722fad7dbc4777bd730))
+
 ### [0.2.7](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.6...v0.2.7) (2022-05-28)
 
 ### Features
