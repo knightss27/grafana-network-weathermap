@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { PanelProps, scaledUnits } from '@grafana/data';
+import { getValueFormat, PanelProps } from '@grafana/data';
 import {
   Anchor,
   DrawnLink,
@@ -44,7 +44,7 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
 }
 
 // Format link values as the proper prefix of bits
-const linkValueFormatter = scaledUnits(1000, ['b', 'Kb', 'Mb', 'Gb', 'Tb']);
+const getlinkValueFormatter = (fmt_id: string) => getValueFormat(fmt_id);
 
 /**
  * Weathermap panel component.
@@ -215,6 +215,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   function generateDrawnLink(d: Link, i: number): DrawnLink {
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
+    const linkValueFormatter = getlinkValueFormatter(d.units ? d.units : 'binbps');
 
     // Set the link's source and target node
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
@@ -256,11 +257,11 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
 
         let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
-        toReturn.sides[side].currentText = `${scaledSideValue.text} ${scaledSideValue.suffix}/s`;
+        toReturn.sides[side].currentText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
       }
 
       let scaledBandwidth = linkValueFormatter(toReturn.sides[side].bandwidth);
-      toReturn.sides[side].currentBandwidthText = `${scaledBandwidth.text} ${scaledBandwidth.suffix}/s`;
+      toReturn.sides[side].currentBandwidthText = `${scaledBandwidth.text} ${scaledBandwidth.suffix}`;
     }
 
     // Calculate positions for links and arrow polygons. Not included above to help with typing.

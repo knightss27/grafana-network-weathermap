@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
-import { Button, InlineField, InlineFieldRow, Input, Select, Slider, stylesFactory } from '@grafana/ui';
+import { Button, InlineField, InlineFieldRow, Input, Select, Slider, stylesFactory, UnitPicker } from '@grafana/ui';
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
@@ -112,7 +112,7 @@ export const LinkForm = (props: Props) => {
           dashboardLink: '',
         },
       },
-      units: undefined,
+      units: 'binbps',
     };
     weathermap.nodes[0].anchors[Anchor.Center].numLinks += 2;
     weathermap.links.push(link);
@@ -273,6 +273,18 @@ export const LinkForm = (props: Props) => {
                   </React.Fragment>
                 );
               })}
+              <InlineFieldRow className={styles.row2}>
+              <InlineField label={`Link Units`} style={{ width: '100%' }}>
+                <UnitPicker
+                  onChange={(val) => {
+                    let wm = value;
+                    wm.links[i].units = val;
+                    onChange(wm);
+                  }}
+                  value={link.units}
+                />
+              </InlineField>
+            </InlineFieldRow>
               <InlineFieldRow className={styles.row}>
                 <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeLink(i)} className={''}>
                   Remove Link
