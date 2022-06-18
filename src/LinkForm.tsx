@@ -274,17 +274,17 @@ export const LinkForm = (props: Props) => {
                 );
               })}
               <InlineFieldRow className={styles.row2}>
-              <InlineField label={`Link Units`} style={{ width: '100%' }}>
-                <UnitPicker
-                  onChange={(val) => {
-                    let wm = value;
-                    wm.links[i].units = val;
-                    onChange(wm);
-                  }}
-                  value={link.units}
-                />
-              </InlineField>
-            </InlineFieldRow>
+                <InlineField label={`Link Units`} style={{ width: '100%' }}>
+                  <UnitPicker
+                    onChange={(val) => {
+                      let wm = value;
+                      wm.links[i].units = val;
+                      onChange(wm);
+                    }}
+                    value={link.units}
+                  />
+                </InlineField>
+              </InlineFieldRow>
               <InlineFieldRow className={styles.row}>
                 <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeLink(i)} className={''}>
                   Remove Link
