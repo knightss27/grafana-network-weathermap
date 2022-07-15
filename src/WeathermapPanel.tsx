@@ -409,7 +409,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               top: ${hoveredLink.mouseEvent.nativeEvent.layerY}px;
               left: ${hoveredLink.mouseEvent.nativeEvent.layerX}px;
               transform: translate(0%, -100%);
-              background-color: black;
+              background-color: ${wm.settings.tooltip.backgroundColor};
+              color: ${wm.settings.tooltip.textColor} !important;
+              font-size: ${wm.settings.tooltip.fontSize} !important;
               z-index: 1000;
               display: ${hoveredLink ? 'flex' : 'none'};
               flex-direction: column;
@@ -418,9 +420,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               border-radius: 4px;
             `}
           >
-            <div>Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}</div>
-            <div>Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}</div>
-            <div>{hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}</div>
+            <div style={{fontSize: wm.settings.tooltip.fontSize}}>Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}</div>
+            <div style={{fontSize: wm.settings.tooltip.fontSize}}>Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}</div>
+            <div style={{fontSize: wm.settings.tooltip.fontSize}}>{hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}</div>
           </div>
         ) : (
           ''

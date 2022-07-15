@@ -10,6 +10,12 @@ export interface PanelOptions {
   };
 }
 
+export interface TooltipOptions {
+  fontSize: number;
+  textColor: string;
+  backgroundColor: string;
+}
+
 export interface AreaSize {
   width: number;
   height: number;
@@ -155,6 +161,7 @@ export interface WeathermapSettings {
     link: number;
   };
   panel: PanelOptions;
+  tooltip: TooltipOptions;
 }
 
 export interface Weathermap {

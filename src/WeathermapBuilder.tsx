@@ -68,6 +68,11 @@ export const WeathermapBuilder = (props: Props) => {
           guidesEnabled: false,
         },
       },
+      tooltip: {
+        fontSize: 8,
+        textColor: "white",
+        backgroundColor: "black"
+      }
     },
   };
 

@@ -329,6 +329,43 @@ export const PanelForm = ({ value, onChange }: Props) => {
             />
           </InlineField>
         </InlineFieldRow>
+        <FormDivider title='Tootlip Options' />
+        <FormDivider title="Tooltip" />
+        <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
+          Background Color:
+          <ColorPicker
+            color={value.settings.tooltip.backgroundColor}
+            onChange={(color) => {
+              let options = value;
+              options.settings.tooltip.backgroundColor = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Text Color:
+          <ColorPicker
+            color={value.settings.tooltip.textColor}
+            onChange={(color) => {
+              let options = value;
+              options.settings.tooltip.textColor = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
+        <InlineField label="Tooltip Font Size" className={styles.inlineField}>
+            <Slider
+              min={2}
+              max={40}
+              value={value.settings.tooltip.fontSize}
+              step={1}
+              onChange={(num) => {
+                let options = value;
+                options.settings.tooltip.fontSize = num;
+                onChange(options);
+              }}
+            />
+          </InlineField>
       </React.Fragment>
     );
   } else {
