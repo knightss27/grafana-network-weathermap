@@ -70,9 +70,9 @@ export const WeathermapBuilder = (props: Props) => {
       },
       tooltip: {
         fontSize: 8,
-        textColor: "white",
-        backgroundColor: "black"
-      }
+        textColor: 'white',
+        backgroundColor: 'black',
+      },
     },
   };
 

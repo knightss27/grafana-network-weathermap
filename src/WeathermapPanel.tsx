@@ -420,9 +420,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               border-radius: 4px;
             `}
           >
-            <div style={{fontSize: wm.settings.tooltip.fontSize}}>Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}</div>
-            <div style={{fontSize: wm.settings.tooltip.fontSize}}>Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}</div>
-            <div style={{fontSize: wm.settings.tooltip.fontSize}}>{hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}</div>
+            <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
+              Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}
+            </div>
+            <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
+              Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
+            </div>
+            <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
+              {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
+            </div>
           </div>
         ) : (
           ''

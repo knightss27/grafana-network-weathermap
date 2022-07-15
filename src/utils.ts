@@ -282,9 +282,9 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
       },
       tooltip: {
         fontSize: 8,
-        textColor: "white",
-        backgroundColor: "black"
-      }
+        textColor: 'white',
+        backgroundColor: 'black',
+      },
     },
   };
 
