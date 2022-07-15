@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'src/**'
+      - 'package-lock.json'
   pull_request:
 
 jobs:
@@ -15,5 +16,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
+      - run: npm install -g npm
       - run: npm ci
       - run: npm run build
