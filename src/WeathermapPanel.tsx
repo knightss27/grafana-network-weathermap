@@ -69,13 +69,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
     const percent = (current / max) * 100;
     let assignedColor = '';
-    
+
     wm.scale.forEach((threshold: Threshold) => {
       if (threshold.percent <= percent) {
         assignedColor = threshold.color;
       }
-    })
-  
+    });
+
     return assignedColor;
   }
 

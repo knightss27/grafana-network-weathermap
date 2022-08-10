@@ -292,14 +292,14 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
   wm.nodes = wm.nodes.map((n) => merge(generateBasicNode('Node A', [200, 300], theme), n));
   wm.links = wm.links.map((l) => merge(generateBasicLink(), l));
   if (!(wm.scale instanceof Array)) {
-    console.log(wm.scale)
+    console.log(wm.scale);
     // @ts-ignore
     wm.scale = Object.keys(wm.scale).map((key: number) => {
       return {
         percent: key,
-        color: wm.scale[key]
-      }
-    })
+        color: wm.scale[key],
+      };
+    });
   }
   wm = merge(modelWeathermap, wm);
   console.log('updated weathermap state version', wm);

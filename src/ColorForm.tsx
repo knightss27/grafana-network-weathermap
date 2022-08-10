@@ -19,7 +19,7 @@ export const ColorForm = (props: Props) => {
   const handleNumberChange = (e: any, currentIndex: number) => {
     let weathermap: Weathermap = value;
     weathermap.scale[currentIndex].percent = e.currentTarget.valueAsNumber;
-    weathermap.scale.sort((a,b) => a.percent - b.percent);
+    weathermap.scale.sort((a, b) => a.percent - b.percent);
     onChange(weathermap);
     setEditedPercents(weathermap.scale);
   };
@@ -36,13 +36,13 @@ export const ColorForm = (props: Props) => {
     if (value.scale.length === 0) {
       weathermap.scale.push({
         percent: 0,
-        color: '#ffffff'
-      })
+        color: '#ffffff',
+      });
     } else {
       weathermap.scale.push({
         percent: weathermap.scale[weathermap.scale.length - 1].percent + 10,
-        color: '#ffffff'
-      })
+        color: '#ffffff',
+      });
     }
     onChange(weathermap);
     setEditedPercents(weathermap.scale);
@@ -86,7 +86,7 @@ export const ColorForm = (props: Props) => {
               let t = prev;
               t[i].percent = e.currentTarget.valueAsNumber;
               return t;
-            })
+            });
             onChange(value);
           }}
           value={editedPercents[i].percent}
@@ -95,20 +95,11 @@ export const ColorForm = (props: Props) => {
           prefix={
             <div className={styles.inputPrefix}>
               <div className={styles.colorPicker}>
-                <ColorPicker
-                  color={threshold.color}
-                  onChange={(color) => handleColorChange(color, i)}
-                />
+                <ColorPicker color={threshold.color} onChange={(color) => handleColorChange(color, i)} />
               </div>
             </div>
           }
-          suffix={
-            <Icon
-              className={styles.trashIcon}
-              name="trash-alt"
-              onClick={() => handleDeletePercent(i)}
-            />
-          }
+          suffix={<Icon className={styles.trashIcon} name="trash-alt" onClick={() => handleDeletePercent(i)} />}
         />
       ))}
 
