@@ -164,12 +164,17 @@ export interface WeathermapSettings {
   tooltip: TooltipOptions;
 }
 
+export interface Threshold {
+  percent: number;
+  color: string;
+}
+
 export interface Weathermap {
   version: number;
   id: string;
   nodes: Node[];
   links: Link[];
-  scale: { [propName: number]: string };
+  scale: Threshold[];
   settings: WeathermapSettings;
 }
 

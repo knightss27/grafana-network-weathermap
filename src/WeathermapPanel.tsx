@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { getValueFormat, PanelProps } from '@grafana/data';
 import {
   Anchor,
@@ -11,6 +11,7 @@ import {
   Position,
   Weathermap,
   HoveredLink,
+  Threshold,
 } from 'types';
 import { css, cx } from 'emotion';
 import { stylesFactory, useTheme2 } from '@grafana/ui';
@@ -61,28 +62,21 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   const isEditMode = window.location.search.includes('editPanel');
 
-  // Color scales
-  const colors: any = useMemo(() => {
-    const c: any = {};
-    Object.keys(wm.scale).forEach((pct: string) => {
-      c[parseInt(pct, 10)] = options.weathermap.scale[parseInt(pct, 10)];
-    });
-    return c;
-  }, [wm.scale, options]);
-
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
       return getSolidFromAlphaColor(wm.settings.link.stroke.color, wm.settings.panel.backgroundColor);
     }
 
-    const percent = Math.round((current / max) * 100);
-    let actual = '';
-    Object.keys(colors).forEach((amount: string) => {
-      if (parseInt(amount, 10) <= percent) {
-        actual = amount;
+    const percent = (current / max) * 100;
+    let assignedColor = '';
+    
+    wm.scale.forEach((threshold: Threshold) => {
+      if (threshold.percent <= percent) {
+        assignedColor = threshold.color;
       }
-    });
-    return colors[actual];
+    })
+  
+    return assignedColor;
   }
 
   // Get the middle point between two nodes
@@ -433,7 +427,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         ) : (
           ''
         )}
-        <ColorScale colors={colors} settings={wm.settings} />
+        <ColorScale thresholds={wm.scale} settings={wm.settings} />
         <svg
           style={{
             position: 'absolute',

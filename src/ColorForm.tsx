@@ -16,47 +16,53 @@ export const ColorForm = (props: Props) => {
 
   const { value, onChange } = props;
 
-  const handleNumberChange = (e: any, key: number) => {
+  const handleNumberChange = (e: any, currentIndex: number) => {
     let weathermap: Weathermap = value;
-    let prev: string = weathermap.scale[key];
-    delete weathermap.scale[key];
-    weathermap.scale[parseInt(e.currentTarget.value, 10)] = prev;
+    weathermap.scale[currentIndex].percent = e.currentTarget.valueAsNumber;
+    weathermap.scale.sort((a,b) => a.percent - b.percent);
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
+    setEditedPercents(weathermap.scale);
   };
 
-  const handleColorChange = (color: any, key: number) => {
+  const handleColorChange = (color: any, index: number) => {
     let weathermap: Weathermap = value;
-    weathermap.scale[key] = color;
+    weathermap.scale[index].color = color;
     onChange(weathermap);
+    setEditedPercents(weathermap.scale);
   };
 
   const addNewValue = () => {
     let weathermap: Weathermap = value;
-    if (Object.keys(value.scale).length === 0) {
-      weathermap.scale[0] = '#ffffff';
+    if (value.scale.length === 0) {
+      weathermap.scale.push({
+        percent: 0,
+        color: '#ffffff'
+      })
     } else {
-      weathermap.scale[parseInt(Object.keys(value.scale)[Object.keys(value.scale).length - 1], 10) + 10] = '#ffffff';
+      weathermap.scale.push({
+        percent: weathermap.scale[weathermap.scale.length - 1].percent + 10,
+        color: '#ffffff'
+      })
     }
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
+    setEditedPercents(weathermap.scale);
   };
 
   const clearValues = () => {
     let weathermap: Weathermap = value;
-    weathermap.scale = {};
+    weathermap.scale = [];
     onChange(weathermap);
-    setEditedPercents(Object.keys(value.scale).map((i) => parseInt(i, 10)));
+    setEditedPercents(weathermap.scale);
   };
 
-  const handleDeletePercent = (key: number) => {
+  const handleDeletePercent = (currentIndex: number) => {
     let weathermap: Weathermap = value;
-    delete weathermap.scale[key];
+    weathermap.scale.splice(currentIndex, 1);
     onChange(weathermap);
+    setEditedPercents(weathermap.scale);
   };
 
-  // const [editedColor, setEditedColor] = useState('');
-  const [editedPercents, setEditedPercents] = useState(Object.keys(value.scale).map((i) => parseInt(i, 10)));
+  const [editedPercents, setEditedPercents] = useState(value.scale);
 
   return (
     <React.Fragment>
@@ -69,7 +75,7 @@ export const ColorForm = (props: Props) => {
       >
         Color Scale
       </h6>
-      {Object.keys(value.scale).map((percent, i) => (
+      {editedPercents.map((threshold, i) => (
         <Input
           className={styles.item}
           type="number"
@@ -78,20 +84,20 @@ export const ColorForm = (props: Props) => {
           onChange={(e) => {
             setEditedPercents((prev) => {
               let t = prev;
-              t[i] = e.currentTarget.valueAsNumber;
+              t[i].percent = e.currentTarget.valueAsNumber;
               return t;
-            });
+            })
             onChange(value);
           }}
-          value={editedPercents[i]}
-          aria-label={`Weathermap Threshold ${percent}`}
-          onBlur={(e) => handleNumberChange(e, parseInt(percent, 10))}
+          value={editedPercents[i].percent}
+          aria-label={`Weathermap Threshold ${threshold.percent}`}
+          onBlur={(e) => handleNumberChange(e, i)}
           prefix={
             <div className={styles.inputPrefix}>
               <div className={styles.colorPicker}>
                 <ColorPicker
-                  color={value.scale[parseInt(percent, 10)]}
-                  onChange={(color) => handleColorChange(color, parseInt(percent, 10))}
+                  color={threshold.color}
+                  onChange={(color) => handleColorChange(color, i)}
                 />
               </div>
             </div>
@@ -100,7 +106,7 @@ export const ColorForm = (props: Props) => {
             <Icon
               className={styles.trashIcon}
               name="trash-alt"
-              onClick={() => handleDeletePercent(parseInt(percent, 10))}
+              onClick={() => handleDeletePercent(i)}
             />
           }
         />

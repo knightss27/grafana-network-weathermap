@@ -25,7 +25,7 @@ export const WeathermapBuilder = (props: Props) => {
     id: uuidv4(),
     nodes: defaultNodes,
     links: [generateBasicLink([defaultNodes[0], defaultNodes[1]])],
-    scale: {},
+    scale: [],
     settings: {
       link: {
         spacing: {

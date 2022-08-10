@@ -1,30 +1,28 @@
 import { stylesFactory, useTheme2 } from '@grafana/ui';
 import { css, cx } from 'emotion';
-import React, { useMemo } from 'react';
-import { WeathermapSettings } from 'types';
+import React from 'react';
+import { Threshold, WeathermapSettings } from 'types';
 
 interface ColorScaleProps {
-  colors: { [propName: string]: string };
+  thresholds: Threshold[];
   settings: WeathermapSettings;
 }
 
+// TODO: Fix auto-updating to scale that happens before we've had onBlur called on the ColorForm.
 const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
-  const { colors, settings } = props;
+  const { thresholds, settings } = props;
   const styles = getStyles();
   const theme = useTheme2();
 
   // Calculate the height of a scale's sub-rectangle
-  const scaleHeights: { [num: number]: string } = useMemo(() => {
-    let c: { [num: number]: string } = {};
-    Object.keys(colors).forEach((percent, i) => {
-      const keys = Object.keys(colors);
-      const current: number = parseInt(keys[i], 10);
-      const next: number = keys[i + 1] !== undefined ? parseInt(keys[i + 1], 10) : 101;
-      let height: number = ((next - current) / 100) * 200;
-      c[i] = height.toString() + 'px';
-    });
-    return c;
-  }, [colors]);
+  const scaleHeights: { [num: number]: string } = {};
+
+  thresholds.forEach((threshold, i) => {
+    const current: number = threshold.percent;
+    const next: number = thresholds[i + 1] !== undefined ? thresholds[i + 1].percent : 101;
+    let height: number = ((next - current) / 100) * 200;
+    scaleHeights[i] = height.toString() + 'px';
+  });
 
   return (
     <div className={styles.colorScaleContainer}>
@@ -42,13 +40,13 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
       >
         Traffic Load
       </div>
-      {Object.keys(colors).map((percent, i) => (
+      {thresholds.map((threshold, i) => (
         <div className={styles.colorScaleItem} key={i}>
           <span
             className={cx(
               styles.colorBox,
               css`
-                background: ${colors[percent]};
+                background: ${threshold.color};
                 height: ${scaleHeights[i]};
               `
             )}
@@ -65,13 +63,13 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
               `
             )}
           >
-            {percent +
+            {threshold.percent +
               '%' +
-              (Object.keys(colors)[i + 1] === undefined
-                ? percent === '100'
+              (thresholds[i + 1] === undefined
+                ? threshold.percent >= 100
                   ? ''
                   : ' - 100%'
-                : ' - ' + Object.keys(colors)[i + 1] + '%')}
+                : ' - ' + thresholds[i + 1].percent + '%')}
           </span>
         </div>
       ))}
@@ -112,4 +110,4 @@ const getStyles = stylesFactory(() => {
   };
 });
 
-export default React.memo(ColorScale);
+export default ColorScale;

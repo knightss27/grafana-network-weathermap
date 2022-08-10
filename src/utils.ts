@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 3;
+export const CURRENT_VERSION = 4;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -237,7 +237,7 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
     id: '',
     nodes: [],
     links: [],
-    scale: {},
+    scale: [],
     settings: {
       link: {
         spacing: {
@@ -291,6 +291,16 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
   wm.version = CURRENT_VERSION;
   wm.nodes = wm.nodes.map((n) => merge(generateBasicNode('Node A', [200, 300], theme), n));
   wm.links = wm.links.map((l) => merge(generateBasicLink(), l));
+  if (!(wm.scale instanceof Array)) {
+    console.log(wm.scale)
+    // @ts-ignore
+    wm.scale = Object.keys(wm.scale).map((key: number) => {
+      return {
+        percent: key,
+        color: wm.scale[key]
+      }
+    })
+  }
   wm = merge(modelWeathermap, wm);
   console.log('updated weathermap state version', wm);
   return wm;
