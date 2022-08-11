@@ -73,6 +73,21 @@ export const WeathermapBuilder = (props: Props) => {
         textColor: 'white',
         backgroundColor: 'black',
       },
+      scale: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 50,
+          height: 200,
+        },
+        title: 'Traffic Load',
+        fontSizing: {
+          title: 16,
+          threshold: 12,
+        },
+      },
     },
   };
 

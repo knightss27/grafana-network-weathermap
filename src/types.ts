@@ -162,11 +162,22 @@ export interface WeathermapSettings {
   };
   panel: PanelOptions;
   tooltip: TooltipOptions;
+  scale: TrafficPanelSettings;
 }
 
 export interface Threshold {
   percent: number;
   color: string;
+}
+
+export interface TrafficPanelSettings {
+  position: Position;
+  size: AreaSize;
+  title: string;
+  fontSizing: {
+    title: number;
+    threshold: number;
+  };
 }
 
 export interface Weathermap {

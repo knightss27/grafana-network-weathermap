@@ -330,7 +330,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
           </InlineField>
         </InlineFieldRow>
         <FormDivider title="Tootlip Options" />
-        <FormDivider title="Tooltip" />
         <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
           Background Color:
           <ColorPicker
@@ -362,6 +361,72 @@ export const PanelForm = ({ value, onChange }: Props) => {
             onChange={(num) => {
               let options = value;
               options.settings.tooltip.fontSize = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <FormDivider title="Scale Options" />
+        <InlineField label="Scale Title" className={styles.inlineField}>
+          <Input
+            value={value.settings.scale.title}
+            placeholder={'Scale Title'}
+            type={'text'}
+            name={'scaleTitle'}
+            onChange={(e) => {
+              let options = value;
+              options.settings.scale.title = e.currentTarget.value;
+              onChange(options);
+            }}
+          ></Input>
+        </InlineField>
+        <InlineField label="Scale Width" className={styles.inlineField}>
+          <Slider
+            min={10}
+            max={200}
+            value={value.settings.scale.size.width}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.scale.size.width = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <InlineField label="Scale Height" className={styles.inlineField}>
+          <Slider
+            min={0}
+            max={1000}
+            value={value.settings.scale.size.height}
+            step={10}
+            onChange={(num) => {
+              let options = value;
+              options.settings.scale.size.height = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <InlineField label="Title Font Size" className={styles.inlineField}>
+          <Slider
+            min={2}
+            max={40}
+            value={value.settings.scale.fontSizing.title}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.scale.fontSizing.title = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <InlineField label="Threshold Font Size" className={styles.inlineField}>
+          <Slider
+            min={2}
+            max={40}
+            value={value.settings.scale.fontSizing.threshold}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.scale.fontSizing.threshold = num;
               onChange(options);
             }}
           />
