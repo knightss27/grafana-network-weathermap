@@ -30,7 +30,15 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
 
   if (settings.scale && settings.scale.fontSizing) {
     return (
-      <div className={styles.colorScaleContainer}>
+      <div
+        className={cx(
+          styles.colorScaleContainer,
+          css`
+            top: ${settings.scale.position.y}%;
+            left: ${settings.scale.position.x}%;
+          `
+        )}
+      >
         <div
           className={cx(
             styles.colorBoxTitle,
@@ -92,8 +100,6 @@ const getStyles = stylesFactory(() => {
   return {
     colorScaleContainer: css`
       position: relative;
-      bottom: 0;
-      left: 0;
       padding: 10px;
       display: flex;
       flex-direction: column;

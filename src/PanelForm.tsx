@@ -405,6 +405,32 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
+        <InlineField label="Scale Position X" className={styles.inlineField}>
+          <Slider
+            min={0}
+            max={100}
+            value={value.settings.scale.position.x}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.scale.position.x = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <InlineField label="Scale Position Y" className={styles.inlineField}>
+          <Slider
+            min={0}
+            max={100}
+            value={value.settings.scale.position.y}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.scale.position.y = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
         <InlineField label="Title Font Size" className={styles.inlineField}>
           <Slider
             min={2}
