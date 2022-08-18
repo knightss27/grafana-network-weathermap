@@ -280,6 +280,12 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       toReturn.lineStartA,
       -wm.settings.linkArrow.offset - wm.settings.linkArrow.height
     );
+
+    if (tempNodes[toReturn.target.index].isConnection) {
+      toReturn.lineEndA = toReturn.lineStartZ;
+      toReturn.lineEndZ = toReturn.lineStartZ;
+    }
+
     toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -wm.settings.linkArrow.offset);
     toReturn.arrowPolygonA = getArrowPolygon(toReturn.lineStartA, toReturn.arrowCenterA);
 
@@ -549,6 +555,24 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
+                // Automatic data collection through connection links
+                if (tempNodes[d.source.index].isConnection) {
+                  // If this link is coming from a connection, we want to take the link to that connection's data
+                  
+                  // Find the link with that data
+                  let prevLinks = links.filter(l => l.target.id === d.source.id);
+                  // Check there is only one connection (otherwise this doesn't work)
+                  if (prevLinks.length === 1) {
+                    for (let key in d.sides.A) {
+                      if (key != 'labelOffset' && key != 'anchor') {
+                        // @ts-ignore
+                        d.sides.A[key] = prevLinks[0].sides.A[key];
+                      }
+                    }
+                  } else {
+                    console.warn(`Connection node "${d.source.label}" missing input connection.`);
+                  }
+                }
                 return (
                   <g
                     key={i}
@@ -575,6 +599,16 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       }}
                       style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></line>
+                    {tempNodes[d.target.index].isConnection ? 
+                    <circle
+                      cx={d.lineEndA.x}
+                      cy={d.lineEndA.y}
+                      r={wm.settings.link.stroke.width/2}
+                      fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                      style={{ paintOrder: 'stroke' }}
+                    ></circle>
+                     :
+                    <React.Fragment>
                     <polygon
                       points={`
                                         ${d.arrowCenterA.x}
@@ -635,6 +669,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       }}
                       style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></polygon>
+                    </React.Fragment>}
                   </g>
                 );
               })}
@@ -644,7 +679,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
-                const transform = getPercentPoint(d.lineStartZ, d.lineStartA, 0.5 * (d.sides.A.labelOffset / 100));
+                const transform = getPercentPoint(d.lineStartZ, d.lineStartA, (tempNodes[d.target.index].isConnection ? 1 : 0.5) * (d.sides.A.labelOffset / 100));
                 return (
                   <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
                     <rect
@@ -683,7 +718,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             </g>
             <g>
               {links.map((d, i) => {
-                if (d.nodes[0].id === d.nodes[1].id) {
+                if (d.nodes[0].id === d.nodes[1].id || tempNodes[d.target.index].isConnection) {
                   return;
                 }
                 const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));

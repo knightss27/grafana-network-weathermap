@@ -43,6 +43,11 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   const { node, draggedNode, wm, onDrag, onStop, disabled } = props;
   const styles = getStyles();
 
+  // TODO: decide how to make things show up on each half
+  if (node.label === '') {
+    node.label = "  "
+  }
+
   const rectX = useMemo(() => calculateRectX(node, wm), [node, wm]);
   const rectY = useMemo(() => calculateRectY(node, wm), [node, wm]);
   const rectWidth = useMemo(() => calculateRectangleAutoWidth(node, wm), [node, wm]);
@@ -72,9 +77,9 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
               y={rectY}
               width={rectWidth}
               height={rectHeight}
-              fill={getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)}
-              stroke={getSolidFromAlphaColor(node.colors.border, wm.settings.panel.backgroundColor)}
-              strokeWidth={4}
+              fill={node.isConnection ? 'transparent' : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)}
+              stroke={disabled && node.isConnection ? 'transparent' : getSolidFromAlphaColor(node.colors.border, wm.settings.panel.backgroundColor)}
+              strokeWidth={node.isConnection ? 2 : 4}
               rx={6}
               ry={7}
               style={{ paintOrder: 'stroke' }}
@@ -87,9 +92,9 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
               dominantBaseline={'central'}
               fill={node.colors.font}
               className={styles.nodeText}
-              fontSize={`${wm.settings.fontSizing.node}px`}
+              fontSize={node.isConnection ? '6px' : `${wm.settings.fontSizing.node}px`}
             >
-              {node.label !== undefined ? node.label : ''}
+              {node.label !== undefined && ! (node.isConnection && disabled) ? node.label : ''}
             </text>
           </React.Fragment>
         ) : (

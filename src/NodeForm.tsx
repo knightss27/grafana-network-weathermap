@@ -29,6 +29,11 @@ export const NodeForm = ({ value, onChange }: Props) => {
   const styles = getStyles();
   const theme = useTheme2();
 
+  let connectionCounter = 0;
+  for (let node of value.nodes) {
+    connectionCounter += node.isConnection ? 1 : 0;
+  }
+
   const handleChange = (e: React.FormEvent<HTMLInputElement>, i: number) => {
     let weathermap: Weathermap = value;
     if (e.currentTarget.name === 'X') {
@@ -58,6 +63,14 @@ export const NodeForm = ({ value, onChange }: Props) => {
     weathermap.nodes[i].compactVerticalLinks = e.currentTarget.checked;
     onChange(weathermap);
   };
+
+  function handleConnectionChange(e: React.FormEvent<HTMLInputElement>, i: number): void {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].isConnection = e.currentTarget.checked;
+    weathermap.nodes[i].label = "C" + connectionCounter;
+    onChange(weathermap);
+  }
+  
 
   const handleColorChange = (color: string, i: number, type: string) => {
     let weathermap: Weathermap = value;
@@ -163,6 +176,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
         },
         drawInside: false,
       },
+      isConnection: false,
     };
     weathermap.nodes.push(node);
     onChange(weathermap);
@@ -397,6 +411,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     <InlineField label={'Compact Vertical Links'}>
                       <InlineSwitch value={node.compactVerticalLinks} onChange={(e) => handleCompactChange(e, i)} />
                     </InlineField>
+                    <InlineField label={'Use As Connection'}>
+                      <InlineSwitch value={node.isConnection} onChange={(e) => handleConnectionChange(e, i)} />
+                    </InlineField>
                   </InlineFieldRow>
                 </ControlledCollapse>
               </InlineFieldRow>
@@ -478,3 +495,4 @@ const getStyles = stylesFactory(() => {
     `,
   };
 });
+
