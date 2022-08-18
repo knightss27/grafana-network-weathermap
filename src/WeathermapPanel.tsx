@@ -564,7 +564,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   // Check there is only one connection (otherwise this doesn't work)
                   if (prevLinks.length === 1) {
                     for (let key in d.sides.A) {
-                      if (key != 'labelOffset' && key != 'anchor') {
+                      if (key !== 'labelOffset' && key !== 'anchor') {
                         // @ts-ignore
                         d.sides.A[key] = prevLinks[0].sides.A[key];
                       }
