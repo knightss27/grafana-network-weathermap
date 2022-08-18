@@ -67,10 +67,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
   function handleConnectionChange(e: React.FormEvent<HTMLInputElement>, i: number): void {
     let weathermap: Weathermap = value;
     weathermap.nodes[i].isConnection = e.currentTarget.checked;
-    weathermap.nodes[i].label = "C" + connectionCounter;
+    weathermap.nodes[i].label = 'C' + connectionCounter;
     onChange(weathermap);
   }
-  
 
   const handleColorChange = (color: string, i: number, type: string) => {
     let weathermap: Weathermap = value;
@@ -495,4 +494,3 @@ const getStyles = stylesFactory(() => {
     `,
   };
 });
-

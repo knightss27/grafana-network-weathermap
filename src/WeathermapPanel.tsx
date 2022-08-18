@@ -558,9 +558,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 // Automatic data collection through connection links
                 if (tempNodes[d.source.index].isConnection) {
                   // If this link is coming from a connection, we want to take the link to that connection's data
-                  
+
                   // Find the link with that data
-                  let prevLinks = links.filter(l => l.target.id === d.source.id);
+                  let prevLinks = links.filter((l) => l.target.id === d.source.id);
                   // Check there is only one connection (otherwise this doesn't work)
                   if (prevLinks.length === 1) {
                     for (let key in d.sides.A) {
@@ -599,18 +599,18 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       }}
                       style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></line>
-                    {tempNodes[d.target.index].isConnection ? 
-                    <circle
-                      cx={d.lineEndA.x}
-                      cy={d.lineEndA.y}
-                      r={wm.settings.link.stroke.width/2}
-                      fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                      style={{ paintOrder: 'stroke' }}
-                    ></circle>
-                     :
-                    <React.Fragment>
-                    <polygon
-                      points={`
+                    {tempNodes[d.target.index].isConnection ? (
+                      <circle
+                        cx={d.lineEndA.x}
+                        cy={d.lineEndA.y}
+                        r={wm.settings.link.stroke.width / 2}
+                        fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                        style={{ paintOrder: 'stroke' }}
+                      ></circle>
+                    ) : (
+                      <React.Fragment>
+                        <polygon
+                          points={`
                                         ${d.arrowCenterA.x}
                                         ${d.arrowCenterA.y}
                                         ${d.arrowPolygonA.p1.x}
@@ -618,38 +618,38 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                                         ${d.arrowPolygonA.p2.x}
                                         ${d.arrowPolygonA.p2.y}
                                     `}
-                      fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                      onMouseMove={(e) => {
-                        handleLinkHover(d, 'A', e);
-                      }}
-                      onMouseOut={handleLinkHoverLoss}
-                      onClick={() => {
-                        if (d.sides.A.dashboardLink.length > 0) {
-                          window.location.href = d.sides.A.dashboardLink;
-                        }
-                      }}
-                      style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
-                    ></polygon>
-                    <line
-                      strokeWidth={wm.settings.link.stroke.width}
-                      stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                      x1={d.lineStartZ.x}
-                      y1={d.lineStartZ.y}
-                      x2={d.lineEndZ.x}
-                      y2={d.lineEndZ.y}
-                      onMouseMove={(e) => {
-                        handleLinkHover(d, 'Z', e);
-                      }}
-                      onMouseOut={handleLinkHoverLoss}
-                      onClick={() => {
-                        if (d.sides.Z.dashboardLink.length > 0) {
-                          window.location.href = d.sides.Z.dashboardLink;
-                        }
-                      }}
-                      style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
-                    ></line>
-                    <polygon
-                      points={`
+                          fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                          onMouseMove={(e) => {
+                            handleLinkHover(d, 'A', e);
+                          }}
+                          onMouseOut={handleLinkHoverLoss}
+                          onClick={() => {
+                            if (d.sides.A.dashboardLink.length > 0) {
+                              window.location.href = d.sides.A.dashboardLink;
+                            }
+                          }}
+                          style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
+                        ></polygon>
+                        <line
+                          strokeWidth={wm.settings.link.stroke.width}
+                          stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
+                          x1={d.lineStartZ.x}
+                          y1={d.lineStartZ.y}
+                          x2={d.lineEndZ.x}
+                          y2={d.lineEndZ.y}
+                          onMouseMove={(e) => {
+                            handleLinkHover(d, 'Z', e);
+                          }}
+                          onMouseOut={handleLinkHoverLoss}
+                          onClick={() => {
+                            if (d.sides.Z.dashboardLink.length > 0) {
+                              window.location.href = d.sides.Z.dashboardLink;
+                            }
+                          }}
+                          style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
+                        ></line>
+                        <polygon
+                          points={`
                                         ${d.arrowCenterZ.x}
                                         ${d.arrowCenterZ.y}
                                         ${d.arrowPolygonZ.p1.x}
@@ -657,19 +657,20 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                                         ${d.arrowPolygonZ.p2.x}
                                         ${d.arrowPolygonZ.p2.y}
                                     `}
-                      fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
-                      onMouseMove={(e) => {
-                        handleLinkHover(d, 'Z', e);
-                      }}
-                      onMouseOut={handleLinkHoverLoss}
-                      onClick={() => {
-                        if (d.sides.Z.dashboardLink.length > 0) {
-                          window.location.href = d.sides.Z.dashboardLink;
-                        }
-                      }}
-                      style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
-                    ></polygon>
-                    </React.Fragment>}
+                          fill={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
+                          onMouseMove={(e) => {
+                            handleLinkHover(d, 'Z', e);
+                          }}
+                          onMouseOut={handleLinkHoverLoss}
+                          onClick={() => {
+                            if (d.sides.Z.dashboardLink.length > 0) {
+                              window.location.href = d.sides.Z.dashboardLink;
+                            }
+                          }}
+                          style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
+                        ></polygon>
+                      </React.Fragment>
+                    )}
                   </g>
                 );
               })}
@@ -679,7 +680,11 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
-                const transform = getPercentPoint(d.lineStartZ, d.lineStartA, (tempNodes[d.target.index].isConnection ? 1 : 0.5) * (d.sides.A.labelOffset / 100));
+                const transform = getPercentPoint(
+                  d.lineStartZ,
+                  d.lineStartA,
+                  (tempNodes[d.target.index].isConnection ? 1 : 0.5) * (d.sides.A.labelOffset / 100)
+                );
                 return (
                   <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
                     <rect

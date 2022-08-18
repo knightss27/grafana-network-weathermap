@@ -45,7 +45,7 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
 
   // TODO: decide how to make things show up on each half
   if (node.label === '') {
-    node.label = "  "
+    node.label = '  ';
   }
 
   const rectX = useMemo(() => calculateRectX(node, wm), [node, wm]);
@@ -77,8 +77,16 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
               y={rectY}
               width={rectWidth}
               height={rectHeight}
-              fill={node.isConnection ? 'transparent' : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)}
-              stroke={disabled && node.isConnection ? 'transparent' : getSolidFromAlphaColor(node.colors.border, wm.settings.panel.backgroundColor)}
+              fill={
+                node.isConnection
+                  ? 'transparent'
+                  : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)
+              }
+              stroke={
+                disabled && node.isConnection
+                  ? 'transparent'
+                  : getSolidFromAlphaColor(node.colors.border, wm.settings.panel.backgroundColor)
+              }
               strokeWidth={node.isConnection ? 2 : 4}
               rx={6}
               ry={7}
@@ -94,7 +102,7 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
               className={styles.nodeText}
               fontSize={node.isConnection ? '6px' : `${wm.settings.fontSizing.node}px`}
             >
-              {node.label !== undefined && ! (node.isConnection && disabled) ? node.label : ''}
+              {node.label !== undefined && !(node.isConnection && disabled) ? node.label : ''}
             </text>
           </React.Fragment>
         ) : (
