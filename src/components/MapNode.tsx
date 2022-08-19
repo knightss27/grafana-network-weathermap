@@ -43,11 +43,6 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   const { node, draggedNode, wm, onDrag, onStop, disabled } = props;
   const styles = getStyles();
 
-  // TODO: decide how to make things show up on each half
-  if (node.label === '') {
-    node.label = '  ';
-  }
-
   const rectX = useMemo(() => calculateRectX(node, wm), [node, wm]);
   const rectY = useMemo(() => calculateRectY(node, wm), [node, wm]);
   const rectWidth = useMemo(() => calculateRectangleAutoWidth(node, wm), [node, wm]);
