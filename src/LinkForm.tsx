@@ -138,6 +138,15 @@ export const LinkForm = (props: Props) => {
   const clearLinks = () => {
     let weathermap: Weathermap = value;
     weathermap.links = [];
+    for (let i = 0; i < weathermap.nodes.length; i++) {
+      weathermap.nodes[i].anchors = {
+        0: { numLinks: 0, numFilledLinks: 0 },
+        1: { numLinks: 0, numFilledLinks: 0 },
+        2: { numLinks: 0, numFilledLinks: 0 },
+        3: { numLinks: 0, numFilledLinks: 0 },
+        4: { numLinks: 0, numFilledLinks: 0 },
+      };
+    }
     props.onChange(weathermap);
   };
 
