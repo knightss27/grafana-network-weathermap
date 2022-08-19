@@ -25,7 +25,7 @@ export const WeathermapBuilder = (props: Props) => {
     id: uuidv4(),
     nodes: defaultNodes.map((d, i) => {
       let v = d;
-      v.anchors[i == 0 ? Anchor.Right : Anchor.Left].numLinks = 1;
+      v.anchors[i === 0 ? Anchor.Right : Anchor.Left].numLinks = 1;
       return v;
     }),
     links: [generateBasicLink([defaultNodes[0], defaultNodes[1]])],
