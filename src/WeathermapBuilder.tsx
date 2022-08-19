@@ -1,6 +1,6 @@
 import React from 'react';
 import { StandardEditorProps } from '@grafana/data';
-import { Weathermap } from 'types';
+import { Anchor, Weathermap } from 'types';
 import { NodeForm } from './NodeForm';
 import { LinkForm } from './LinkForm';
 import { ColorForm } from './ColorForm';
@@ -23,7 +23,7 @@ export const WeathermapBuilder = (props: Props) => {
   const defaultValue: Weathermap = {
     version: CURRENT_VERSION,
     id: uuidv4(),
-    nodes: defaultNodes,
+    nodes: defaultNodes.map((d, i) => {let v = d; v.anchors[i == 0 ? Anchor.Right : Anchor.Left].numLinks = 1; return v}),
     links: [generateBasicLink([defaultNodes[0], defaultNodes[1]])],
     scale: [],
     settings: {

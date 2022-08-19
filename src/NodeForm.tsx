@@ -410,7 +410,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     <InlineField label={'Compact Vertical Links'}>
                       <InlineSwitch value={node.compactVerticalLinks} onChange={(e) => handleCompactChange(e, i)} />
                     </InlineField>
-                    <InlineField label={'Use As Connection'}>
+                    <InlineField label={'Use As Connection (BETA)'}>
                       <InlineSwitch value={node.isConnection} onChange={(e) => handleConnectionChange(e, i)} />
                     </InlineField>
                   </InlineFieldRow>
