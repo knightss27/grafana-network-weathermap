@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.8...v0.3.0) (2022-08-19)
+
+
+### Features
+
+* customizable tooltips ([#15](https://github.com/knightss27/grafana-network-weathermap/issues/15)) ([a5e2440](https://github.com/knightss27/grafana-network-weathermap/commit/a5e2440889389a5c41d2f098809a4ccdb98d0b0c))
+* decimal percentages in color scale ([#6](https://github.com/knightss27/grafana-network-weathermap/issues/6)) ([0ce987c](https://github.com/knightss27/grafana-network-weathermap/commit/0ce987c6b19f4f1a08abd2681d8ab60b34b31ae6))
+* link turns/connections ([#10](https://github.com/knightss27/grafana-network-weathermap/issues/10)) ([ea4abfc](https://github.com/knightss27/grafana-network-weathermap/commit/ea4abfcd538e3dd4003b9c83a68338be786a556f))
+* link-specific units ([8373e2a](https://github.com/knightss27/grafana-network-weathermap/commit/8373e2af609432938b97d14bf988f19df5dcc81a))
+* load scale customization ([#10](https://github.com/knightss27/grafana-network-weathermap/issues/10)) ([6b636b2](https://github.com/knightss27/grafana-network-weathermap/commit/6b636b270630ce2d098eece8e1dc95f91bbff4fb))
+
+
+### Bug Fixes
+
+* basic setup correctly adds link ([d3fabd7](https://github.com/knightss27/grafana-network-weathermap/commit/d3fabd7a529f3cec59fbce14ab7de39f27a849d7))
+* clearing all links resets node height/width ([809b914](https://github.com/knightss27/grafana-network-weathermap/commit/809b914568168f89f6b8be0241d012f6d75b63e1))
+
 ### [0.2.8](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.7...v0.2.8) (2022-06-16)
 
 ### Features
