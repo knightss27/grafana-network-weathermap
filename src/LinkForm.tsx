@@ -250,7 +250,12 @@ export const LinkForm = (props: Props) => {
                             name={`${sName}bandwidth`}
                           />
                         </InlineField>
-                        <InlineField grow label={`${sName} Bandwidth Query`} style={{ width: '100%' }} labelWidth={'auto'}>
+                        <InlineField
+                          grow
+                          label={`${sName} Bandwidth Query`}
+                          style={{ width: '100%' }}
+                          labelWidth={'auto'}
+                        >
                           <Select
                             onChange={(v) => {
                               handleBandwidthQueryChange(v.name, i, sName);
