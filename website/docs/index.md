@@ -2,10 +2,32 @@
 
 ## Installation
 
+### Installing on a local Grafana:
+
+For local instances, plugins are installed and updated via a simple CLI command. Plugins are not updated automatically, however you will be notified when updates are available right within your Grafana.
+
+#### 1: Install the Panel
+
+Use the grafana-cli tool to install Network Weathermap from the commandline:
+
+```grafana-cli plugins install knightss27-weathermap-panel```
+
+The plugin will be installed into your grafana plugins directory; the default is /var/lib/grafana/plugins. [More information on the cli tool.](https://grafana.com/docs/grafana/latest/administration/cli/#plugins-commands)
+
+Alternatively, you can manually download the .zip file from the [latest release](https://github.com/knightss27/grafana-network-weathermap/releases/latest/) and unpack it into your grafana plugins directory.
+
+
+#### 2: Add the Panel to a Dashboard
+
+Installed panels are available immediately in the Dashboards section in your Grafana main menu, and can be added like any other core panel in Grafana.
+
+To see a list of installed panels, click the Plugins item in the main menu. Both core panels and installed panels will appear.
+
+### Testing
+
 For testing with Docker, follow the instructions on the [testing README](https://github.com/knightss27/grafana-network-weathermap/tree/main/testing#readme). This will provide you with an instance to play around with.
 
-To install unsigned to your own Grafana instance, download the [latest release zip](https://github.com/knightss27/grafana-network-weathermap/releases/latest/). This page will be updated once this plugin is officially on the Grafana plugin store (which you will be able to install from there or using their cli).
-
+---
 ## Creating a New Weathermap
 
 1. In Grafana, create a new `Empty Panel`.
@@ -25,34 +47,41 @@ By default, the panel will start completely blank, looking something like this:
 
 - Make sure you have selected `Edit` on the panel in Grafana.
 - On the right hand side, find the `Nodes` editor.
-  ![Nodes 0](img/basics/2-nodes-0.png)
+
+    ![Nodes 0](img/basics/2-nodes-0.png)
+
 - Click `Add Node` to create a new node.
 - Nodes have three basic fields:
-  - X position (`number`): Node's X position.
-  - Y position (`number`): Node's Y position.
-  - Label (`string`): The text visible on the node.
+    - X position (`number`): Node's X position.
+    - Y position (`number`): Node's Y position.
+    - Label (`string`): The text visible on the node.
 - You can then move the node by dragging it with your mouse.
 
 ## Adding Links
 
 - Ensure you have at least two nodes.
 - On the right hand side, find the `Links` editor.
-  ![Nodes 1](img/basics/2-nodes-1.png)
+
+    ![Nodes 1](img/basics/2-nodes-1.png)
+
 - Click `Add Link` to create a new link.
 - Links are split into two sides, `A` and `B`.
 - Each side has four central fields:
-  - Side (`Node`): The node this side of the link connects to.
-  - Query (`Query`): A query representing the current side's throughput in `bits/sec`.
-  - Bandwidth # (`number`): A number representing the bandwidth of this side in `bits`.
-  - Bandwidth Query (`Query`): A query representing the bandwidth of this side in `bits`.
+    - Side (`Node`): The node this side of the link connects to.
+    - Query (`Query`): A query representing the current side's throughput in the specified units.
+    - Bandwidth # (`number`): A number representing the bandwidth of this side in specified units.
+    - Bandwidth Query (`Query`): A query representing the bandwidth of this side in the specified units.
+    - Units (`unit`): The units the link expects to recieve its data as. This is used for both the main query and bandwidth. Defaults to `bits/sec (IEC)` (`binbps`).
 - Select `A` and `B` side nodes from their respective dropdowns.
 
 ## Adding Data
 
 - The weathermap expects a data frame with two fields, a time and a number.
-- This number should always be in `bits/s` (or just `bits` if you have a query for bandwidth).
+- You probably want this number in `bits/sec`, unless your links are expecting something else.
 - The weathermap works best with 'instant' queries, which just use the most recent value retrieved. (Otherwise, the weathermap will always choose the most recent data point possible).
 - Once you have added a query in the panel editor, you can can see all queries and select one from the dropdown in the Query fields of the links.
+
+**PLEASE NOTE:** _Queries with the exact same labels will be considered as such. If you have multiple queries and are unable to select the one that you want, double check to make sure it is labeled uniquely._
 
 ## Setting Thresholds
 
@@ -61,7 +90,7 @@ By default, the panel will start completely blank, looking something like this:
   ![Nodes 2](img/basics/2-nodes-2.png)
 - Click `Add Scale Value` to create a new threshold.
 - Each threshold has two basic fields:
-  - % (`number`): The percent of bandwidth usage at which to _start_ this threshold.
-  - Color (`picker`): The color of this threshold, can be any valid CSS `color` chosen or input with the picker.
-    - `green` | `#00FF00` | `rgb(0, 255, 0)`
-- By default, the scale will fill from the highest threshold to 100%. You can see the scale in the top left of the panel.
+    - % (`number`): The percent of bandwidth usage at which to _start_ this threshold.
+    - Color (`picker`): The color of this threshold, can be any valid CSS `color` chosen or input with the picker.
+        - `green` | `#00FF00` | `rgb(0, 255, 0)`
+- By default, the scale will fill from the highest threshold to 100%. You can see the scale in the top left of the panel. When updating numerical values, click off of the input when you're finished to allow the scale to update.

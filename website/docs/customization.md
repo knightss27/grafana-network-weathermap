@@ -1,4 +1,4 @@
-# Visual Customization
+# Customization
 
 Once you've gotten a basic layout done, you may be wondering how to customize the way things look, to suit your personal feel.
 
