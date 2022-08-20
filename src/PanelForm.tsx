@@ -38,7 +38,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
     return (
       <React.Fragment>
         <FormDivider title="Panel" />
-        <InlineField label="Background:" className={styles.inlineField}>
+        <InlineField grow label="Background:" className={styles.inlineField}>
           <React.Fragment></React.Fragment>
         </InlineField>
         <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
@@ -98,7 +98,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           )}
         </InlineLabel> */}
         <InlineFieldRow className={styles.inlineRow}>
-          <InlineField label="Viewbox Width (px)" className={styles.inlineField}>
+          <InlineField grow label="Viewbox Width (px)" className={styles.inlineField}>
             <Input
               value={value.settings.panel.panelSize.width}
               placeholder={'Panel Width'}
@@ -111,7 +111,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             ></Input>
           </InlineField>
-          <InlineField label="Viewbox Height (px)" className={styles.inlineField}>
+          <InlineField grow label="Viewbox Height (px)" className={styles.inlineField}>
             <Input
               value={value.settings.panel.panelSize.height}
               placeholder={'Panel Height'}
@@ -138,7 +138,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           />
         </InlineLabel>
         <InlineFieldRow className={styles.inlineRow}>
-          <InlineField label="Link Stroke Width" className={styles.inlineField}>
+          <InlineField grow label="Link Stroke Width" className={styles.inlineField}>
             <Slider
               min={1}
               max={30}
@@ -151,7 +151,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-          <InlineField label="Link Spacing Horizontal" className={styles.inlineField}>
+          <InlineField grow label="Link Spacing Horizontal" className={styles.inlineField}>
             <Slider
               min={0}
               max={30}
@@ -164,7 +164,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-          <InlineField label="Link Spacing Vertical" className={styles.inlineField}>
+          <InlineField grow label="Link Spacing Vertical" className={styles.inlineField}>
             <Slider
               min={0}
               max={30}
@@ -213,7 +213,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
         </InlineLabel>
         <FormDivider title="Arrow Options" />
         <InlineFieldRow className={styles.inlineRow}>
-          <InlineField label="Arrow Width" className={styles.inlineField}>
+          <InlineField grow label="Arrow Width" className={styles.inlineField}>
             <Slider
               min={0}
               max={30}
@@ -226,7 +226,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-          <InlineField label="Arrow Height" className={styles.inlineField}>
+          <InlineField grow label="Arrow Height" className={styles.inlineField}>
             <Slider
               min={0}
               max={30}
@@ -239,7 +239,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-          <InlineField label="Arrow Offset" className={styles.inlineField}>
+          <InlineField grow label="Arrow Offset" className={styles.inlineField}>
             <Slider
               min={0}
               max={10}
@@ -255,7 +255,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
         </InlineFieldRow>
         <FormDivider title="Grid Options" />
         <InlineFieldRow className={styles.inlineRow}>
-          <InlineField label="Enable Node Grid Snapping" className={styles.inlineField}>
+          <InlineField grow label="Enable Node Grid Snapping" className={styles.inlineField}>
             <InlineSwitch
               value={value.settings.panel.grid.enabled}
               onChange={(e) => {
@@ -267,7 +267,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             />
           </InlineField>
           {value.settings.panel.grid.enabled ? (
-            <InlineField label="Grid Size (px)" className={styles.inlineField}>
+            <InlineField grow label="Grid Size (px)" className={styles.inlineField}>
               <Slider
                 min={2}
                 max={50}
@@ -286,7 +286,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
         </InlineFieldRow>
         {value.settings.panel.grid.enabled ? (
           <InlineFieldRow className={styles.inlineRow}>
-            <InlineField label="Grid Guides" className={styles.inlineField}>
+            <InlineField grow label="Grid Guides" className={styles.inlineField}>
               <InlineSwitch
                 value={value.settings.panel.grid.guidesEnabled}
                 onChange={(e) => {
@@ -302,7 +302,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
         )}
         <FormDivider title="Font Options" />
         <InlineFieldRow className={styles.inlineRow}>
-          <InlineField label="Node Font Size" className={styles.inlineField}>
+          <InlineField grow label="Node Font Size" className={styles.inlineField}>
             <Slider
               min={2}
               max={40}
@@ -315,7 +315,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-          <InlineField label="Link Font Size" className={styles.inlineField}>
+          <InlineField grow label="Link Font Size" className={styles.inlineField}>
             <Slider
               min={2}
               max={40}
@@ -352,7 +352,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineLabel>
-        <InlineField label="Tooltip Font Size" className={styles.inlineField}>
+        <InlineField grow label="Tooltip Font Size" className={styles.inlineField}>
           <Slider
             min={2}
             max={40}
@@ -366,7 +366,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           />
         </InlineField>
         <FormDivider title="Scale Options" />
-        <InlineField label="Scale Title" className={styles.inlineField}>
+        <InlineField grow label="Scale Title" className={styles.inlineField}>
           <Input
             value={value.settings.scale.title}
             placeholder={'Scale Title'}
@@ -379,7 +379,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           ></Input>
         </InlineField>
-        <InlineField label="Scale Width" className={styles.inlineField}>
+        <InlineField grow label="Scale Width" className={styles.inlineField}>
           <Slider
             min={10}
             max={200}
@@ -392,7 +392,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
-        <InlineField label="Scale Height" className={styles.inlineField}>
+        <InlineField grow label="Scale Height" className={styles.inlineField}>
           <Slider
             min={0}
             max={1000}
@@ -405,7 +405,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
-        <InlineField label="Scale Position X" className={styles.inlineField}>
+        <InlineField grow label="Scale Position X" className={styles.inlineField}>
           <Slider
             min={0}
             max={100}
@@ -418,7 +418,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
-        <InlineField label="Scale Position Y" className={styles.inlineField}>
+        <InlineField grow label="Scale Position Y" className={styles.inlineField}>
           <Slider
             min={0}
             max={100}
@@ -431,7 +431,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
-        <InlineField label="Title Font Size" className={styles.inlineField}>
+        <InlineField grow label="Title Font Size" className={styles.inlineField}>
           <Slider
             min={2}
             max={40}
@@ -444,7 +444,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
-        <InlineField label="Threshold Font Size" className={styles.inlineField}>
+        <InlineField grow label="Threshold Font Size" className={styles.inlineField}>
           <Slider
             min={2}
             max={40}

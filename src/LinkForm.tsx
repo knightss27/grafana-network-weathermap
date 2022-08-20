@@ -199,7 +199,7 @@ export const LinkForm = (props: Props) => {
                 return (
                   <React.Fragment key={sideIndex}>
                     <FormDivider title={sName + ' Side Options'} />
-                    <InlineField label={`${sName} Side`} labelWidth={'auto'} style={{ width: '100%' }}>
+                    <InlineField grow label={`${sName} Side`} labelWidth={'auto'} style={{ width: '100%' }}>
                       <Select
                         onChange={(v) => {
                           handleNodeChange(v as unknown as Node, sName, i);
@@ -218,7 +218,7 @@ export const LinkForm = (props: Props) => {
                     (link.nodes[0].isConnection && link.nodes[1].isConnection) ? (
                       ''
                     ) : (
-                      <InlineField label={`${sName} Side Query`} labelWidth={'auto'} style={{ width: '100%' }}>
+                      <InlineField grow label={`${sName} Side Query`} labelWidth={'auto'} style={{ width: '100%' }}>
                         <Select
                           onChange={(v) => {
                             handleDataChange(sName, i, v.name);
@@ -240,7 +240,7 @@ export const LinkForm = (props: Props) => {
                       ''
                     ) : (
                       <React.Fragment>
-                        <InlineField label={`${sName} Bandwidth #`} style={{ width: '100%' }}>
+                        <InlineField grow label={`${sName} Bandwidth #`} style={{ width: '100%' }}>
                           <Input
                             value={side.bandwidth}
                             onChange={(e) => handleBandwidthChange(e.currentTarget.valueAsNumber, i, sName)}
@@ -250,7 +250,7 @@ export const LinkForm = (props: Props) => {
                             name={`${sName}bandwidth`}
                           />
                         </InlineField>
-                        <InlineField label={`${sName} Bandwidth Query`} style={{ width: '100%' }} labelWidth={'auto'}>
+                        <InlineField grow label={`${sName} Bandwidth Query`} style={{ width: '100%' }} labelWidth={'auto'}>
                           <Select
                             onChange={(v) => {
                               handleBandwidthQueryChange(v.name, i, sName);
@@ -263,7 +263,7 @@ export const LinkForm = (props: Props) => {
                             placeholder={'Select Bandwidth'}
                           ></Select>
                         </InlineField>
-                        <InlineField label={`${sName} Label Offset %`} style={{ width: '100%' }}>
+                        <InlineField grow label={`${sName} Label Offset %`} style={{ width: '100%' }}>
                           <Slider
                             min={0}
                             max={100}
@@ -273,7 +273,7 @@ export const LinkForm = (props: Props) => {
                             }}
                           />
                         </InlineField>
-                        <InlineField label={`${sName} Side Anchor Point`} style={{ width: '100%' }}>
+                        <InlineField grow label={`${sName} Side Anchor Point`} style={{ width: '100%' }}>
                           <Select
                             onChange={(v) => {
                               handleAnchorChange(v.value ? v.value : 0, i, sName);
@@ -288,7 +288,7 @@ export const LinkForm = (props: Props) => {
                             placeholder={'Select Anchor'}
                           ></Select>
                         </InlineField>
-                        <InlineField label={`${sName} Dashboard Link`} style={{ width: '100%' }}>
+                        <InlineField grow label={`${sName} Dashboard Link`} style={{ width: '100%' }}>
                           <Input
                             value={side.dashboardLink}
                             onChange={(e) => handleDashboardLinkChange(e.currentTarget.value, i, sName)}
@@ -305,7 +305,7 @@ export const LinkForm = (props: Props) => {
               })}
               <FormDivider title="Link Options" />
               <InlineFieldRow className={styles.row2}>
-                <InlineField label={`Link Units`} style={{ width: '100%' }}>
+                <InlineField grow label={`Link Units`} style={{ width: '100%' }}>
                   <UnitPicker
                     onChange={(val) => {
                       let wm = value;

@@ -246,7 +246,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
           return (
             <React.Fragment>
               <InlineFieldRow className={styles.inlineRow}>
-                <InlineField label={'X'}>
+                <InlineField grow label={'X'}>
                   <Input
                     value={node.position[0]}
                     onChange={(e) => handleChange(e, i)}
@@ -256,7 +256,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     name={'X'}
                   />
                 </InlineField>
-                <InlineField label={'Y'}>
+                <InlineField grow label={'Y'}>
                   <Input
                     value={node.position[1]}
                     onChange={(e) => handleChange(e, i)}
@@ -266,7 +266,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     name={'Y'}
                   />
                 </InlineField>
-                <InlineField label={'Label'}>
+                <InlineField grow label={'Label'}>
                   <Input
                     value={node.label}
                     onChange={(e) => handleChange(e, i)}
@@ -326,7 +326,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     {node.nodeIcon?.name}
                   </InlineLabel> */}
                   <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField label={'Width'}>
+                    <InlineField grow label={'Width'}>
                       <Input
                         value={node.nodeIcon!.size.width}
                         onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'width')}
@@ -336,7 +336,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         name={'iconWidth'}
                       />
                     </InlineField>
-                    <InlineField label={'Height'}>
+                    <InlineField grow label={'Height'}>
                       <Input
                         value={node.nodeIcon!.size.height}
                         onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'height')}
@@ -348,7 +348,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     </InlineField>
                   </InlineFieldRow>
                   <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField label={'Padding Horizontal'}>
+                    <InlineField grow label={'Padding Horizontal'}>
                       <Slider
                         min={0}
                         max={40}
@@ -357,7 +357,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(num) => handleIconPaddingChange(num, i, 'horizontal')}
                       />
                     </InlineField>
-                    <InlineField label={'Padding Vertical'}>
+                    <InlineField grow label={'Padding Vertical'}>
                       <Slider
                         min={0}
                         max={40}
@@ -368,7 +368,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                     </InlineField>
                   </InlineFieldRow>
                   <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField label={'Draw Inside'}>
+                    <InlineField grow label={'Draw Inside'}>
                       <InlineSwitch
                         value={node.nodeIcon!.drawInside}
                         onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
@@ -380,7 +380,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
               <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Padding">
                   <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField label={'Horizontal'}>
+                    <InlineField grow label={'Horizontal'}>
                       <Slider
                         min={0}
                         max={50}
@@ -389,7 +389,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
                         onChange={(num) => handleNodePaddingChange(num, i, 'horizontal')}
                       />
                     </InlineField>
-                    <InlineField label={'Vertical'}>
+                    <InlineField grow label={'Vertical'}>
                       <Slider
                         min={0}
                         max={50}
@@ -404,13 +404,13 @@ export const NodeForm = ({ value, onChange }: Props) => {
               <InlineFieldRow className={styles.inlineRow}>
                 <ControlledCollapse label="Advanced">
                   <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField label={'Constant Spacing'}>
+                    <InlineField grow label={'Constant Spacing'}>
                       <InlineSwitch value={node.useConstantSpacing} onChange={(e) => handleSpacingChange(e, i)} />
                     </InlineField>
-                    <InlineField label={'Compact Vertical Links'}>
+                    <InlineField grow label={'Compact Vertical Links'}>
                       <InlineSwitch value={node.compactVerticalLinks} onChange={(e) => handleCompactChange(e, i)} />
                     </InlineField>
-                    <InlineField label={'Use As Connection (BETA)'}>
+                    <InlineField grow label={'Use As Connection (BETA)'}>
                       <InlineSwitch value={node.isConnection} onChange={(e) => handleConnectionChange(e, i)} />
                     </InlineField>
                   </InlineFieldRow>
