@@ -43,7 +43,7 @@ By default, the panel will start completely blank, looking something like this:
 
 ![Blank Panel](img/basics/1-on-startup.png)
 
-## Adding Nodes
+### Adding Nodes
 
 - Make sure you have selected `Edit` on the panel in Grafana.
 - On the right hand side, find the `Nodes` editor.
@@ -57,7 +57,7 @@ By default, the panel will start completely blank, looking something like this:
     - Label (`string`): The text visible on the node.
 - You can then move the node by dragging it with your mouse.
 
-## Adding Links
+### Adding Links
 
 - Ensure you have at least two nodes.
 - On the right hand side, find the `Links` editor.
@@ -74,7 +74,7 @@ By default, the panel will start completely blank, looking something like this:
     - Units (`unit`): The units the link expects to recieve its data as. This is used for both the main query and bandwidth. Defaults to `bits/sec (IEC)` (`binbps`).
 - Select `A` and `B` side nodes from their respective dropdowns.
 
-## Adding Data
+### Adding Data
 
 - The weathermap expects a data frame with two fields, a time and a number.
 - You probably want this number in `bits/sec`, unless your links are expecting something else.
@@ -83,7 +83,7 @@ By default, the panel will start completely blank, looking something like this:
 
 **PLEASE NOTE:** _Queries with the exact same labels will be considered as such. If you have multiple queries and are unable to select the one that you want, double check to make sure it is labeled uniquely._
 
-## Setting Thresholds
+### Setting Thresholds
 
 - The weathermap color scale allows you to color links based on their bandwidth usage.
 - On the right hand side, find the `Color Scale` editor.

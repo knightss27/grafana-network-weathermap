@@ -25,12 +25,14 @@ One of the most important parts of creating a weathermap is arranging the links 
 
 **PLEASE NOTE:** _Links are drawn in the order in which they are added to a node, meaning some may overlap if you aren't careful when adding them. While a future version may make some easier way to deal with this, for now you can just remove the relevant links and re-add them in the necessary order._
 
+---
+
 ## Link Options
 
 - Anchors:
-  - Each node has 5 anchors that any link side can connect to:
-    - (`Center | Top | Bottom | Left | Right`)
-  - This makes it easy to try and avoid having too many overlapping links. By default, links are auto-spaced to be as far apart as possible when parallel to each other vertically (attached to a `Bottom` of one link, and `Top` of another). When parallel vertically (attached to a `Right` of one link, and `Left` of another), nodes will automatically grow to accomodate them.
+    - Each node has 5 anchors that any link side can connect to:
+        - (`Center | Top | Bottom | Left | Right`)
+    - This makes it easy to try and avoid having too many overlapping links. By default, links are auto-spaced to be as far apart as possible when parallel to each other vertically (attached to a `Bottom` of one link, and `Top` of another). When parallel horiztonally (attached to a `Right` of one link, and `Left` of another), nodes will automatically grow to accomodate them.
 - Label Offset # (`number`): A number between 0 and 100 representing the location of the link's label as a percentage of that link's length. (Play around with it to see how it works! This is especially useful if you have close / overlapping links which need their labels to not overlap.)
 
 ### Global Link Options
@@ -56,7 +58,7 @@ These options are set on all arrows.
 - Height (`number`): The height of the arrow in pixels (how long it looks).
 - Offset (`number`): The distance from the meeting point of the two links the point of the arrow will reach to. This is the offset for _one_ side of the link, meaning the actual space between two arrows will be twice this number.
 
-## Node Options:
+## Node Options
 
 #### Icon
 
