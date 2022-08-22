@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.3.1](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.0...v0.3.1) (2022-08-20)
 
-
 ### Bug Fixes
 
-* sliders are the proper width ([#16](https://github.com/knightss27/grafana-network-weathermap/issues/16)) ([d320f0e](https://github.com/knightss27/grafana-network-weathermap/commit/d320f0ed01b78d2b2188f46df122e1572799840d))
+- sliders are the proper width ([#16](https://github.com/knightss27/grafana-network-weathermap/issues/16)) ([d320f0e](https://github.com/knightss27/grafana-network-weathermap/commit/d320f0ed01b78d2b2188f46df122e1572799840d))
 
 ## [0.3.0](https://github.com/knightss27/grafana-network-weathermap/compare/v0.2.8...v0.3.0) (2022-08-19)
 
