@@ -577,6 +577,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   <g
                     key={i}
                     className="line"
+                    data-testid="link"
                     strokeOpacity={1}
                     width={Math.abs(d.target.x - d.source.x)}
                     height={Math.abs(d.target.y - d.source.y)}
