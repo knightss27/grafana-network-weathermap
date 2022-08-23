@@ -15,7 +15,6 @@ export const theme: GrafanaTheme2 = {
   },
 } as unknown as GrafanaTheme2;
 
-
 export const defaultNodes = [
   generateBasicNode('Node A', [200, 300], theme),
   generateBasicNode('Node B', [400, 300], theme),
