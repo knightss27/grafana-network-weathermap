@@ -1,11 +1,9 @@
-import { GrafanaTheme2 } from '@grafana/data';
 import { defaultNodes, getData, theme } from 'testData';
 import { DrawnNode, Weathermap } from 'types';
 import {
   calculateRectangleAutoHeight,
   calculateRectangleAutoWidth,
   CURRENT_VERSION,
-  generateBasicNode,
   getSolidFromAlphaColor,
   handleVersionedStateUpdates,
   measureText,
@@ -43,5 +41,5 @@ test('node calculations', () => {
 
 test('versioned state updates', () => {
   let wm: Weathermap = getData(theme);
-  expect(handleVersionedStateUpdates(wm, theme as unknown as GrafanaTheme2)).toHaveProperty('version', CURRENT_VERSION);
+  expect(handleVersionedStateUpdates(wm, theme)).toHaveProperty('version', CURRENT_VERSION);
 });

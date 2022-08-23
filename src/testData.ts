@@ -1,7 +1,8 @@
+import { GrafanaTheme2 } from '@grafana/data';
 import { Weathermap, Anchor, Node } from 'types';
 import { generateBasicLink, generateBasicNode } from 'utils';
 
-export const theme = {
+export const theme: GrafanaTheme2 = {
   colors: {
     secondary: {
       main: '#000000',
@@ -12,9 +13,9 @@ export const theme = {
       primary: '#FFFFFF',
     },
   },
-};
+} as unknown as GrafanaTheme2;
 
-// @ts-ignore
+
 export const defaultNodes = [
   generateBasicNode('Node A', [200, 300], theme),
   generateBasicNode('Node B', [400, 300], theme),
