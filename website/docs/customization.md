@@ -64,7 +64,7 @@ These options are set on all arrows.
 
 - Select one of the icons from the existing library to attach it to a node.
 - Width (`number`): Icon bounding box width.
-- Height (`numer`): Icon bounding box height.
+- Height (`number`): Icon bounding box height.
 - Padding, Horizontal & Vertical ( `number`, `number`): Padding between the icon's bounding box and node edges or text.
 - Draw Inside (`boolean`): When true, will put the icon within the node's border (you may need to adjust the padding a little).
   ![Drawn inside example](/img/customization/2-icon-0.png)
@@ -75,11 +75,24 @@ These options are set on all arrows.
 
 #### Advanced
 
-- In the `Advanced` section of the `Nodes` editor, there are two toggles:
+- In the `Advanced` section of the `Nodes` editor, there are three toggles:
   - Constant Spacing: Should links be a certain `Link Spacing Horizontal (px)` apart?
     - This setting is useful if you have two nodes with signficant differences in text length, as by default the plugin will space links evenly across a `Top | Bottom` anchor. Switching to a constant spacing forces these links to be the same pixel distance apart.
   - Compact Vertical Links: Should nodes ignore the number of links attached to their sides?
     - This setting lets you decide whether an individual node will grow when there is more than one link attached to either `Left | Right` anchor. When on, a node will always only be the size of its text and padding. When off, a node will grow so that links going left to right do not overlap (these links will be `Link Spacing Vertical (px)` apart).
+  - Use As Connection (BETA): Should this node be used to extend another link?
+    - Link "turns/connections" are a beta feature added fairly recently. They work by turning nodes into invisible vertices through which links can be extended, and are especially useful if you want your links to all follow a specific path (i.e. to represent some physical organization or just for clarity). 
+    - Link connections work like this:
+        1. Have two nodes you want to connect with a link.
+            ![connection example p1](/img/customization/connect-1.png)
+        2. Add however many nodes you need to represent all the vertices of your path, and toggle the "Use As Connection" button for each. This will now render the node as transparent, with a "C?" label letting you know it is a connection. *It is recommended to simply delete connection nodes after converting them, instead of un-toggling this option if you want to use them for something else.*
+            ![connection example p2](/img/customization/connect-2.png)
+        3. *In order, from the A-side to the Z-side*, connect the first node to the last through these connections by creating new links. **NOTE:** Each connection node will only accept **2 links**, one in and one out (i.e. you can not use a connection for multiple different links). This must be done from A-Z sides as each connection link will inherit the data from the A-side.
+            ![connection example p3](/img/customization/connect-3.png)
+        4. When you have finished adding links from A-Z sides, you should see the A-side is extended and the Z-side remains connected to the final node in your path. Notice that when selecting connection nodes as sides for a link, query options dissappear (as they will be inherited from the A-side).
+            ![connection example p4](/img/customization/connect-4.png)
+        5. When you exit edit mode, connection nodes will dissappear and your link will be drawn following their path! You can set the queries for each side of the extended link in the options for the links that touch either of your nodes (i.e. the first and last links of the connected path).
+            ![connection example p5](/img/customization/connect-5.png)
 
 #### Colors
 
