@@ -55,7 +55,7 @@ const ColorScale: React.FC<ColorScaleProps> = (props: ColorScaleProps) => {
           {settings.scale.title}
         </div>
         {thresholds.map((threshold, i) => (
-          <div className={styles.colorScaleItem} key={i}>
+          <div className={styles.colorScaleItem} key={i} data-testid="scale-item">
             <span
               className={cx(
                 styles.colorBox,

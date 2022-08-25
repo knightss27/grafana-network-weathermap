@@ -31,6 +31,8 @@ export const getData = (theme: any): Weathermap => {
     }),
     links: [generateBasicLink([defaultNodes[0], defaultNodes[1]])].map((l, i) => {
       l.id = `nw-link-${i}`;
+      l.sides.A.dashboardLink = 'https://example.com/';
+      l.sides.Z.dashboardLink = 'https://example.com/';
       return l;
     }),
     scale: [],
@@ -98,4 +100,53 @@ export const getData = (theme: any): Weathermap => {
       },
     },
   };
+};
+
+export const getData2 = (theme: GrafanaTheme2): Weathermap => {
+  let data = getData(theme);
+  data.links.push(generateBasicLink([data.nodes[0], data.nodes[1]]));
+  data.nodes = data.nodes.map((d, i) => {
+    let v: Node = d;
+    v.anchors[i === 0 ? Anchor.Right : Anchor.Left].numLinks = 2;
+    return v;
+  });
+  return data;
+};
+
+export const getConnectedLinkData = (theme: GrafanaTheme2): Weathermap => {
+  let data = getData(theme);
+  data.nodes.push({
+    ...generateBasicNode('C0', [300, 300], theme),
+    isConnection: true,
+    anchors: {
+      '0': {
+        numFilledLinks: 0,
+        numLinks: 2,
+      },
+      '1': {
+        numFilledLinks: 0,
+        numLinks: 0,
+      },
+      '2': {
+        numFilledLinks: 0,
+        numLinks: 0,
+      },
+      '3': {
+        numFilledLinks: 0,
+        numLinks: 0,
+      },
+      '4': {
+        numFilledLinks: 0,
+        numLinks: 0,
+      },
+    },
+  });
+
+  data.links = [];
+  data.links.push(generateBasicLink([data.nodes[0], data.nodes[2]]));
+  data.links.push(generateBasicLink([data.nodes[2], data.nodes[1]]));
+  data.links[0].sides.Z.anchor = Anchor.Center;
+  data.links[1].sides.A.anchor = Anchor.Center;
+  data.id = 'testing';
+  return data;
 };

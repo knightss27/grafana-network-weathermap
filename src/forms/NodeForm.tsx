@@ -17,7 +17,7 @@ import {
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
-import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from 'iconOptions';
+import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from './iconOptions';
 
 interface Settings {
   placeholder: string;

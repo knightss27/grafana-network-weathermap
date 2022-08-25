@@ -4,7 +4,7 @@ import { Button, InlineField, InlineFieldRow, Input, Select, Slider, stylesFacto
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
-import { FormDivider } from 'FormDivider';
+import { FormDivider } from './FormDivider';
 
 interface Settings {
   placeholder: string;

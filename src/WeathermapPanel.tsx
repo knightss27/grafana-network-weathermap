@@ -777,6 +777,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       if (e.ctrlKey) {
                         return;
                       }
+                      console.log('NODE DRAGGED');
 
                       // Otherwise set our currently dragged node and manage scaling and grid settings.
                       setDraggedNode(d);

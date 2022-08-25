@@ -1,8 +1,8 @@
 import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { WeathermapPanel } from './WeathermapPanel';
-import { WeathermapBuilder } from 'WeathermapBuilder';
-import { ExportForm } from './ExportForm';
+import { WeathermapBuilder } from 'forms/WeathermapBuilder';
+import { ExportForm } from 'forms/ExportForm';
 
 export const plugin = new PanelPlugin<SimpleOptions>(WeathermapPanel).setPanelOptions((builder) => {
   return builder
