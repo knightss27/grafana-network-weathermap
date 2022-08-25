@@ -17,7 +17,8 @@ pids
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
+coverage/lcov*
+coverage/junit*
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 dist/

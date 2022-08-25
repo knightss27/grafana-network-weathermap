@@ -51,7 +51,7 @@ test('Creating a scale', () => {
   };
 
   // Render the panel
-  const { container, rerender } = render(<ColorScale {...testProps} />);
+  const { rerender } = render(<ColorScale {...testProps} />);
 
   // Check if scale items are all rendered
   expect(screen.getAllByTestId('scale-item')).toHaveLength(testProps.thresholds.length);

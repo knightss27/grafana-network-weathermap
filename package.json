@@ -5,6 +5,7 @@
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test --coverage",
+    "posttest": "make-coverage-badge",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
     "sign": "grafana-toolkit plugin:sign"
@@ -28,7 +29,8 @@
     "@typescript-eslint/parser": "^4.31.0",
     "emotion": "10.0.27",
     "eslint": "^7.32.0",
-    "eslint-plugin-react": "^7.25.1"
+    "eslint-plugin-react": "^7.25.1",
+    "make-coverage-badge": "^1.2.0"
   },
   "engines": {
     "node": ">=14"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { getDefaultRelativeTimeRange, getTimeZone, LoadingState, PanelProps } from '@grafana/data';
-import { createEvent, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { WeathermapPanel } from 'WeathermapPanel';
 import { SimpleOptions } from 'types';
 import { handleVersionedStateUpdates } from 'utils';
