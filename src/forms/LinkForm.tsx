@@ -5,6 +5,7 @@ import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
 import { FormDivider } from './FormDivider';
+import { getDataFramesWithIds } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -167,6 +168,9 @@ export const LinkForm = (props: Props) => {
   let usedConnectionNodes = usedConnectionSourceNodes.filter((n) => usedConnectionTargetNodes.includes(n));
   let availableNodes = value.nodes.filter((n) => !usedConnectionNodes.includes(n.id));
 
+  // Add names with refId and series index for selecting between similar labels
+  let dataWithIds = getDataFramesWithIds(context.data);
+
   return (
     <React.Fragment>
       <h6
@@ -225,8 +229,8 @@ export const LinkForm = (props: Props) => {
                           }}
                           // TODO: Unable to just pass a data frame or string here?
                           // This is fairly unoptimized if you have loads of data frames
-                          value={context.data.filter((p) => p.name === side.query)[0]}
-                          options={context.data}
+                          value={dataWithIds.filter((p) => p.name === side.query)[0]}
+                          options={dataWithIds}
                           getOptionLabel={(data) => data?.name || 'No label'}
                           getOptionValue={(data) => data?.name}
                           className={styles.querySelect}
@@ -260,8 +264,8 @@ export const LinkForm = (props: Props) => {
                             onChange={(v) => {
                               handleBandwidthQueryChange(v.name, i, sName);
                             }}
-                            value={context.data.filter((p) => p.name === side.bandwidthQuery)[0]}
-                            options={context.data}
+                            value={dataWithIds.filter((p) => p.name === side.bandwidthQuery)[0]}
+                            options={dataWithIds}
                             getOptionLabel={(data) => data?.name || 'No label'}
                             getOptionValue={(data) => data?.name}
                             className={styles.bandwidthSelect}

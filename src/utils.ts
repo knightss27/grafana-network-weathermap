@@ -1,4 +1,4 @@
-import { GrafanaTheme2 } from '@grafana/data';
+import { DataFrame, GrafanaTheme2 } from '@grafana/data';
 import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
@@ -321,3 +321,12 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
   console.log('updated weathermap state version', wm);
   return wm;
 }
+
+export const getDataFramesWithIds = (frames: DataFrame[]): DataFrame[] => {
+  return frames.map((d, i) => {
+    if (!d.name) {
+      d.name = `${d.refId}${i}`;
+    }
+    return d;
+  });
+};

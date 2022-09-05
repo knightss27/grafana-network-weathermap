@@ -1,3 +1,5 @@
+import { DataFrame } from '@grafana/data';
+
 export interface PanelOptions {
   backgroundColor: string;
   panelSize: AreaSize;
@@ -192,4 +194,8 @@ export interface Weathermap {
 
 export interface SimpleOptions {
   weathermap: Weathermap;
+}
+
+export interface DataFrameWithId extends DataFrame {
+  id: string;
 }
