@@ -139,6 +139,9 @@ const getStyles = stylesFactory((theme: GrafanaTheme2) => {
     `,
     colorPicker: css`
       padding: 0 ${theme.spacing(1)};
+      &:last-child button {
+        border: 1px solid ${theme.colors.border.medium} !important;
+      }
     `,
     trashIcon: css`
       color: ${theme.colors.text.secondary};
