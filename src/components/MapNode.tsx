@@ -10,6 +10,7 @@ import {
 import { css } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
+import { DataFrame } from '@grafana/data';
 
 interface NodeProps {
   node: DrawnNode;
@@ -18,6 +19,7 @@ interface NodeProps {
   onDrag: DraggableEventHandler;
   onStop: DraggableEventHandler;
   disabled: boolean;
+  data: DataFrame[];
 }
 
 // Calculate the middle of the rectangle for text centering
@@ -40,7 +42,7 @@ function calculateRectY(d: DrawnNode, wm: Weathermap) {
 }
 
 const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
-  const { node, draggedNode, wm, onDrag, onStop, disabled } = props;
+  const { node, draggedNode, wm, onDrag, onStop, disabled, data } = props;
   const styles = getStyles();
 
   const rectX = useMemo(() => calculateRectX(node, wm), [node, wm]);
@@ -48,6 +50,16 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   const rectWidth = useMemo(() => calculateRectangleAutoWidth(node, wm), [node, wm]);
   const rectHeight = useMemo(() => calculateRectangleAutoHeight(node, wm), [node, wm]);
   const textY = useMemo(() => calculateTextY(node), [node]);
+
+  let nodeIsDown = false;
+  if (node.statusQuery) {
+    let recentFrame = data
+      .filter((series) => series.name === node.statusQuery)
+      .map((frame) => frame.fields[1].values.get(0));
+
+    // Check if the node is down (data returns 0 or below)
+    nodeIsDown = recentFrame.length > 0 && recentFrame[0] < 1;
+  }
 
   return (
     <DraggableCore disabled={disabled} onDrag={onDrag} onStop={onStop}>
@@ -80,7 +92,10 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
               stroke={
                 disabled && node.isConnection
                   ? 'transparent'
-                  : getSolidFromAlphaColor(node.colors.border, wm.settings.panel.backgroundColor)
+                  : getSolidFromAlphaColor(
+                      nodeIsDown ? node.colors.statusDown : node.colors.border,
+                      wm.settings.panel.backgroundColor
+                    )
               }
               strokeWidth={node.isConnection ? 2 : 4}
               rx={6}

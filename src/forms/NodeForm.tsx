@@ -18,6 +18,7 @@ import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
 import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from './iconOptions';
+import { getDataFramesWithIds } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -25,7 +26,7 @@ interface Settings {
 
 interface Props extends StandardEditorProps<Weathermap, Settings> {}
 
-export const NodeForm = ({ value, onChange }: Props) => {
+export const NodeForm = ({ value, onChange, context }: Props) => {
   const styles = getStyles();
   const theme = useTheme2();
 
@@ -64,12 +65,18 @@ export const NodeForm = ({ value, onChange }: Props) => {
     onChange(weathermap);
   };
 
-  function handleConnectionChange(e: React.FormEvent<HTMLInputElement>, i: number): void {
+  const handleConnectionChange = (e: React.FormEvent<HTMLInputElement>, i: number): void => {
     let weathermap: Weathermap = value;
     weathermap.nodes[i].isConnection = e.currentTarget.checked;
     weathermap.nodes[i].label = 'C' + connectionCounter;
     onChange(weathermap);
-  }
+  };
+
+  const handleStatusQueryChange = (query: string | undefined, i: number) => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].statusQuery = query;
+    onChange(weathermap);
+  };
 
   const handleColorChange = (color: string, i: number, type: string) => {
     let weathermap: Weathermap = value;
@@ -161,6 +168,7 @@ export const NodeForm = ({ value, onChange }: Props) => {
               font: theme.colors.secondary.contrastText,
               background: theme.colors.secondary.main,
               border: theme.colors.secondary.border,
+              statusDown: '#ff0000',
             },
       nodeIcon: {
         src: '',
@@ -217,6 +225,9 @@ export const NodeForm = ({ value, onChange }: Props) => {
   const computerIconsFormatted = ComputerIcons.map((t) => {
     return { label: t, value: 'computers_monitors/' + t };
   });
+
+  // Add names with refId and series index for selecting between similar labels
+  let dataWithIds = getDataFramesWithIds(context.data);
 
   return (
     <React.Fragment>
@@ -399,6 +410,38 @@ export const NodeForm = ({ value, onChange }: Props) => {
                       />
                     </InlineField>
                   </InlineFieldRow>
+                </ControlledCollapse>
+              </InlineFieldRow>
+              <InlineFieldRow className={styles.inlineRow}>
+                <ControlledCollapse label="Status">
+                  <InlineFieldRow className={styles.inlineRow}>
+                    <InlineField grow label={'Query'}>
+                      <Select
+                        onChange={(v) => {
+                          handleStatusQueryChange(v?.name, i);
+                        }}
+                        // TODO: Unable to just pass a data frame or string here?
+                        // This is fairly unoptimized if you have loads of data frames
+                        value={dataWithIds.filter((p) => p.name === node.statusQuery)[0]}
+                        options={dataWithIds}
+                        getOptionLabel={(data) => data?.name || 'No label'}
+                        getOptionValue={(data) => data?.name}
+                        placeholder={`Select query`}
+                        isClearable
+                      ></Select>
+                    </InlineField>
+                  </InlineFieldRow>
+                  <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
+                    DOWN Color:
+                    <ColorPicker
+                      color={node.colors.statusDown}
+                      onChange={(color) => {
+                        let weathermap: Weathermap = value;
+                        weathermap.nodes[i].colors.statusDown = color;
+                        onChange(weathermap);
+                      }}
+                    />
+                  </InlineLabel>
                 </ControlledCollapse>
               </InlineFieldRow>
               <InlineFieldRow className={styles.inlineRow}>

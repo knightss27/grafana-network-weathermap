@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 5;
+export const CURRENT_VERSION = 6;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -175,6 +175,7 @@ export function generateBasicNode(label: string, position: [number, number], the
       font: theme.colors.secondary.contrastText,
       background: theme.colors.secondary.main,
       border: theme.colors.secondary.border,
+      statusDown: '#ff0000',
     },
     nodeIcon: {
       src: '',

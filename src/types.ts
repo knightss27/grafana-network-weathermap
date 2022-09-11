@@ -68,9 +68,11 @@ export interface Node {
     font: string;
     background: string;
     border: string;
+    statusDown: string;
   };
   nodeIcon: Icon | null;
   isConnection: boolean;
+  statusQuery?: string;
 }
 
 export interface LinkSide {
