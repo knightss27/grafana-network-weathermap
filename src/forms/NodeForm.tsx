@@ -432,7 +432,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                     </InlineField>
                   </InlineFieldRow>
                   <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
-                    DOWN Color:
+                    StatusDown Color:
                     <ColorPicker
                       color={node.colors.statusDown}
                       onChange={(color) => {
