@@ -92,6 +92,8 @@ export interface Link {
     Z: LinkSide;
   };
   units: string | undefined;
+  arrows: ArrowOptions;
+  stroke: number;
 }
 
 export interface DrawnNode extends Node {
@@ -151,7 +153,6 @@ export interface WeathermapSettings {
       vertical: number;
     };
     stroke: {
-      width: number;
       color: string;
     };
     label: {
@@ -160,7 +161,6 @@ export interface WeathermapSettings {
       font: string;
     };
   };
-  linkArrow: ArrowOptions;
   fontSizing: {
     node: number;
     link: number;

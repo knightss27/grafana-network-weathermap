@@ -99,9 +99,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   }
 
   // Find the points that create the two other points of a triangle for the arrow's tip
-  function getArrowPolygon(_p1: any, _p2: any) {
-    let h = wm.settings.linkArrow.height;
-    let w = wm.settings.linkArrow.width / 2;
+  function getArrowPolygon(_p1: any, _p2: any, height: number, width: number) {
+    let h = height;
+    let w = width / 2;
     let vec1 = { x: _p2.x - _p1.x, y: _p2.y - _p1.y };
     let length = Math.sqrt(vec1.x * vec1.x + vec1.y * vec1.y);
     vec1.x = vec1.x / length;
@@ -154,36 +154,41 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         ? nearestMultiple(d.y, wm.settings.panel.grid.size)
         : y;
 
+    // The maximum link width on this anchor point
+    const maxLinkWidth = Math.max(
+      ...wm.links
+        .filter((l) => l.nodes[0].id == d.id || l.nodes[1].id == d.id)
+        .filter((l) => side.anchor === l.sides.A.anchor || l.sides.Z.anchor === side.anchor)
+        .map((l) => l.stroke)
+    );
+
     // Change x values for left/right anchors
     if (side.anchor === Anchor.Left || side.anchor === Anchor.Right) {
       // Align left/right
       if (side.anchor === Anchor.Left) {
-        x -= calculateRectangleAutoWidth(d, wm) / 2 - wm.settings.link.stroke.width / 2;
+        x -= calculateRectangleAutoWidth(d, wm) / 2 - maxLinkWidth / 2;
       } else {
-        x += calculateRectangleAutoWidth(d, wm) / 2 - wm.settings.link.stroke.width / 2;
+        x += calculateRectangleAutoWidth(d, wm) / 2 - maxLinkWidth / 2;
       }
       // Calculate vertical alignments given # of links
       if (!d.compactVerticalLinks && d.anchors[side.anchor].numLinks > 1) {
-        const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical;
+        const linkHeight = maxLinkWidth + wm.settings.link.spacing.vertical;
         const fullHeight =
-          linkHeight * d.anchors[side.anchor].numLinks -
-          wm.settings.link.spacing.vertical -
-          wm.settings.link.stroke.width;
+          linkHeight * d.anchors[side.anchor].numLinks - wm.settings.link.spacing.vertical - maxLinkWidth;
         y -= fullHeight / 2;
         y +=
-          (d.anchors[side.anchor].numFilledLinks + 1) * wm.settings.link.stroke.width +
+          (d.anchors[side.anchor].numFilledLinks + 1) * maxLinkWidth +
           d.anchors[side.anchor].numFilledLinks * wm.settings.link.spacing.vertical -
-          wm.settings.link.stroke.width;
+          maxLinkWidth;
       }
     } else if (side.anchor !== Anchor.Center) {
       if (d.useConstantSpacing) {
         // To be used with constant-spacing
         const maxWidth =
-          wm.settings.link.stroke.width * (d.anchors[side.anchor].numLinks - 1) +
+          maxLinkWidth * (d.anchors[side.anchor].numLinks - 1) +
           wm.settings.link.spacing.horizontal * (d.anchors[side.anchor].numLinks - 1);
         x +=
-          -maxWidth / 2 +
-          d.anchors[side.anchor].numFilledLinks * (wm.settings.link.stroke.width + wm.settings.link.spacing.horizontal);
+          -maxWidth / 2 + d.anchors[side.anchor].numFilledLinks * (maxLinkWidth + wm.settings.link.spacing.horizontal);
       } else {
         // To be used with auto-spacing
         const paddedWidth = d.labelWidth + d.padding.horizontal * 2;
@@ -194,10 +199,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       }
       // Add height if we are at the bottom;
       if (side.anchor === Anchor.Bottom) {
-        y += calculateRectangleAutoHeight(d, wm) / 2 - wm.settings.link.stroke.width / 2;
+        y += calculateRectangleAutoHeight(d, wm) / 2 - maxLinkWidth / 2;
       } else if (side.anchor === Anchor.Top) {
         y -= calculateRectangleAutoHeight(d, wm) / 2;
-        y += wm.settings.link.stroke.width / 2;
+        y += maxLinkWidth / 2;
       }
     }
     // Mark that we've drawn another link
@@ -278,7 +283,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     toReturn.lineEndA = getMiddlePoint(
       toReturn.lineStartZ,
       toReturn.lineStartA,
-      -wm.settings.linkArrow.offset - wm.settings.linkArrow.height
+      -toReturn.arrows.offset - toReturn.arrows.height
     );
 
     if (tempNodes[toReturn.target.index].isConnection) {
@@ -286,16 +291,26 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       toReturn.lineEndZ = toReturn.lineStartZ;
     }
 
-    toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -wm.settings.linkArrow.offset);
-    toReturn.arrowPolygonA = getArrowPolygon(toReturn.lineStartA, toReturn.arrowCenterA);
+    toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -toReturn.arrows.offset);
+    toReturn.arrowPolygonA = getArrowPolygon(
+      toReturn.lineStartA,
+      toReturn.arrowCenterA,
+      toReturn.arrows.height,
+      toReturn.arrows.width
+    );
 
     toReturn.lineEndZ = getMiddlePoint(
       toReturn.lineStartZ,
       toReturn.lineStartA,
-      wm.settings.linkArrow.offset + wm.settings.linkArrow.height
+      toReturn.arrows.offset + toReturn.arrows.height
     );
-    toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, wm.settings.linkArrow.offset);
-    toReturn.arrowPolygonZ = getArrowPolygon(toReturn.lineStartZ, toReturn.arrowCenterZ);
+    toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, toReturn.arrows.offset);
+    toReturn.arrowPolygonZ = getArrowPolygon(
+      toReturn.lineStartZ,
+      toReturn.arrowCenterZ,
+      toReturn.arrows.height,
+      toReturn.arrows.width
+    );
 
     return toReturn;
   }
@@ -555,12 +570,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 if (d.nodes[0].id === d.nodes[1].id) {
                   return;
                 }
+                let prevLinks: DrawnLink[] = [];
                 // Automatic data collection through connection links
                 if (tempNodes[d.source.index].isConnection) {
                   // If this link is coming from a connection, we want to take the link to that connection's data
 
                   // Find the link with that data
-                  let prevLinks = links.filter((l) => l.target.id === d.source.id);
+                  prevLinks = links.filter((l) => l.target.id === d.source.id);
                   // Check there is only one connection (otherwise this doesn't work)
                   if (prevLinks.length === 1) {
                     for (let key in d.sides.A) {
@@ -583,7 +599,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     height={Math.abs(d.target.y - d.source.y)}
                   >
                     <line
-                      strokeWidth={wm.settings.link.stroke.width}
+                      strokeWidth={d.stroke}
                       stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                       x1={d.lineStartA.x}
                       y1={d.lineStartA.y}
@@ -600,14 +616,19 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       }}
                       style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></line>
-                    {tempNodes[d.target.index].isConnection ? (
+                    {tempNodes[d.source.index].isConnection ? (
                       <circle
-                        cx={d.lineEndA.x}
-                        cy={d.lineEndA.y}
-                        r={wm.settings.link.stroke.width / 2}
+                        cx={d.lineStartA.x}
+                        cy={d.lineStartA.y}
+                        r={prevLinks.length > 0 ? Math.max(d.stroke, prevLinks[0].stroke) / 2 : d.stroke / 2}
                         fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                         style={{ paintOrder: 'stroke' }}
                       ></circle>
+                    ) : (
+                      ''
+                    )}
+                    {tempNodes[d.target.index].isConnection ? (
+                      ''
                     ) : (
                       <React.Fragment>
                         <polygon
@@ -632,7 +653,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                           style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                         ></polygon>
                         <line
-                          strokeWidth={wm.settings.link.stroke.width}
+                          strokeWidth={d.stroke}
                           stroke={getScaleColor(d.sides.Z.currentValue, d.sides.Z.bandwidth)}
                           x1={d.lineStartZ.x}
                           y1={d.lineStartZ.y}
@@ -777,7 +798,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       if (e.ctrlKey) {
                         return;
                       }
-                      console.log('NODE DRAGGED');
 
                       // Otherwise set our currently dragged node and manage scaling and grid settings.
                       setDraggedNode(d);

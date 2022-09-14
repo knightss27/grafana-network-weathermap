@@ -2,18 +2,18 @@ version: '3.7'
 
 services:
   grafana:
-    build:
-      context: grafana
-      dockerfile: Dockerfile
-      args:
-        GRAFANA_VERSION: 8.0.7
-        GF_INSTALL_PLUGINS: https://github.com/knightss27/grafana-network-weathermap/releases/download/v0.2.8/knightss27-weathermap-panel-0.2.8.zip;network-weathermap
+    image: grafana/grafana:latest
     ports:
-      - 3000:3000
+      - 3101:3000
+    volumes:
+      - ~/grafana-plugins:/var/lib/grafana/plugins
+    environment:
+      - GF_APP_MODE=development
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=knightss27-weathermap-panel
   prometheus:
     image: prom/prometheus
     volumes:
-      - .\exporter\prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./exporter/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - 9090:9090
   exporter:

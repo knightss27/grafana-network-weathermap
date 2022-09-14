@@ -138,19 +138,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
           />
         </InlineLabel>
         <InlineFieldRow className={styles.inlineRow}>
-          <InlineField grow label="Link Stroke Width" className={styles.inlineField}>
-            <Slider
-              min={1}
-              max={30}
-              value={value.settings.link.stroke.width}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.link.stroke.width = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
           <InlineField grow label="Link Spacing Horizontal" className={styles.inlineField}>
             <Slider
               min={0}
@@ -212,47 +199,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
           />
         </InlineLabel>
         <FormDivider title="Arrow Options" />
-        <InlineFieldRow className={styles.inlineRow}>
-          <InlineField grow label="Arrow Width" className={styles.inlineField}>
-            <Slider
-              min={0}
-              max={30}
-              value={value.settings.linkArrow.width}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.linkArrow.width = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
-          <InlineField grow label="Arrow Height" className={styles.inlineField}>
-            <Slider
-              min={0}
-              max={30}
-              value={value.settings.linkArrow.height}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.linkArrow.height = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
-          <InlineField grow label="Arrow Offset" className={styles.inlineField}>
-            <Slider
-              min={0}
-              max={10}
-              value={value.settings.linkArrow.offset}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.linkArrow.offset = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
-        </InlineFieldRow>
+
         <FormDivider title="Grid Options" />
         <InlineFieldRow className={styles.inlineRow}>
           <InlineField grow label="Enable Node Grid Snapping" className={styles.inlineField}>

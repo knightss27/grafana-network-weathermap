@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { css } from 'emotion';
-import { Button, InlineField, InlineFieldRow, Input, Select, Slider, stylesFactory, UnitPicker } from '@grafana/ui';
+import {
+  Button,
+  ControlledCollapse,
+  InlineField,
+  InlineFieldRow,
+  Input,
+  Select,
+  Slider,
+  stylesFactory,
+  UnitPicker,
+} from '@grafana/ui';
 import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
@@ -115,6 +125,12 @@ export const LinkForm = (props: Props) => {
         },
       },
       units: 'binbps',
+      stroke: 8,
+      arrows: {
+        width: 8,
+        height: 10,
+        offset: 2,
+      },
     };
     weathermap.nodes[0].anchors[Anchor.Center].numLinks += 2;
     weathermap.links.push(link);
@@ -325,6 +341,66 @@ export const LinkForm = (props: Props) => {
                   />
                 </InlineField>
               </InlineFieldRow>
+              <ControlledCollapse label="Stroke and Arrow">
+                <InlineField grow label="Link Stroke Width" className={styles.inlineField}>
+                  <Slider
+                    min={1}
+                    max={30}
+                    value={link.stroke}
+                    step={1}
+                    onChange={(num) => {
+                      let options = value;
+                      options.links[i].stroke = num;
+                      onChange(options);
+                    }}
+                  />
+                </InlineField>
+                {link.nodes[1].isConnection ? (
+                  ''
+                ) : (
+                  <React.Fragment>
+                    <InlineField grow label="Arrow Width" className={styles.inlineField}>
+                      <Slider
+                        min={0}
+                        max={30}
+                        value={link.arrows.width}
+                        step={1}
+                        onChange={(num) => {
+                          let options = value;
+                          options.links[i].arrows.width = num;
+                          onChange(options);
+                        }}
+                      />
+                    </InlineField>
+                    <InlineField grow label="Arrow Height" className={styles.inlineField}>
+                      <Slider
+                        min={0}
+                        max={30}
+                        value={link.arrows.height}
+                        step={1}
+                        onChange={(num) => {
+                          let options = value;
+                          options.links[i].arrows.height = num;
+                          onChange(options);
+                        }}
+                      />
+                    </InlineField>
+                    <InlineField grow label="Arrow Offset" className={styles.inlineField}>
+                      <Slider
+                        min={0}
+                        max={10}
+                        value={link.arrows.offset}
+                        step={1}
+                        onChange={(num) => {
+                          let options = value;
+                          options.links[i].arrows.offset = num;
+                          onChange(options);
+                        }}
+                      />
+                    </InlineField>
+                  </React.Fragment>
+                )}
+              </ControlledCollapse>
               <InlineFieldRow className={styles.row}>
                 <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeLink(i)} className={''}>
                   Remove Link
@@ -384,5 +460,6 @@ const getStyles = stylesFactory(() => {
       margin-top: 5px;
       max-width: 100%;
     `,
+    inlineField: css``,
   };
 });

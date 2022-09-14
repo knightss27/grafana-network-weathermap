@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 6;
+export const CURRENT_VERSION = 7;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -105,9 +105,21 @@ export function nearestMultiple(input: number, grid: number): number {
 // Calculate the automatically determined widths for nodes with multiple links.
 export function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): number {
   const widerSideLinks = Math.max(d.anchors[Anchor.Top].numLinks, d.anchors[Anchor.Bottom].numLinks);
+  // Gets the maximum width of any link associated with this node.
+  const maxLinkHeight = Math.max(
+    ...wm.links
+      .filter((l) => l.nodes[0].id == d.id || l.nodes[1].id == d.id)
+      .filter(
+        (l) =>
+          [Anchor.Bottom, Anchor.Top].includes(l.sides.A.anchor) ||
+          [Anchor.Bottom, Anchor.Top].includes(l.sides.Z.anchor)
+      )
+      .map((l) => l.stroke),
+    0
+  );
 
   const maxWidth =
-    wm.settings.link.stroke.width * (widerSideLinks - 1) +
+    maxLinkHeight * (widerSideLinks - 1) +
     wm.settings.link.spacing.horizontal * (widerSideLinks - 1) +
     d.padding.horizontal * 2;
 
@@ -135,6 +147,17 @@ export function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): numbe
 // Calculate the auto-determined height of a node's rectangle
 export function calculateRectangleAutoHeight(d: DrawnNode, wm: Weathermap): number {
   const numLinks = Math.max(1, Math.max(d.anchors[Anchor.Left].numLinks, d.anchors[Anchor.Right].numLinks));
+  // Gets the maximum height of any link associated with this node.
+  const maxLinkHeight = Math.max(
+    ...wm.links
+      .filter((l) => l.nodes[0].id == d.id || l.nodes[1].id == d.id)
+      .filter(
+        (l) =>
+          [Anchor.Left, Anchor.Right].includes(l.sides.A.anchor) ||
+          [Anchor.Left, Anchor.Right].includes(l.sides.Z.anchor)
+      )
+      .map((l) => l.stroke)
+  );
   let minHeight = wm.settings.fontSizing.node + 2 * d.padding.vertical; // fontSize + padding
 
   if (d.nodeIcon?.drawInside) {
@@ -145,7 +168,7 @@ export function calculateRectangleAutoHeight(d: DrawnNode, wm: Weathermap): numb
     minHeight -= wm.settings.fontSizing.node;
   }
 
-  const linkHeight = wm.settings.link.stroke.width + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
+  const linkHeight = maxLinkHeight + wm.settings.link.spacing.vertical + 2 * d.padding.vertical;
   const fullHeight = linkHeight * numLinks - wm.settings.link.spacing.vertical;
   let final = !d.compactVerticalLinks && fullHeight > minHeight ? fullHeight : minHeight;
 
@@ -218,6 +241,12 @@ export function generateBasicLink(nodes?: [Node, Node]): Link {
       },
     },
     units: undefined,
+    arrows: {
+      width: 8,
+      height: 10,
+      offset: 2,
+    },
+    stroke: 8,
   };
 }
 
@@ -247,7 +276,6 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
           vertical: 5,
         },
         stroke: {
-          width: 8,
           color: theme.colors.secondary.main,
         },
         label: {
@@ -255,11 +283,6 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
           border: theme.colors.secondary.border,
           font: theme.colors.secondary.contrastText,
         },
-      },
-      linkArrow: {
-        width: 8,
-        height: 10,
-        offset: 2,
       },
       fontSizing: {
         node: 10,
