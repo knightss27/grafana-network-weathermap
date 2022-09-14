@@ -6,11 +6,12 @@ import {
   getSolidFromAlphaColor,
   calculateRectangleAutoWidth,
   calculateRectangleAutoHeight,
+  getDataFramesWithIds,
 } from '../utils';
 import { css } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
 import { DraggableCore, DraggableEventHandler } from 'react-draggable';
-import { DataFrame } from '@grafana/data';
+import { PanelData } from '@grafana/data';
 
 interface NodeProps {
   node: DrawnNode;
@@ -19,7 +20,7 @@ interface NodeProps {
   onDrag: DraggableEventHandler;
   onStop: DraggableEventHandler;
   disabled: boolean;
-  data: DataFrame[];
+  data: PanelData;
 }
 
 // Calculate the middle of the rectangle for text centering
@@ -53,9 +54,9 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
 
   let nodeIsDown = false;
   if (node.statusQuery) {
-    let recentFrame = data
+    let recentFrame = getDataFramesWithIds(data.series)
       .filter((series) => series.name === node.statusQuery)
-      .map((frame) => frame.fields[1].values.get(0));
+      .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
     // Check if the node is down (data returns 0 or below)
     nodeIsDown = recentFrame.length > 0 && recentFrame[0] < 1;
@@ -90,8 +91,10 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
                   : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)
               }
               stroke={
-                disabled && node.isConnection
-                  ? 'transparent'
+                node.isConnection
+                  ? disabled
+                    ? 'transparent'
+                    : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)
                   : getSolidFromAlphaColor(
                       nodeIsDown ? node.colors.statusDown : node.colors.border,
                       wm.settings.panel.backgroundColor

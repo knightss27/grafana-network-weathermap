@@ -23,6 +23,7 @@ import {
   calculateRectangleAutoHeight,
   CURRENT_VERSION,
   handleVersionedStateUpdates,
+  getDataFramesWithIds,
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
@@ -61,6 +62,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   }
 
   const isEditMode = window.location.search.includes('editPanel');
+  let dataFramesWithIds = getDataFramesWithIds(data.series);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -220,7 +222,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
     toReturn.target = nodes.filter((n) => n.id === toReturn.nodes[1].id)[0];
 
-    let dataFrames = data.series.filter(
+    let dataFrames = dataFramesWithIds.filter(
       (series) => series.name === toReturn.sides.A.query || series.name === toReturn.sides.Z.query
     );
 
@@ -237,9 +239,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
       // Check if we have a query to run for this side
       if (toReturn.sides[side].bandwidthQuery) {
-        let dataFrame = data.series
+        let dataFrame = dataFramesWithIds
           .filter((series) => series.name === toReturn.sides[side].bandwidthQuery)
-          .map((frame) => frame.fields[1].values.get(0));
+          .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
         toReturn.sides[side].bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
       }
@@ -844,7 +846,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       });
                     },
                     disabled: !isEditMode,
-                    data: data.series,
+                    data: data,
                   }}
                 />
               ))}
