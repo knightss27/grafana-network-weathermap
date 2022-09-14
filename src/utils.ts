@@ -108,7 +108,7 @@ export function calculateRectangleAutoWidth(d: DrawnNode, wm: Weathermap): numbe
   // Gets the maximum width of any link associated with this node.
   const maxLinkHeight = Math.max(
     ...wm.links
-      .filter((l) => l.nodes[0].id == d.id || l.nodes[1].id == d.id)
+      .filter((l) => l.nodes[0].id === d.id || l.nodes[1].id === d.id)
       .filter(
         (l) =>
           [Anchor.Bottom, Anchor.Top].includes(l.sides.A.anchor) ||
@@ -150,7 +150,7 @@ export function calculateRectangleAutoHeight(d: DrawnNode, wm: Weathermap): numb
   // Gets the maximum height of any link associated with this node.
   const maxLinkHeight = Math.max(
     ...wm.links
-      .filter((l) => l.nodes[0].id == d.id || l.nodes[1].id == d.id)
+      .filter((l) => l.nodes[0].id === d.id || l.nodes[1].id === d.id)
       .filter(
         (l) =>
           [Anchor.Left, Anchor.Right].includes(l.sides.A.anchor) ||

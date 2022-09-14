@@ -157,7 +157,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     // The maximum link width on this anchor point
     const maxLinkWidth = Math.max(
       ...wm.links
-        .filter((l) => l.nodes[0].id == d.id || l.nodes[1].id == d.id)
+        .filter((l) => l.nodes[0].id === d.id || l.nodes[1].id === d.id)
         .filter((l) => side.anchor === l.sides.A.anchor || l.sides.Z.anchor === side.anchor)
         .map((l) => l.stroke)
     );
