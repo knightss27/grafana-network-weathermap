@@ -43,7 +43,6 @@ export const getData = (theme: any): Weathermap => {
           vertical: 5,
         },
         stroke: {
-          width: 8,
           color: theme.colors.secondary.main,
         },
         label: {
@@ -51,11 +50,6 @@ export const getData = (theme: any): Weathermap => {
           border: theme.colors.secondary.border,
           font: theme.colors.secondary.contrastText,
         },
-      },
-      linkArrow: {
-        width: 8,
-        height: 10,
-        offset: 2,
       },
       fontSizing: {
         node: 10,
