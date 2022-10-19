@@ -349,18 +349,18 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
 export const getDataFrameName = (frame: DataFrame): string => {
   let name = frame.name ? frame.name : '';
   if (frame.fields[1].labels && !(name.length > 0)) {
-    let tName  = "{";
+    let tName = '{';
     let isFirst = true;
     for (let l in frame.fields[1].labels) {
       if (!isFirst) {
-        tName += ", ";
+        tName += ', ';
       }
-      tName += " " + l + ": " + frame.fields[1].labels[l];
+      tName += ' ' + l + ': ' + frame.fields[1].labels[l];
       if (isFirst) {
         isFirst = false;
       }
     }
-    name = tName + "}";
+    name = tName + '}';
   }
   return name;
 };
