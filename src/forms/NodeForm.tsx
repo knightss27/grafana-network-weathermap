@@ -18,7 +18,7 @@ import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node } from 'types';
 import { CiscoIcons, NetworkingIcons, DatabaseIcons, ComputerIcons } from './iconOptions';
-import { getDataFramesWithIds } from 'utils';
+import { getDataFrameName } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -226,8 +226,10 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
     return { label: t, value: 'computers_monitors/' + t };
   });
 
-  // Add names with refId and series index for selecting between similar labels
-  let dataWithIds = getDataFramesWithIds(context.data);
+  let dataWithIds: string[] = [];
+  context.data.forEach((d, i) => {
+    dataWithIds.push(getDataFrameName(d));
+  });
 
   return (
     <React.Fragment>
@@ -418,14 +420,12 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                     <InlineField grow label={'Query'}>
                       <Select
                         onChange={(v) => {
-                          handleStatusQueryChange(v?.name, i);
+                          handleStatusQueryChange(v.value, i);
                         }}
-                        // TODO: Unable to just pass a data frame or string here?
-                        // This is fairly unoptimized if you have loads of data frames
-                        value={dataWithIds.filter((p) => p.name === node.statusQuery)[0]}
-                        options={dataWithIds}
-                        getOptionLabel={(data) => data?.name || 'No label'}
-                        getOptionValue={(data) => data?.name}
+                        value={dataWithIds.filter((p, i) => p === node.statusQuery)[0]}
+                        options={dataWithIds.map((d) => {
+                          return { value: d, label: d };
+                        })}
                         placeholder={`Select query`}
                         isClearable
                       ></Select>

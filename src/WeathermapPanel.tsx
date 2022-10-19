@@ -23,7 +23,7 @@ import {
   calculateRectangleAutoHeight,
   CURRENT_VERSION,
   handleVersionedStateUpdates,
-  getDataFramesWithIds,
+  getDataFrameName,
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
@@ -62,7 +62,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   }
 
   const isEditMode = window.location.search.includes('editPanel');
-  let dataFramesWithIds = getDataFramesWithIds(data.series);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -222,16 +221,17 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];
     toReturn.target = nodes.filter((n) => n.id === toReturn.nodes[1].id)[0];
 
-    let dataFrames = dataFramesWithIds.filter(
-      (series) => series.name === toReturn.sides.A.query || series.name === toReturn.sides.Z.query
-    );
-
-    let dataValues = dataFrames.map((frame) => {
-      return {
+    let dataFrameWithIds: Array<{ value: number; id: string }> = [];
+    data.series.forEach((frame) => {
+      dataFrameWithIds.push({
         value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-        name: frame.name,
-      };
+        id: getDataFrameName(frame),
+      });
     });
+
+    let filteredDataFramesWithIds = dataFrameWithIds.filter(
+      (value) => value.id === toReturn.sides.A.query || value.id === toReturn.sides.Z.query
+    );
 
     // For each of our A/Z sides
     for (let s = 0; s < 2; s++) {
@@ -239,8 +239,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
       // Check if we have a query to run for this side
       if (toReturn.sides[side].bandwidthQuery) {
-        let dataFrame = dataFramesWithIds
-          .filter((series) => series.name === toReturn.sides[side].bandwidthQuery)
+        let dataFrame = data.series
+          .filter((series, i) => getDataFrameName(series) === toReturn.sides[side].bandwidthQuery)
           .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
         toReturn.sides[side].bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
@@ -253,7 +253,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       // Set the text if we have a query
       if (toReturn.sides[side].query) {
         let dataSource = toReturn.sides[side].query;
-        let values = dataValues.filter((s) => s.name === dataSource);
+        let values = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
 
         toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
 

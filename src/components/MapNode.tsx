@@ -6,7 +6,7 @@ import {
   getSolidFromAlphaColor,
   calculateRectangleAutoWidth,
   calculateRectangleAutoHeight,
-  getDataFramesWithIds,
+  getDataFrameName,
 } from '../utils';
 import { css } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
@@ -54,8 +54,8 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
 
   let nodeIsDown = false;
   if (node.statusQuery) {
-    let recentFrame = getDataFramesWithIds(data.series)
-      .filter((series) => series.name === node.statusQuery)
+    let recentFrame = data.series
+      .filter((series, i) => getDataFrameName(series, i) === node.statusQuery)
       .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
     // Check if the node is down (data returns 0 or below)

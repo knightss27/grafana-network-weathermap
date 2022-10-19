@@ -15,7 +15,7 @@ import { SelectableValue, StandardEditorProps } from '@grafana/data';
 import { v4 as uuidv4 } from 'uuid';
 import { Weathermap, Node, Link, Anchor, LinkSide } from 'types';
 import { FormDivider } from './FormDivider';
-import { getDataFramesWithIds } from 'utils';
+import { getDataFrameName } from 'utils';
 
 interface Settings {
   placeholder: string;
@@ -184,8 +184,10 @@ export const LinkForm = (props: Props) => {
   let usedConnectionNodes = usedConnectionSourceNodes.filter((n) => usedConnectionTargetNodes.includes(n));
   let availableNodes = value.nodes.filter((n) => !usedConnectionNodes.includes(n.id));
 
-  // Add names with refId and series index for selecting between similar labels
-  let dataWithIds = getDataFramesWithIds(context.data);
+  let dataWithIds: string[] = [];
+  context.data.forEach((d, i) => {
+    dataWithIds.push(getDataFrameName(d));
+  });
 
   return (
     <React.Fragment>
@@ -241,14 +243,14 @@ export const LinkForm = (props: Props) => {
                       <InlineField grow label={`${sName} Side Query`} labelWidth={'auto'} style={{ width: '100%' }}>
                         <Select
                           onChange={(v) => {
-                            handleDataChange(sName, i, v.name);
+                            handleDataChange(sName, i, v.value!);
                           }}
                           // TODO: Unable to just pass a data frame or string here?
                           // This is fairly unoptimized if you have loads of data frames
-                          value={dataWithIds.filter((p) => p.name === side.query)[0]}
-                          options={dataWithIds}
-                          getOptionLabel={(data) => data?.name || 'No label'}
-                          getOptionValue={(data) => data?.name}
+                          value={dataWithIds.filter((p) => p === side.query)[0]}
+                          options={dataWithIds.map((d) => {
+                            return { value: d, label: d };
+                          })}
                           className={styles.querySelect}
                           placeholder={`Select ${sName} Side Query`}
                         ></Select>
@@ -278,12 +280,12 @@ export const LinkForm = (props: Props) => {
                         >
                           <Select
                             onChange={(v) => {
-                              handleBandwidthQueryChange(v.name, i, sName);
+                              handleBandwidthQueryChange(v.value!, i, sName);
                             }}
-                            value={dataWithIds.filter((p) => p.name === side.bandwidthQuery)[0]}
-                            options={dataWithIds}
-                            getOptionLabel={(data) => data?.name || 'No label'}
-                            getOptionValue={(data) => data?.name}
+                            value={dataWithIds.filter((p) => p === side.bandwidthQuery)[0]}
+                            options={dataWithIds.map((d) => {
+                              return { value: d, label: d };
+                            })}
                             className={styles.bandwidthSelect}
                             placeholder={'Select Bandwidth'}
                           ></Select>
