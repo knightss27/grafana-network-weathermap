@@ -247,6 +247,7 @@ export function generateBasicLink(nodes?: [Node, Node]): Link {
       offset: 2,
     },
     stroke: 8,
+    showThroughputPercentage: false,
   };
 }
 

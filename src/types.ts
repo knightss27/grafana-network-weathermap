@@ -94,6 +94,7 @@ export interface Link {
   units: string | undefined;
   arrows: ArrowOptions;
   stroke: number;
+  showThroughputPercentage: boolean;
 }
 
 export interface DrawnNode extends Node {
@@ -115,6 +116,8 @@ export interface DrawnLinkSide extends LinkSide {
   currentValue: number;
   currentText: string;
   currentBandwidthText: string;
+  currentValueText: string;
+  currentPercentageText: string;
 }
 export interface DrawnLink extends Link {
   sides: {

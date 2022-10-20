@@ -5,6 +5,7 @@ import {
   ControlledCollapse,
   InlineField,
   InlineFieldRow,
+  InlineSwitch,
   Input,
   Select,
   Slider,
@@ -131,6 +132,7 @@ export const LinkForm = (props: Props) => {
         height: 10,
         offset: 2,
       },
+      showThroughputPercentage: false,
     };
     weathermap.nodes[0].anchors[Anchor.Center].numLinks += 2;
     weathermap.links.push(link);
@@ -343,6 +345,16 @@ export const LinkForm = (props: Props) => {
                   />
                 </InlineField>
               </InlineFieldRow>
+              <InlineField grow label={'Show Throughput as Percentage'}>
+                <InlineSwitch
+                  value={link.showThroughputPercentage}
+                  onChange={(e) => {
+                    let wm = value;
+                    wm.links[i].showThroughputPercentage = e.currentTarget.checked;
+                    onChange(wm);
+                  }}
+                />
+              </InlineField>
               <ControlledCollapse label="Stroke and Arrow">
                 <InlineField grow label="Link Stroke Width" className={styles.inlineField}>
                   <Slider

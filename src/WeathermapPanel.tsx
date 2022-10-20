@@ -240,7 +240,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       // Check if we have a query to run for this side
       if (toReturn.sides[side].bandwidthQuery) {
         let dataFrame = data.series
-          .filter((series, i) => getDataFrameName(series) === toReturn.sides[side].bandwidthQuery)
+          .filter((series) => getDataFrameName(series) === toReturn.sides[side].bandwidthQuery)
           .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
         toReturn.sides[side].bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
@@ -249,16 +249,34 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       // Set the display value to zero, just in case nothing exists
       toReturn.sides[side].currentValue = 0;
       toReturn.sides[side].currentText = 'n/a';
+      toReturn.sides[side].currentValueText = 'n/a';
+      toReturn.sides[side].currentPercentageText = '0%';
 
       // Set the text if we have a query
       if (toReturn.sides[side].query) {
         let dataSource = toReturn.sides[side].query;
         let values = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
 
+        // If we have a value, go use it
         toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
 
+        // Get the text formatted to KiB/MiB/etc.
         let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
-        toReturn.sides[side].currentText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
+        toReturn.sides[side].currentValueText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
+
+        // Get the percentage througput text
+        // Note that this does allow the text to be 0% even when a query doesn't return a value.
+        toReturn.sides[side].currentPercentageText =
+          toReturn.sides[side].bandwidth > 0
+            ? `${((toReturn.sides[side].currentValue / toReturn.sides[side].bandwidth) * 100).toFixed(2)}%`
+            : 'n/a%';
+      }
+
+      // Display throughput % when necessary
+      if (toReturn.showThroughputPercentage) {
+        toReturn.sides[side].currentText = toReturn.sides[side].currentPercentageText;
+      } else {
+        toReturn.sides[side].currentText = toReturn.sides[side].currentValueText;
       }
 
       let scaledBandwidth = linkValueFormatter(toReturn.sides[side].bandwidth);
@@ -438,10 +456,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             `}
           >
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
-              Usage: {hoveredLink.link.sides[hoveredLink.side].currentText}
+              Usage: {hoveredLink.link.sides[hoveredLink.side].currentValueText}
             </div>
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
+            </div>
+            <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
+              Throughput (%): {hoveredLink.link.sides[hoveredLink.side].currentPercentageText}
             </div>
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
