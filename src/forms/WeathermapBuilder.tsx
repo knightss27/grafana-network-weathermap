@@ -51,6 +51,7 @@ export const WeathermapBuilder = (props: Props) => {
       },
       panel: {
         backgroundColor: theme.colors.background.primary,
+        showTimestamp: true,
         panelSize: {
           width: 600,
           height: 600,

@@ -124,6 +124,16 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             ></Input>
           </InlineField>
+          <InlineField grow label={'Display Timestamp'}>
+            <InlineSwitch
+              value={value.settings.panel.showTimestamp}
+              onChange={(e) => {
+                let wm = value;
+                wm.settings.panel.showTimestamp = e.currentTarget.checked;
+                onChange(wm);
+              }}
+            />
+          </InlineField>
         </InlineFieldRow>
         <FormDivider title="Link Options" />
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>

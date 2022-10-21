@@ -5,6 +5,7 @@ export interface PanelOptions {
   panelSize: AreaSize;
   zoomScale: number;
   offset: Position;
+  showTimestamp: boolean;
   grid: {
     enabled: boolean;
     size: number;

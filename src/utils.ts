@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 7;
+export const CURRENT_VERSION = 8;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -291,6 +291,7 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
       },
       panel: {
         backgroundColor: theme.colors.background.primary,
+        showTimestamp: true,
         panelSize: {
           width: 600,
           height: 600,
