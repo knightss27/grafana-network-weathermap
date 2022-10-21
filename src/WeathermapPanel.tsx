@@ -273,7 +273,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       }
 
       // Display throughput % when necessary
-      if (toReturn.showThroughputPercentage) {
+      if (toReturn.showThroughputPercentage || wm.settings.link.showAllWithPercentage) {
         toReturn.sides[side].currentText = toReturn.sides[side].currentPercentageText;
       } else {
         toReturn.sides[side].currentText = toReturn.sides[side].currentValueText;

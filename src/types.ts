@@ -164,6 +164,7 @@ export interface WeathermapSettings {
       border: string;
       font: string;
     };
+    showAllWithPercentage: boolean;
   };
   fontSizing: {
     node: number;

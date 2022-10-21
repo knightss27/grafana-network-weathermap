@@ -136,6 +136,16 @@ export const PanelForm = ({ value, onChange }: Props) => {
           </InlineField>
         </InlineFieldRow>
         <FormDivider title="Link Options" />
+        <InlineField grow label={'Toggle all as Percentage Throughput'}>
+          <InlineSwitch
+            value={value.settings.link.showAllWithPercentage}
+            onChange={(e) => {
+              let wm = value;
+              wm.settings.link.showAllWithPercentage = e.currentTarget.checked;
+              onChange(wm);
+            }}
+          />
+        </InlineField>
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
           Base Color:
           <ColorPicker
@@ -147,34 +157,32 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineLabel>
-        <InlineFieldRow className={styles.inlineRow}>
-          <InlineField grow label="Link Spacing Horizontal" className={styles.inlineField}>
-            <Slider
-              min={0}
-              max={30}
-              value={value.settings.link.spacing.horizontal}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.link.spacing.horizontal = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
-          <InlineField grow label="Link Spacing Vertical" className={styles.inlineField}>
-            <Slider
-              min={0}
-              max={30}
-              value={value.settings.link.spacing.vertical}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.link.spacing.vertical = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
-        </InlineFieldRow>
+        <InlineField grow label="Link Spacing Horizontal" className={styles.inlineField}>
+          <Slider
+            min={0}
+            max={30}
+            value={value.settings.link.spacing.horizontal}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.link.spacing.horizontal = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <InlineField grow label="Link Spacing Vertical" className={styles.inlineField}>
+          <Slider
+            min={0}
+            max={30}
+            value={value.settings.link.spacing.vertical}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.link.spacing.vertical = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
           Label Background Color:
           <ColorPicker

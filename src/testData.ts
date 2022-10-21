@@ -50,6 +50,7 @@ export const getData = (theme: any): Weathermap => {
           border: theme.colors.secondary.border,
           font: theme.colors.secondary.contrastText,
         },
+        showAllWithPercentage: false,
       },
       fontSizing: {
         node: 10,

@@ -284,6 +284,7 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
           border: theme.colors.secondary.border,
           font: theme.colors.secondary.contrastText,
         },
+        showAllWithPercentage: false,
       },
       fontSizing: {
         node: 10,
