@@ -57,6 +57,7 @@ export const getData = (theme: any): Weathermap => {
       },
       panel: {
         backgroundColor: theme.colors.background.primary,
+        showTimestamp: true,
         panelSize: {
           width: 600,
           height: 600,
