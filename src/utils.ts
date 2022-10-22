@@ -350,7 +350,7 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
 }
 
 export const getDataFrameName = (frame: DataFrame): string => {
-  let name = frame.name ? frame.name : '';
+  let name = frame.name ? frame.name : frame.fields[1].name ? frame.fields[1].name : '';
   if (frame.fields[1].labels && !(name.length > 0)) {
     let tName = '{';
     let isFirst = true;
