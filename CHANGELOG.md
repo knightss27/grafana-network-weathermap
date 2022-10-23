@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.1...v0.3.2) (2022-10-23)
+
+
+### Features
+
+* node DOWN status borders ([#17](https://github.com/knightss27/grafana-network-weathermap/issues/17)) ([aa7986a](https://github.com/knightss27/grafana-network-weathermap/commit/aa7986a50812441e43151e0416a9c9fa0cbaaa4b))
+* percentage throughput on labels ([#24](https://github.com/knightss27/grafana-network-weathermap/issues/24)) ([68d8079](https://github.com/knightss27/grafana-network-weathermap/commit/68d8079b9c175fd1f3d04c31d972c2f69821d840))
+* show all as percentage toggle ([#24](https://github.com/knightss27/grafana-network-weathermap/issues/24)) ([618b9e1](https://github.com/knightss27/grafana-network-weathermap/commit/618b9e10b00ba2cf775c5ecfd70a90fbd439ccf3))
+* timestamp toggling ([#23](https://github.com/knightss27/grafana-network-weathermap/issues/23)) ([6ada467](https://github.com/knightss27/grafana-network-weathermap/commit/6ada467f7697fe8abfccb51b25865e04aedc0630))
+* variable link/arrow widths ([#4](https://github.com/knightss27/grafana-network-weathermap/issues/4)) ([0563f96](https://github.com/knightss27/grafana-network-weathermap/commit/0563f96948e5e17fdaf36ac628f32771fbe02f8d))
+
+
+### Bug Fixes
+
+* handle expressions, unlabeled queries ([#12](https://github.com/knightss27/grafana-network-weathermap/issues/12)) ([09f5c32](https://github.com/knightss27/grafana-network-weathermap/commit/09f5c32771ceb91b655dd4b1543faa5c4c75b48c))
+* outline invisible color pickers ([#19](https://github.com/knightss27/grafana-network-weathermap/issues/19)) ([7bdc5f0](https://github.com/knightss27/grafana-network-weathermap/commit/7bdc5f02b078c9fcf487c2a1bd946ffad023ece7))
+* use field names  where possible ([#29](https://github.com/knightss27/grafana-network-weathermap/issues/29)) ([11d1b12](https://github.com/knightss27/grafana-network-weathermap/commit/11d1b125a9322e5fc1344ea86c4e93d8326206cb))
+
 ### [0.3.1](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.0...v0.3.1) (2022-08-20)
 
 ### Bug Fixes
