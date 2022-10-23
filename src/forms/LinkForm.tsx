@@ -414,6 +414,21 @@ export const LinkForm = (props: Props) => {
                     </InlineField>
                   </React.Fragment>
                 )}
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => {
+                    let weathermap: Weathermap = value;
+                    for (let link of weathermap.links) {
+                      link.arrows = { ...currentLink.arrows };
+                      link.stroke = currentLink.stroke;
+                    }
+                    onChange(weathermap);
+                  }}
+                  style={{ marginTop: '10px' }}
+                >
+                  Apply to All?
+                </Button>
               </ControlledCollapse>
               <InlineFieldRow className={styles.row}>
                 <Button variant="destructive" icon="trash-alt" size="md" onClick={() => removeLink(i)} className={''}>
