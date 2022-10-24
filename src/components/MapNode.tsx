@@ -55,7 +55,7 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   let nodeIsDown = false;
   if (node.statusQuery) {
     let recentFrame = data.series
-      .filter((series) => getDataFrameName(series) === node.statusQuery)
+      .filter((series) => getDataFrameName(series, data.series) === node.statusQuery)
       .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
     // Check if the node is down (data returns 0 or below)

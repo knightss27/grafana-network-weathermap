@@ -225,7 +225,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     data.series.forEach((frame) => {
       dataFrameWithIds.push({
         value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-        id: getDataFrameName(frame),
+        id: getDataFrameName(frame, data.series),
       });
     });
 
@@ -240,7 +240,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       // Check if we have a query to run for this side
       if (toReturn.sides[side].bandwidthQuery) {
         let dataFrame = data.series
-          .filter((series) => getDataFrameName(series) === toReturn.sides[side].bandwidthQuery)
+          .filter((series) => getDataFrameName(series, data.series) === toReturn.sides[side].bandwidthQuery)
           .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
 
         toReturn.sides[side].bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;

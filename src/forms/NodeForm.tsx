@@ -228,7 +228,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
 
   let dataWithIds: string[] = [];
   context.data.forEach((d, i) => {
-    dataWithIds.push(getDataFrameName(d));
+    dataWithIds.push(getDataFrameName(d, context.data));
   });
 
   return (

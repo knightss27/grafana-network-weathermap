@@ -1,4 +1,4 @@
-import { DataFrame, GrafanaTheme2 } from '@grafana/data';
+import { DataFrame, GrafanaTheme2, getFieldDisplayName } from '@grafana/data';
 import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
@@ -349,23 +349,6 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
   return wm;
 }
 
-export const getDataFrameName = (frame: DataFrame): string => {
-  let name = frame.name ? frame.name : '';
-  if (frame.fields[1].labels && !(name.length > 0)) {
-    let tName = '{';
-    let isFirst = true;
-    for (let l in frame.fields[1].labels) {
-      if (!isFirst) {
-        tName += ', ';
-      }
-      tName += ' ' + l + ': ' + frame.fields[1].labels[l];
-      if (isFirst) {
-        isFirst = false;
-      }
-    }
-    name = tName + '}';
-  } else if (!(name.length > 0)) {
-    name = frame.fields[1].name ? frame.fields[1].name : 'No label';
-  }
-  return name;
+export const getDataFrameName = (frame: DataFrame, allFrames: DataFrame[]): string => {
+  return getFieldDisplayName(frame.fields[1], frame);
 };
