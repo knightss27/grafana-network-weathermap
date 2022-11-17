@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.3.3](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.2...v0.3.3) (2022-10-24)
 
-
 ### Bug Fixes
 
-* use Grafana's dataframe display method ([fecbf17](https://github.com/knightss27/grafana-network-weathermap/commit/fecbf174ab36a49ec4234f60cbe99284f5bb6843))
+- use Grafana's dataframe display method ([fecbf17](https://github.com/knightss27/grafana-network-weathermap/commit/fecbf174ab36a49ec4234f60cbe99284f5bb6843))
 
 ### [0.3.2](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.1...v0.3.2) (2022-10-23)
 
