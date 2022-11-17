@@ -71,7 +71,7 @@ By default, the panel will start completely blank, looking something like this:
     - Query (`Query`): A query representing the current side's throughput in the specified units.
     - Bandwidth # (`number`): A number representing the bandwidth of this side in specified units.
     - Bandwidth Query (`Query`): A query representing the bandwidth of this side in the specified units.
-    - Units (`unit`): The units the link expects to recieve its data as. This is used for both the main query and bandwidth. Defaults to `bits/sec (IEC)` (`binbps`).
+    - Units (`unit`): The units the link expects to recieve its data as. This is used for both the main query and bandwidth. Defaults to `bits/sec (SI)` (`bps`).
 - Select `A` and `B` side nodes from their respective dropdowns.
 
 ### Adding Data
