@@ -45,7 +45,7 @@ export const LinkForm = (props: Props) => {
     onChange(weathermap);
   };
 
-  const handleBandwidthQueryChange = (frame: string, i: number, side: 'A' | 'Z') => {
+  const handleBandwidthQueryChange = (frame: string | undefined, i: number, side: 'A' | 'Z') => {
     let weathermap: Weathermap = value;
     weathermap.links[i].sides[side].bandwidth = 0;
     weathermap.links[i].sides[side].bandwidthQuery = frame;
@@ -81,7 +81,7 @@ export const LinkForm = (props: Props) => {
     onChange(weathermap);
   };
 
-  const handleDataChange = (side: 'A' | 'Z', i: number, frameName: string) => {
+  const handleDataChange = (side: 'A' | 'Z', i: number, frameName: string | undefined) => {
     let weathermap: Weathermap = value;
     weathermap.links[i].sides[side].query = frameName;
     onChange(weathermap);
@@ -212,10 +212,11 @@ export const LinkForm = (props: Props) => {
         getOptionValue={(link) => link.id}
         className={styles.nodeSelect}
         placeholder={'Select a link'}
+        isClearable
       ></Select>
 
       {value.links.map((link: Link, i) => {
-        if (link.id === currentLink.id) {
+        if (currentLink && link.id === currentLink.id) {
           return (
             <React.Fragment>
               {Object.values(link.sides).map((side: LinkSide, sideIndex) => {
@@ -223,7 +224,7 @@ export const LinkForm = (props: Props) => {
                 return (
                   <React.Fragment key={sideIndex}>
                     <FormDivider title={sName + ' Side Options'} />
-                    <InlineField grow label={`${sName} Side`} labelWidth={'auto'} style={{ width: '100%' }}>
+                    <InlineField grow label={`${sName} Side`} labelWidth={'auto'}>
                       <Select
                         onChange={(v) => {
                           handleNodeChange(v as unknown as Node, sName, i);
@@ -242,10 +243,10 @@ export const LinkForm = (props: Props) => {
                     (link.nodes[0].isConnection && link.nodes[1].isConnection) ? (
                       ''
                     ) : (
-                      <InlineField grow label={`${sName} Side Query`} labelWidth={'auto'} style={{ width: '100%' }}>
+                      <InlineField grow label={`${sName} Side Query`} labelWidth={'auto'}>
                         <Select
                           onChange={(v) => {
-                            handleDataChange(sName, i, v.value!);
+                            handleDataChange(sName, i, v ? v.value : undefined);
                           }}
                           // TODO: Unable to just pass a data frame or string here?
                           // This is fairly unoptimized if you have loads of data frames
@@ -255,6 +256,7 @@ export const LinkForm = (props: Props) => {
                           })}
                           className={styles.querySelect}
                           placeholder={`Select ${sName} Side Query`}
+                          isClearable
                         ></Select>
                       </InlineField>
                     )}
@@ -282,7 +284,7 @@ export const LinkForm = (props: Props) => {
                         >
                           <Select
                             onChange={(v) => {
-                              handleBandwidthQueryChange(v.value!, i, sName);
+                              handleBandwidthQueryChange(v ? v.value : undefined, i, sName);
                             }}
                             value={dataWithIds.filter((p) => p === side.bandwidthQuery)[0]}
                             options={dataWithIds.map((d) => {
@@ -290,6 +292,7 @@ export const LinkForm = (props: Props) => {
                             })}
                             className={styles.bandwidthSelect}
                             placeholder={'Select Bandwidth'}
+                            isClearable
                           ></Select>
                         </InlineField>
                         <InlineField grow label={`${sName} Label Offset %`} style={{ width: '100%' }}>
@@ -473,12 +476,10 @@ const getStyles = stylesFactory(() => {
     `,
     bandwidthSelect: css`
       margin: 0px 0px;
-      max-width: calc(100% - 112px);
     `,
     querySelect: css`
       margin: 0px 0px;
-      max-width: calc(100% - 88px);
-    `, // TODO: find a better way to do this calc above
+    `,
     row: css`
       margin-top: 5px;
       max-width: 100%;

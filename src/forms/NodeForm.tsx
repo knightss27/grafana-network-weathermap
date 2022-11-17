@@ -92,10 +92,10 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
     onChange(weathermap);
   };
 
-  const handleIconChange = (icon: string, i: number) => {
+  const handleIconChange = (icon: string | undefined, i: number) => {
     let weathermap: Weathermap = value;
 
-    if (icon === null) {
+    if (icon === undefined) {
       weathermap.nodes[i].nodeIcon = {
         src: '',
         name: '',
@@ -211,7 +211,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
     onChange(weathermap);
   };
 
-  const [currentNode, setCurrentNode] = useState(value.nodes[0] ? value.nodes[0] : ('null' as unknown as Node));
+  const [currentNode, setCurrentNode] = useState('null' as unknown as Node);
 
   const ciscoIconsFormatted = CiscoIcons.map((t) => {
     return { label: t, value: 'cisco/' + t };
@@ -252,10 +252,11 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
         getOptionValue={(node) => node.id}
         className={styles.nodeSelect}
         placeholder={'Select a node'}
+        isClearable
       ></Select>
 
       {value.nodes.map((node, i) => {
-        if (node.id === currentNode.id) {
+        if (currentNode && node.id === currentNode.id) {
           return (
             <React.Fragment>
               <InlineFieldRow className={styles.inlineRow}>
@@ -294,7 +295,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                 <ControlledCollapse label="Icon">
                   <Select
                     onChange={(v) => {
-                      handleIconChange(v.value!, i);
+                      handleIconChange(v ? v.value : undefined, i);
                     }}
                     value={node.nodeIcon?.name}
                     options={[
@@ -302,10 +303,10 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                       { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
                       { label: 'Database Icons', value: 'databases', options: databaseIconsFormatted },
                       { label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted },
-                      { label: 'None', value: null },
                     ]}
                     className={styles.nodeSelect}
                     placeholder={'Select an icon'}
+                    isClearable
                   ></Select>
                   {/* <InlineLabel className={styles.nodeSelect}>
                     <FileUpload
@@ -420,7 +421,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                     <InlineField grow label={'Query'}>
                       <Select
                         onChange={(v) => {
-                          handleStatusQueryChange(v.value, i);
+                          handleStatusQueryChange(v ? v.value : undefined, i);
                         }}
                         value={dataWithIds.filter((p, i) => p === node.statusQuery)[0]}
                         options={dataWithIds.map((d) => {
