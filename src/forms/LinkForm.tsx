@@ -125,7 +125,7 @@ export const LinkForm = (props: Props) => {
           dashboardLink: '',
         },
       },
-      units: 'bps',
+      units: undefined,
       stroke: 8,
       arrows: {
         width: 8,

@@ -215,7 +215,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   function generateDrawnLink(d: Link, i: number): DrawnLink {
     let toReturn: DrawnLink = Object.create(d);
     toReturn.index = i;
-    const linkValueFormatter = getlinkValueFormatter(d.units ? d.units : 'bps');
+    const linkValueFormatter = getlinkValueFormatter(
+      d.units ? d.units : wm.settings.link.defaultUnits ? wm.settings.link.defaultUnits : 'bps'
+    );
 
     // Set the link's source and target node
     toReturn.source = nodes.filter((n) => n.id === toReturn.nodes[0].id)[0];

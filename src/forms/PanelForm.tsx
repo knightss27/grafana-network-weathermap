@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Button,
   ColorPicker,
   InlineField,
   InlineFieldRow,
@@ -8,6 +9,7 @@ import {
   Input,
   Slider,
   stylesFactory,
+  UnitPicker,
   useTheme2,
 } from '@grafana/ui';
 import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
@@ -146,6 +148,35 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
+        <InlineField grow label={'Default Link Units'}>
+          <UnitPicker
+            onChange={(val) => {
+              let wm = value;
+              wm.settings.link.defaultUnits = val;
+              onChange(wm);
+            }}
+            value={value.settings.link.defaultUnits ? value.settings.link.defaultUnits : 'bps'}
+          />
+        </InlineField>
+        <InlineField grow label={'Reset All Links to Default Units'}>
+          <Button
+            variant="destructive"
+            size="md"
+            icon="trash-alt"
+            onClick={() => {
+              if (!confirm('Are you sure you want to reset all link units?')) {
+                return;
+              }
+              let options = value;
+              for (let l of options.links) {
+                l.units = undefined;
+              }
+              onChange(options);
+            }}
+            style={{ justifyContent: 'center' }}
+          ></Button>
+        </InlineField>
+
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
           Base Color:
           <ColorPicker
