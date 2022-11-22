@@ -369,7 +369,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   const zoom = (e: WheelEvent) => {
     // Just don't allow zooming when not in edit mode
-    if (!isEditMode) {
+    if (!isEditMode && !e.shiftKey) {
       return;
     }
 
@@ -399,8 +399,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   const [offset, setOffset] = useState(wm.settings.panel.offset);
 
-  const drag = (e: any) => {
-    if (e.ctrlKey || e.buttons === 4) {
+  const drag = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    if (e.ctrlKey || e.buttons === 4 || e.shiftKey) {
       e.nativeEvent.preventDefault();
       const zoomAmt = Math.pow(1.2, wm.settings.panel.zoomScale);
 
@@ -508,7 +508,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             setDragging(true);
           }}
           onMouseMove={(e) => {
-            if (isDragging && (e.ctrlKey || e.buttons === 4)) {
+            if (isDragging && (e.ctrlKey || e.buttons === 4 || e.shiftKey)) {
               drag(e);
             }
           }}
