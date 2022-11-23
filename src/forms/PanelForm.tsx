@@ -126,6 +126,43 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             ></Input>
           </InlineField>
+          <InlineField grow label="Zoom Scale" className={styles.inlineField}>
+            <Input
+              value={value.settings.panel.zoomScale}
+              placeholder={'Zoom Scale'}
+              type={'number'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.panel.zoomScale = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+              
+            ></Input>
+          </InlineField>
+          <InlineField grow label="View Offset X" className={styles.inlineField}>
+            <Input
+              value={value.settings.panel.offset.x}
+              placeholder={'Offset X'}
+              type={'number'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.panel.offset.x = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
+          <InlineField grow label="View Offset Y" className={styles.inlineField}>
+            <Input
+              value={value.settings.panel.offset.y}
+              placeholder={'Offset Y'}
+              type={'number'}
+              onChange={(e) => {
+                let options = value;
+                options.settings.panel.offset.y = e.currentTarget.valueAsNumber;
+                onChange(options);
+              }}
+            ></Input>
+          </InlineField>
           <InlineField grow label={'Display Timestamp'}>
             <InlineSwitch
               value={value.settings.panel.showTimestamp}
