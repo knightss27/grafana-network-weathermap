@@ -136,7 +136,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
                 options.settings.panel.zoomScale = e.currentTarget.valueAsNumber;
                 onChange(options);
               }}
-              
             ></Input>
           </InlineField>
           <InlineField grow label="View Offset X" className={styles.inlineField}>
