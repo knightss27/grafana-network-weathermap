@@ -636,7 +636,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       onMouseOut={handleLinkHoverLoss}
                       onClick={() => {
                         if (d.sides.A.dashboardLink.length > 0) {
-                          window.location.href = d.sides.A.dashboardLink;
+                          window.open(d.sides.A.dashboardLink, '_blank');
                         }
                       }}
                       style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
@@ -672,7 +672,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                           onMouseOut={handleLinkHoverLoss}
                           onClick={() => {
                             if (d.sides.A.dashboardLink.length > 0) {
-                              window.location.href = d.sides.A.dashboardLink;
+                              window.open(d.sides.A.dashboardLink, '_blank');
                             }
                           }}
                           style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
@@ -690,7 +690,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                           onMouseOut={handleLinkHoverLoss}
                           onClick={() => {
                             if (d.sides.Z.dashboardLink.length > 0) {
-                              window.location.href = d.sides.Z.dashboardLink;
+                              window.open(d.sides.Z.dashboardLink, '_blank');
                             }
                           }}
                           style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
@@ -711,7 +711,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                           onMouseOut={handleLinkHoverLoss}
                           onClick={() => {
                             if (d.sides.Z.dashboardLink.length > 0) {
-                              window.location.href = d.sides.Z.dashboardLink;
+                              window.open(d.sides.Z.dashboardLink, '_blank');
                             }
                           }}
                           style={d.sides.Z.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
