@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getValueFormat, PanelProps } from '@grafana/data';
+import { getTimeZone, getValueFormat, PanelProps } from '@grafana/data';
 import {
   Anchor,
   DrawnLink,
@@ -14,7 +14,7 @@ import {
   Threshold,
 } from 'types';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme2 } from '@grafana/ui';
+import { LegendDisplayMode, stylesFactory, TimeSeries, TooltipDisplayMode, TooltipPlugin, useTheme2 } from '@grafana/ui';
 import {
   measureText,
   getSolidFromAlphaColor,
@@ -416,10 +416,16 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
 
   const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
+    if (e.shiftKey) {
+      return;
+    }
     setHoveredLink({ link: d, side, mouseEvent: e });
   };
 
-  const handleLinkHoverLoss = () => {
+  const handleLinkHoverLoss = (e: any) => {
+    if (e.shiftKey) {
+      return;
+    }
     setHoveredLink(null as unknown as HoveredLink);
   };
 
@@ -452,7 +458,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               z-index: 1000;
               display: ${hoveredLink ? 'flex' : 'none'};
               flex-direction: column;
-              cursor: none;
               padding: 5px;
               border-radius: 4px;
             `}
@@ -469,6 +474,32 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
+            {hoveredLink.link.sides[hoveredLink.side].query ?
+            <TimeSeries
+              width={200}
+              height={100}
+              timeRange={timeRange}
+              timeZone={getTimeZone()}
+              frames={data.series
+                .filter((series) => getDataFrameName(series, data.series) === hoveredLink.link.sides[hoveredLink.side].query)}
+              legend={{
+                calcs: [],
+                displayMode: LegendDisplayMode.List,
+                placement: 'bottom'
+              }}>
+                {(config, alignedDataFrame) => {
+                  return(
+                    <>
+                      <TooltipPlugin
+                      config={config}
+                      data={alignedDataFrame}
+                      mode={TooltipDisplayMode.Multi}
+                      timeZone={getTimeZone()}
+                      />
+                    </>
+                  )
+                }}
+              </TimeSeries> : ''}
           </div>
         ) : (
           ''
