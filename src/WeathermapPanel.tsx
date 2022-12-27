@@ -14,7 +14,14 @@ import {
   Threshold,
 } from 'types';
 import { css, cx } from 'emotion';
-import { LegendDisplayMode, stylesFactory, TimeSeries, TooltipDisplayMode, TooltipPlugin, useTheme2 } from '@grafana/ui';
+import {
+  LegendDisplayMode,
+  stylesFactory,
+  TimeSeries,
+  TooltipDisplayMode,
+  TooltipPlugin,
+  useTheme2,
+} from '@grafana/ui';
 import {
   measureText,
   getSolidFromAlphaColor,
@@ -474,32 +481,37 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
-            {hoveredLink.link.sides[hoveredLink.side].query ?
-            <TimeSeries
-              width={200}
-              height={100}
-              timeRange={timeRange}
-              timeZone={getTimeZone()}
-              frames={data.series
-                .filter((series) => getDataFrameName(series, data.series) === hoveredLink.link.sides[hoveredLink.side].query)}
-              legend={{
-                calcs: [],
-                displayMode: LegendDisplayMode.List,
-                placement: 'bottom'
-              }}>
+            {hoveredLink.link.sides[hoveredLink.side].query ? (
+              <TimeSeries
+                width={200}
+                height={100}
+                timeRange={timeRange}
+                timeZone={getTimeZone()}
+                frames={data.series.filter(
+                  (series) => getDataFrameName(series, data.series) === hoveredLink.link.sides[hoveredLink.side].query
+                )}
+                legend={{
+                  calcs: [],
+                  displayMode: LegendDisplayMode.List,
+                  placement: 'bottom',
+                }}
+              >
                 {(config, alignedDataFrame) => {
-                  return(
+                  return (
                     <>
                       <TooltipPlugin
-                      config={config}
-                      data={alignedDataFrame}
-                      mode={TooltipDisplayMode.Multi}
-                      timeZone={getTimeZone()}
+                        config={config}
+                        data={alignedDataFrame}
+                        mode={TooltipDisplayMode.Multi}
+                        timeZone={getTimeZone()}
                       />
                     </>
-                  )
+                  );
                 }}
-              </TimeSeries> : ''}
+              </TimeSeries>
+            ) : (
+              ''
+            )}
           </div>
         ) : (
           ''
