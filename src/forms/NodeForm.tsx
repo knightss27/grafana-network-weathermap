@@ -47,6 +47,12 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
     onChange(weathermap);
   };
 
+  const handleDashboardLinkChange = (e: React.FormEvent<HTMLInputElement>, i: number) => {
+    let weathermap: Weathermap = value;
+    weathermap.nodes[i].dashboardLink = e.currentTarget.value;
+    onChange(weathermap);
+  }
+
   const handleNodePaddingChange = (num: number, i: number, type: 'vertical' | 'horizontal') => {
     let weathermap: Weathermap = value;
     weathermap.nodes[i].padding[type] = num;
@@ -288,6 +294,16 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                     type={'text'}
                     className={styles.nodeLabel}
                     name={'label'}
+                  />
+                </InlineField>
+                <InlineField grow label={'Dashboard Link'}>
+                  <Input
+                    value={node.dashboardLink}
+                    onChange={(e) => handleDashboardLinkChange(e, i)}
+                    placeholder={'Node Dashboard Link'}
+                    type={'text'}
+                    className={styles.nodeLabel}
+                    name={'Dashboard link'}
                   />
                 </InlineField>
               </InlineFieldRow>

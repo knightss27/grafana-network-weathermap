@@ -65,8 +65,13 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
   return (
     <DraggableCore disabled={disabled} onDrag={onDrag} onStop={onStop}>
       <g
+        cursor={disabled ? (node.dashboardLink ? 'pointer' : '') : 'move'}
         display={node.label !== undefined ? 'inline' : 'none'}
-        cursor={'move'}
+        onClick={() => {
+          if (disabled && node.dashboardLink) {
+            window.open(node.dashboardLink, '_blank');
+          }
+        }}
         transform={`translate(${
           wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === node.index
             ? nearestMultiple(node.x, wm.settings.panel.grid.size)

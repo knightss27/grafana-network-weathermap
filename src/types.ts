@@ -52,6 +52,7 @@ export interface Node {
   id: string;
   position: [number, number];
   label?: string;
+  dashboardLink?: string;
   anchors: {
     [Anchor.Center]: NodeAnchor;
     [Anchor.Top]: NodeAnchor;
