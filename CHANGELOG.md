@@ -4,18 +4,16 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.3.4](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.3...v0.3.4) (2022-12-13)
 
-
 ### Features
 
-* configurable default link units ([#34](https://github.com/knightss27/grafana-network-weathermap/issues/34)) ([7a2acf7](https://github.com/knightss27/grafana-network-weathermap/commit/7a2acf7a635fd4df659f79f92599732cc8442342))
-* expose zoom level and offsets ([#32](https://github.com/knightss27/grafana-network-weathermap/issues/32)) ([d9d3645](https://github.com/knightss27/grafana-network-weathermap/commit/d9d36450bb1c11031fd6ce6f3189b75fbd19a120))
-* zoom outside of edit mode with shift key ([#32](https://github.com/knightss27/grafana-network-weathermap/issues/32)) ([78f0aa7](https://github.com/knightss27/grafana-network-weathermap/commit/78f0aa76aea072362dfcf9b1fed9ee2c426c89ca))
-
+- configurable default link units ([#34](https://github.com/knightss27/grafana-network-weathermap/issues/34)) ([7a2acf7](https://github.com/knightss27/grafana-network-weathermap/commit/7a2acf7a635fd4df659f79f92599732cc8442342))
+- expose zoom level and offsets ([#32](https://github.com/knightss27/grafana-network-weathermap/issues/32)) ([d9d3645](https://github.com/knightss27/grafana-network-weathermap/commit/d9d36450bb1c11031fd6ce6f3189b75fbd19a120))
+- zoom outside of edit mode with shift key ([#32](https://github.com/knightss27/grafana-network-weathermap/issues/32)) ([78f0aa7](https://github.com/knightss27/grafana-network-weathermap/commit/78f0aa76aea072362dfcf9b1fed9ee2c426c89ca))
 
 ### Bug Fixes
 
-* clearable select fields ([#31](https://github.com/knightss27/grafana-network-weathermap/issues/31)) ([3bdb782](https://github.com/knightss27/grafana-network-weathermap/commit/3bdb7823b061ea783a9b895d0b3fe09011e8d5f7))
-* defaults data rate back to SI bits/sec ([#34](https://github.com/knightss27/grafana-network-weathermap/issues/34)) ([790a624](https://github.com/knightss27/grafana-network-weathermap/commit/790a62421dc8d34823f7e974fbfc46bb28df65f1))
+- clearable select fields ([#31](https://github.com/knightss27/grafana-network-weathermap/issues/31)) ([3bdb782](https://github.com/knightss27/grafana-network-weathermap/commit/3bdb7823b061ea783a9b895d0b3fe09011e8d5f7))
+- defaults data rate back to SI bits/sec ([#34](https://github.com/knightss27/grafana-network-weathermap/issues/34)) ([790a624](https://github.com/knightss27/grafana-network-weathermap/commit/790a62421dc8d34823f7e974fbfc46bb28df65f1))
 
 ### [0.3.3](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.2...v0.3.3) (2022-10-24)
 

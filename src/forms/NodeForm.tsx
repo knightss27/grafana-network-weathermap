@@ -51,7 +51,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
     let weathermap: Weathermap = value;
     weathermap.nodes[i].dashboardLink = e.currentTarget.value;
     onChange(weathermap);
-  }
+  };
 
   const handleNodePaddingChange = (num: number, i: number, type: 'vertical' | 'horizontal') => {
     let weathermap: Weathermap = value;
