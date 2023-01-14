@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getTimeZone, getValueFormat, PanelProps } from '@grafana/data';
+import { Field, getTimeZone, getValueFormat, PanelProps, Vector } from '@grafana/data';
 import {
   Anchor,
   DrawnLink,
@@ -34,6 +34,8 @@ import {
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
+import { AxisProps } from '@grafana/ui/components/uPlot/config/UPlotAxisBuilder';
+import { ScaleProps } from '@grafana/ui/components/uPlot/config/UPlotScaleBuilder';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
@@ -54,6 +56,12 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
 
 // Format link values as the proper prefix of bits
 const getlinkValueFormatter = (fmt_id: string) => getValueFormat(fmt_id);
+const getlinkGraphFormatter = (fmt_id: string) => (v: any): string => {
+        let formatter = getValueFormat(fmt_id);
+        let formattedValue = formatter(v);
+        return `${formattedValue.text} ${formattedValue.suffix}`;
+    };
+
 
 /**
  * Weathermap panel component.
@@ -488,12 +496,28 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 timeRange={timeRange}
                 timeZone={getTimeZone()}
                 frames={data.series.filter(
-                  (series) => getDataFrameName(series, data.series) === hoveredLink.link.sides[hoveredLink.side].query
+                  (series) => {
+                    let displayName = getDataFrameName(series, data.series);
+                    return displayName === hoveredLink.link.sides[hoveredLink.side].query || displayName === hoveredLink.link.sides[hoveredLink.side].bandwidthQuery
+                  }
                 )}
                 legend={{
                   calcs: [],
                   displayMode: LegendDisplayMode.List,
                   placement: 'bottom',
+                }}
+                tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
+                    opts.softMin = 0;
+                    if (hoveredLink.link.sides[hoveredLink.side].bandwidth > 0) {
+                        opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth
+                    }
+                    return opts
+                }}
+                tweakAxis={(opts: AxisProps, forField: Field<any, Vector<any>>) => {
+                    opts.formatValue = getlinkGraphFormatter(
+                        hoveredLink.link.units ? hoveredLink.link.units : wm.settings.link.defaultUnits ? wm.settings.link.defaultUnits : 'bps'
+                      );
+                    return opts
                 }}
               >
                 {(config, alignedDataFrame) => {
