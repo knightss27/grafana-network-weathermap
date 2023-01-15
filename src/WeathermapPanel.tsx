@@ -268,12 +268,18 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       toReturn.sides[side].currentValue = 0;
       toReturn.sides[side].currentText = 'n/a';
       toReturn.sides[side].currentValueText = 'n/a';
-      toReturn.sides[side].currentPercentageText = '0%';
+      toReturn.sides[side].currentPercentageText = 'n/a%';
+      toReturn.sides[side].currentBandwidthText = 'n/a';
 
       // Set the text if we have a query
       if (toReturn.sides[side].query) {
         let dataSource = toReturn.sides[side].query;
         let values = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
+
+        // If we don't have any values, return early so the set values stay as they should.
+        if (!values[0]) {
+          break;
+        }
 
         // If we have a value, go use it
         toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
@@ -490,7 +496,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
-            {hoveredLink.link.sides[hoveredLink.side].query ? (
+            {hoveredLink.link.sides[hoveredLink.side].query &&
+            hoveredLink.link.sides[hoveredLink.side].currentText !== 'n/a' ? (
               <TimeSeries
                 options={{
                   fillOpacity: 25,
