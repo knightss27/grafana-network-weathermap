@@ -398,23 +398,23 @@ export const PanelForm = ({ value, onChange }: Props) => {
           />
         </InlineField>
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
-          Throughput Graph Color:
+          Inbound Graph Color:
           <ColorPicker
-            color={value.settings.tooltip.throughputColor}
+            color={value.settings.tooltip.inboundColor}
             onChange={(color) => {
               let options = value;
-              options.settings.tooltip.throughputColor = color;
+              options.settings.tooltip.inboundColor = color;
               onChange(options);
             }}
           />
         </InlineLabel>
         <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
-          Bandwidth Graph Color:
+          Outbound Graph Color:
           <ColorPicker
-            color={value.settings.tooltip.bandwidthColor}
+            color={value.settings.tooltip.outboundColor}
             onChange={(color) => {
               let options = value;
-              options.settings.tooltip.bandwidthColor = color;
+              options.settings.tooltip.outboundColor = color;
               onChange(options);
             }}
           />

@@ -72,8 +72,8 @@ export const WeathermapBuilder = (props: Props) => {
         fontSize: 8,
         textColor: 'white',
         backgroundColor: 'black',
-        throughputColor: '#00cf00',
-        bandwidthColor: '#fade2a',
+        inboundColor: '#00cf00',
+        outboundColor: '#fade2a',
       },
       scale: {
         position: {

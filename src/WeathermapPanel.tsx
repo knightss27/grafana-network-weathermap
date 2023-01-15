@@ -453,7 +453,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
 
-  // const extraWidthOffset = ((width2/height2) * wm.settings.panel.panelSize.height - wm.settings.panel.panelSize.width) / 2;
+  const filteredGraphQueries = data.series.filter((frame) => {
+    let displayName = getDataFrameName(frame, data.series);
+    if (!hoveredLink) {
+      return;
+    }
+    return displayName === hoveredLink.link.sides.A.query || displayName === hoveredLink.link.sides.Z.query;
+  });
 
   if (wm) {
     return (
@@ -485,51 +491,41 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             `}
           >
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
-              Usage: {hoveredLink.link.sides[hoveredLink.side].currentValueText}
+              Usage - Inbound: {hoveredLink.link.sides.Z.currentValueText}, Outbound:{' '}
+              {hoveredLink.link.sides.A.currentValueText}
             </div>
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
-              Bandwidth: {hoveredLink.link.sides[hoveredLink.side].currentBandwidthText}
+              Bandwidth - Inbound: {hoveredLink.link.sides.Z.currentBandwidthText}, Outbound:{' '}
+              {hoveredLink.link.sides.A.currentBandwidthText}
             </div>
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
-              Throughput (%): {hoveredLink.link.sides[hoveredLink.side].currentPercentageText}
+              Throughput (%) - Inbound: {hoveredLink.link.sides.Z.currentPercentageText}, Outbound:{' '}
+              {hoveredLink.link.sides.A.currentPercentageText}
             </div>
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
-            {hoveredLink.link.sides[hoveredLink.side].query &&
-            hoveredLink.link.sides[hoveredLink.side].currentText !== 'n/a' ? (
+            {(hoveredLink.link.sides.A.query || hoveredLink.link.sides.Z.query) && filteredGraphQueries.length > 0 ? (
               <React.Fragment>
                 <TimeSeries
-                  options={{
-                    fillOpacity: 25,
-                  }}
                   width={300}
                   height={100}
                   timeRange={timeRange}
                   timeZone={getTimeZone()}
-                  frames={data.series
-                    .filter((frame) => {
-                      let displayName = getDataFrameName(frame, data.series);
-                      return (
-                        displayName === hoveredLink.link.sides[hoveredLink.side].query ||
-                        displayName === hoveredLink.link.sides[hoveredLink.side].bandwidthQuery
-                      );
-                    })
-                    .map((frame: DataFrame) => {
-                      let copy = frame;
-                      let isThroughputFrame =
-                        getDataFrameName(frame, data.series) === hoveredLink.link.sides[hoveredLink.side].query;
-                      copy.fields = copy.fields.map((v) => {
-                        v.config.custom = {
-                          fillOpacity: isThroughputFrame ? 50 : 0,
-                          lineColor: isThroughputFrame
-                            ? wm.settings.tooltip.throughputColor
-                            : wm.settings.tooltip.bandwidthColor,
-                        };
-                        return v;
-                      });
-                      return copy;
-                    })}
+                  frames={filteredGraphQueries.map((frame: DataFrame) => {
+                    let copy = frame;
+                    let isInboundQuery = getDataFrameName(frame, data.series) === hoveredLink.link.sides.Z.query;
+                    copy.fields = copy.fields.map((v) => {
+                      v.config.custom = {
+                        fillOpacity: 10,
+                        lineColor: isInboundQuery
+                          ? wm.settings.tooltip.inboundColor
+                          : wm.settings.tooltip.outboundColor,
+                      };
+                      return v;
+                    });
+                    return copy;
+                  })}
                   legend={{
                     calcs: [],
                     displayMode: LegendDisplayMode.List,
@@ -571,21 +567,21 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   <div
                     style={{
                       fontSize: wm.settings.tooltip.fontSize,
-                      borderLeft: `10px solid ${wm.settings.tooltip.throughputColor}`,
+                      borderLeft: `10px solid ${wm.settings.tooltip.inboundColor}`,
                       paddingLeft: '5px',
                       marginRight: '10px',
                     }}
                   >
-                    Throughput
+                    Inbound
                   </div>
                   <div
                     style={{
                       fontSize: wm.settings.tooltip.fontSize,
-                      borderLeft: `10px solid ${wm.settings.tooltip.bandwidthColor}`,
+                      borderLeft: `10px solid ${wm.settings.tooltip.outboundColor}`,
                       paddingLeft: '5px',
                     }}
                   >
-                    Bandwidth
+                    Outbound
                   </div>
                 </div>
               </React.Fragment>
