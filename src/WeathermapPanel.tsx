@@ -477,7 +477,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               background-color: ${wm.settings.tooltip.backgroundColor};
               color: ${wm.settings.tooltip.textColor} !important;
               font-size: ${wm.settings.tooltip.fontSize} !important;
-              z-index: 1000;
+              z-index: 10000;
               display: ${hoveredLink ? 'flex' : 'none'};
               flex-direction: column;
               padding: 5px;
@@ -498,74 +498,97 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             </div>
             {hoveredLink.link.sides[hoveredLink.side].query &&
             hoveredLink.link.sides[hoveredLink.side].currentText !== 'n/a' ? (
-              <TimeSeries
-                options={{
-                  fillOpacity: 25,
-                }}
-                width={200}
-                height={100}
-                timeRange={timeRange}
-                timeZone={getTimeZone()}
-                frames={data.series
-                  .filter((frame) => {
-                    let displayName = getDataFrameName(frame, data.series);
-                    return (
-                      displayName === hoveredLink.link.sides[hoveredLink.side].query ||
-                      displayName === hoveredLink.link.sides[hoveredLink.side].bandwidthQuery
+              <React.Fragment>
+                <TimeSeries
+                  options={{
+                    fillOpacity: 25,
+                  }}
+                  width={300}
+                  height={100}
+                  timeRange={timeRange}
+                  timeZone={getTimeZone()}
+                  frames={data.series
+                    .filter((frame) => {
+                      let displayName = getDataFrameName(frame, data.series);
+                      return (
+                        displayName === hoveredLink.link.sides[hoveredLink.side].query ||
+                        displayName === hoveredLink.link.sides[hoveredLink.side].bandwidthQuery
+                      );
+                    })
+                    .map((frame: DataFrame) => {
+                      let copy = frame;
+                      let isThroughputFrame =
+                        getDataFrameName(frame, data.series) === hoveredLink.link.sides[hoveredLink.side].query;
+                      copy.fields = copy.fields.map((v) => {
+                        v.config.custom = {
+                          fillOpacity: isThroughputFrame ? 50 : 0,
+                          lineColor: isThroughputFrame
+                            ? wm.settings.tooltip.throughputColor
+                            : wm.settings.tooltip.bandwidthColor,
+                        };
+                        return v;
+                      });
+                      return copy;
+                    })}
+                  legend={{
+                    calcs: [],
+                    displayMode: LegendDisplayMode.List,
+                    placement: 'bottom',
+                    isVisible: true,
+                  }}
+                  tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
+                    opts.softMin = 0;
+                    if (hoveredLink.link.sides[hoveredLink.side].bandwidth > 0) {
+                      opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
+                    }
+                    return opts;
+                  }}
+                  tweakAxis={(opts: AxisProps, forField: Field<any, Vector<any>>) => {
+                    opts.formatValue = getlinkGraphFormatter(
+                      hoveredLink.link.units
+                        ? hoveredLink.link.units
+                        : wm.settings.link.defaultUnits
+                        ? wm.settings.link.defaultUnits
+                        : 'bps'
                     );
-                  })
-                  .map((frame: DataFrame) => {
-                    let copy = frame;
-                    let isThroughputFrame =
-                      getDataFrameName(frame, data.series) === hoveredLink.link.sides[hoveredLink.side].query;
-                    copy.fields = copy.fields.map((v) => {
-                      v.config.custom = {
-                        fillOpacity: isThroughputFrame ? 50 : 0,
-                        lineColor: isThroughputFrame
-                          ? wm.settings.tooltip.throughputColor
-                          : wm.settings.tooltip.bandwidthColor,
-                      };
-                      return v;
-                    });
-                    return copy;
-                  })}
-                legend={{
-                  calcs: [],
-                  displayMode: LegendDisplayMode.List,
-                  placement: 'bottom',
-                  isVisible: true,
-                }}
-                tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
-                  opts.softMin = 0;
-                  if (hoveredLink.link.sides[hoveredLink.side].bandwidth > 0) {
-                    opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
-                  }
-                  return opts;
-                }}
-                tweakAxis={(opts: AxisProps, forField: Field<any, Vector<any>>) => {
-                  opts.formatValue = getlinkGraphFormatter(
-                    hoveredLink.link.units
-                      ? hoveredLink.link.units
-                      : wm.settings.link.defaultUnits
-                      ? wm.settings.link.defaultUnits
-                      : 'bps'
-                  );
-                  return opts;
-                }}
-              >
-                {(config, alignedDataFrame) => {
-                  return (
-                    <>
-                      <TooltipPlugin
-                        config={config}
-                        data={alignedDataFrame}
-                        mode={TooltipDisplayMode.Multi}
-                        timeZone={getTimeZone()}
-                      />
-                    </>
-                  );
-                }}
-              </TimeSeries>
+                    return opts;
+                  }}
+                >
+                  {(config, alignedDataFrame) => {
+                    return (
+                      <>
+                        <TooltipPlugin
+                          config={config}
+                          data={alignedDataFrame}
+                          mode={TooltipDisplayMode.Multi}
+                          timeZone={getTimeZone()}
+                        />
+                      </>
+                    );
+                  }}
+                </TimeSeries>
+                <div style={{ display: 'flex', paddingTop: '10px' }}>
+                  <div
+                    style={{
+                      fontSize: wm.settings.tooltip.fontSize,
+                      borderLeft: `10px solid ${wm.settings.tooltip.throughputColor}`,
+                      paddingLeft: '5px',
+                      marginRight: '10px',
+                    }}
+                  >
+                    Throughput
+                  </div>
+                  <div
+                    style={{
+                      fontSize: wm.settings.tooltip.fontSize,
+                      borderLeft: `10px solid ${wm.settings.tooltip.bandwidthColor}`,
+                      paddingLeft: '5px',
+                    }}
+                  >
+                    Bandwidth
+                  </div>
+                </div>
+              </React.Fragment>
             ) : (
               ''
             )}
