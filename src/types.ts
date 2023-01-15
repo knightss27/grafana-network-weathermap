@@ -17,6 +17,8 @@ export interface TooltipOptions {
   fontSize: number;
   textColor: string;
   backgroundColor: string;
+  throughputColor: string;
+  bandwidthColor: string;
 }
 
 export interface AreaSize {

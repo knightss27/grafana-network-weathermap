@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getValueFormat, PanelProps } from '@grafana/data';
+import { DataFrame, Field, getTimeZone, getValueFormat, PanelProps, Vector } from '@grafana/data';
 import {
   Anchor,
   DrawnLink,
@@ -14,7 +14,14 @@ import {
   Threshold,
 } from 'types';
 import { css, cx } from 'emotion';
-import { stylesFactory, useTheme2 } from '@grafana/ui';
+import {
+  LegendDisplayMode,
+  stylesFactory,
+  TimeSeries,
+  TooltipDisplayMode,
+  TooltipPlugin,
+  useTheme2,
+} from '@grafana/ui';
 import {
   measureText,
   getSolidFromAlphaColor,
@@ -27,6 +34,8 @@ import {
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
+import { AxisProps } from '@grafana/ui/components/uPlot/config/UPlotAxisBuilder';
+import { ScaleProps } from '@grafana/ui/components/uPlot/config/UPlotScaleBuilder';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
@@ -47,6 +56,13 @@ function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
 
 // Format link values as the proper prefix of bits
 const getlinkValueFormatter = (fmt_id: string) => getValueFormat(fmt_id);
+const getlinkGraphFormatter =
+  (fmt_id: string) =>
+  (v: any): string => {
+    let formatter = getValueFormat(fmt_id);
+    let formattedValue = formatter(v);
+    return `${formattedValue.text} ${formattedValue.suffix}`;
+  };
 
 /**
  * Weathermap panel component.
@@ -252,12 +268,18 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       toReturn.sides[side].currentValue = 0;
       toReturn.sides[side].currentText = 'n/a';
       toReturn.sides[side].currentValueText = 'n/a';
-      toReturn.sides[side].currentPercentageText = '0%';
+      toReturn.sides[side].currentPercentageText = 'n/a%';
+      toReturn.sides[side].currentBandwidthText = 'n/a';
 
       // Set the text if we have a query
       if (toReturn.sides[side].query) {
         let dataSource = toReturn.sides[side].query;
         let values = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
+
+        // If we don't have any values, return early so the set values stay as they should.
+        if (!values[0]) {
+          break;
+        }
 
         // If we have a value, go use it
         toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
@@ -416,10 +438,16 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   const [hoveredLink, setHoveredLink] = useState(null as unknown as HoveredLink);
 
   const handleLinkHover = (d: DrawnLink, side: 'A' | 'Z', e: any) => {
+    if (e.shiftKey) {
+      return;
+    }
     setHoveredLink({ link: d, side, mouseEvent: e });
   };
 
-  const handleLinkHoverLoss = () => {
+  const handleLinkHoverLoss = (e: any) => {
+    if (e.shiftKey) {
+      return;
+    }
     setHoveredLink(null as unknown as HoveredLink);
   };
 
@@ -449,10 +477,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               background-color: ${wm.settings.tooltip.backgroundColor};
               color: ${wm.settings.tooltip.textColor} !important;
               font-size: ${wm.settings.tooltip.fontSize} !important;
-              z-index: 1000;
+              z-index: 10000;
               display: ${hoveredLink ? 'flex' : 'none'};
               flex-direction: column;
-              cursor: none;
               padding: 5px;
               border-radius: 4px;
             `}
@@ -469,6 +496,102 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
+            {hoveredLink.link.sides[hoveredLink.side].query &&
+            hoveredLink.link.sides[hoveredLink.side].currentText !== 'n/a' ? (
+              <React.Fragment>
+                <TimeSeries
+                  options={{
+                    fillOpacity: 25,
+                  }}
+                  width={300}
+                  height={100}
+                  timeRange={timeRange}
+                  timeZone={getTimeZone()}
+                  frames={data.series
+                    .filter((frame) => {
+                      let displayName = getDataFrameName(frame, data.series);
+                      return (
+                        displayName === hoveredLink.link.sides[hoveredLink.side].query ||
+                        displayName === hoveredLink.link.sides[hoveredLink.side].bandwidthQuery
+                      );
+                    })
+                    .map((frame: DataFrame) => {
+                      let copy = frame;
+                      let isThroughputFrame =
+                        getDataFrameName(frame, data.series) === hoveredLink.link.sides[hoveredLink.side].query;
+                      copy.fields = copy.fields.map((v) => {
+                        v.config.custom = {
+                          fillOpacity: isThroughputFrame ? 50 : 0,
+                          lineColor: isThroughputFrame
+                            ? wm.settings.tooltip.throughputColor
+                            : wm.settings.tooltip.bandwidthColor,
+                        };
+                        return v;
+                      });
+                      return copy;
+                    })}
+                  legend={{
+                    calcs: [],
+                    displayMode: LegendDisplayMode.List,
+                    placement: 'bottom',
+                    isVisible: true,
+                  }}
+                  tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
+                    opts.softMin = 0;
+                    if (hoveredLink.link.sides[hoveredLink.side].bandwidth > 0) {
+                      opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
+                    }
+                    return opts;
+                  }}
+                  tweakAxis={(opts: AxisProps, forField: Field<any, Vector<any>>) => {
+                    opts.formatValue = getlinkGraphFormatter(
+                      hoveredLink.link.units
+                        ? hoveredLink.link.units
+                        : wm.settings.link.defaultUnits
+                        ? wm.settings.link.defaultUnits
+                        : 'bps'
+                    );
+                    return opts;
+                  }}
+                >
+                  {(config, alignedDataFrame) => {
+                    return (
+                      <>
+                        <TooltipPlugin
+                          config={config}
+                          data={alignedDataFrame}
+                          mode={TooltipDisplayMode.Multi}
+                          timeZone={getTimeZone()}
+                        />
+                      </>
+                    );
+                  }}
+                </TimeSeries>
+                <div style={{ display: 'flex', paddingTop: '10px' }}>
+                  <div
+                    style={{
+                      fontSize: wm.settings.tooltip.fontSize,
+                      borderLeft: `10px solid ${wm.settings.tooltip.throughputColor}`,
+                      paddingLeft: '5px',
+                      marginRight: '10px',
+                    }}
+                  >
+                    Throughput
+                  </div>
+                  <div
+                    style={{
+                      fontSize: wm.settings.tooltip.fontSize,
+                      borderLeft: `10px solid ${wm.settings.tooltip.bandwidthColor}`,
+                      paddingLeft: '5px',
+                    }}
+                  >
+                    Bandwidth
+                  </div>
+                </div>
+              </React.Fragment>
+            ) : (
+              ''
+            )}
           </div>
         ) : (
           ''
