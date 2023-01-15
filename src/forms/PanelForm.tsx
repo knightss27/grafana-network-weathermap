@@ -397,6 +397,28 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineField>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Throughput Graph Color:
+          <ColorPicker
+            color={value.settings.tooltip.throughputColor}
+            onChange={(color) => {
+              let options = value;
+              options.settings.tooltip.throughputColor = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
+        <InlineLabel width="auto" style={{ marginBottom: '4px' }}>
+          Bandwidth Graph Color:
+          <ColorPicker
+            color={value.settings.tooltip.bandwidthColor}
+            onChange={(color) => {
+              let options = value;
+              options.settings.tooltip.bandwidthColor = color;
+              onChange(options);
+            }}
+          />
+        </InlineLabel>
         <FormDivider title="Scale Options" />
         <InlineField grow label="Scale Title" className={styles.inlineField}>
           <Input

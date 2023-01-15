@@ -1,14 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  DataFrame,
-  Field,
-  FieldColorModeId,
-  getFieldColorMode,
-  getTimeZone,
-  getValueFormat,
-  PanelProps,
-  Vector,
-} from '@grafana/data';
+import { DataFrame, Field, getTimeZone, getValueFormat, PanelProps, Vector } from '@grafana/data';
 import {
   Anchor,
   DrawnLink,
@@ -523,8 +514,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     copy.fields = copy.fields.map((v) => {
                       v.config.custom = {
                         fillOpacity: isThroughputFrame ? 50 : 0,
-                        colorMode: getFieldColorMode(FieldColorModeId.PaletteClassic),
-                        lineColor: isThroughputFrame ? '#00cf00' : '#fade2a',
+                        lineColor: isThroughputFrame
+                          ? wm.settings.tooltip.throughputColor
+                          : wm.settings.tooltip.bandwidthColor,
                       };
                       return v;
                     });
@@ -534,6 +526,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   calcs: [],
                   displayMode: LegendDisplayMode.List,
                   placement: 'bottom',
+                  isVisible: true,
                 }}
                 tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
                   opts.softMin = 0;
@@ -554,7 +547,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 }}
               >
                 {(config, alignedDataFrame) => {
-                  console.log(config);
                   return (
                     <>
                       <TooltipPlugin
