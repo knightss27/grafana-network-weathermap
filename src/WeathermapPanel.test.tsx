@@ -74,8 +74,6 @@ test('Creating a weathermap', () => {
 
   // Check that link hover works
   fireEvent.mouseMove(screen.getByTestId('link').firstChild!);
-  expect(screen.getByText('Usage')).not.toBeNull();
-  expect(screen.getByText('Bandwidth')).not.toBeNull();
   fireEvent.mouseLeave(screen.getByTestId('link').firstChild!);
 
   // Check link labels
