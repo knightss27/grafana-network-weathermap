@@ -255,13 +255,17 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     for (let s = 0; s < 2; s++) {
       const side: 'A' | 'Z' = s === 0 ? 'A' : 'Z';
 
-      // Check if we have a query to run for this side
+      // Check if we have a query to run for this side's bandwidth
       if (toReturn.sides[side].bandwidthQuery) {
-        let dataFrame = data.series
-          .filter((series) => getDataFrameName(series, data.series) === toReturn.sides[side].bandwidthQuery)
-          .map((frame) => frame.fields[1].values.get(frame.fields[1].values.length - 1));
+        let dataFrame = dataFrameWithIds.filter((value) => value.id === toReturn.sides[side].bandwidthQuery);
 
-        toReturn.sides[side].bandwidth = dataFrame.length > 0 ? dataFrame[0] : 0;
+        // If we don't have any values, return early so the set values stay as they should
+        if (!(dataFrame[0] && dataFrame[0].value)) {
+          break;
+        }
+
+        // If we have a value, go use it
+        toReturn.sides[side].bandwidth = dataFrame[0].value;
       }
 
       // Set the display value to zero, just in case nothing exists
@@ -271,18 +275,18 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       toReturn.sides[side].currentPercentageText = 'n/a%';
       toReturn.sides[side].currentBandwidthText = 'n/a';
 
-      // Set the text if we have a query
+      // Check if we have a query to run for this side's throughput
       if (toReturn.sides[side].query) {
         let dataSource = toReturn.sides[side].query;
-        let values = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
+        let dataFrame = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
 
-        // If we don't have any values, return early so the set values stay as they should.
-        if (!values[0]) {
+        // If we don't have any values, return early so the set values stay as they should
+        if (!(dataFrame[0] && dataFrame[0].value)) {
           break;
         }
 
         // If we have a value, go use it
-        toReturn.sides[side].currentValue = values[0] ? values[0].value : 0;
+        toReturn.sides[side].currentValue = dataFrame[0].value;
 
         // Get the text formatted to KiB/MiB/etc.
         let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
