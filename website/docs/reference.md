@@ -1,6 +1,6 @@
 # Reference
 
-This page documents all editing fields with their expected inputs and usage. It is not descriptive about _how_ to use these fields.
+This page documents all editing fields with their expected inputs and usage. It is not necessarily descriptive about _how_ to use some of these fields.
 
 ## Node
 
@@ -11,6 +11,7 @@ This page documents all editing fields with their expected inputs and usage. It 
 | X | `number` | X position |
 | Y | `number` | Y position |
 | Label | `string` | Text displayed on the node, when set to an empty string the node's outline is not drawn |
+| Dashboard Link | `string` | URL which clicking on this node will direct you to |
 | **Icon:** |
 | - Icon | `Icon` | SVG icon drawn with the node |
 | - Width | `number` | Bounding width (icon will maintain its original aspect ratio) |
@@ -21,6 +22,9 @@ This page documents all editing fields with their expected inputs and usage. It 
 | **Padding:** |
 | - Horizontal | `number` | Padding to the left and right of the label |
 | - Vertical | `number` | Padding above and below the label |
+| **Status** |
+| - Query | `Query` | Query for the Node's status. 0 or null is DOWN, 1 or above is UP |
+| - StatusDown Color | `picker` | The color to outline the node with when DOWN |
 | **Advanced:** |
 | - Constant Spacing | `boolean` | Use global link spacing values for this node |
 | - Compact Vertical Links | `boolean` | Do not allow the node to grow vertically |
@@ -46,6 +50,12 @@ This page documents all editing fields with their expected inputs and usage. It 
 | - Dashboard Link | `string` | URL which clicking on this link will take you to |
 | **Options:** |
 | - Units | `Unit` | The units for this link's throughput and bandwidth queries, defaults to `bits/sec (IEC)` |
+| - Show Throughput as Percentage | `boolean` | Whether or not to show the throughput labels as percentages of bandwidth |
+| **Stroke and Arrow** |
+| - Stroke Width | `number` | Width of each link |
+| - Arrow Width | `number` | Distance from left vertex to right vertex of the arrow |
+| - Arrow Height | `number` | Distance from base to tip vertiex of the arrow |
+| - Arrow Offset | `number` | Distance between arrow tips in links |
 
 ## Global
 
@@ -58,27 +68,24 @@ This page documents all editing fields with their expected inputs and usage. It 
 | Background Color | `picker` |
 | Viewbox Width (px) | `number` | SVG viewbox width, allows for drawing larger maps |
 | Viewbox Height (px) | `number` | SVG viewbox height, allows for drawing larger maps |
+| Zoom Scale | `number` | The viewport zoom, negative is zoomed in, positive zoomed out |
+| View Offset X | `number` | The viewport center X position as an offset from (0,0) |
+| View Offset Y | `number` | The viewport center Y position as an offset from (0,0) |
+| Display Timestamp | `boolean` | Turn the timestamp on or off |
 
 ### Link Options
 
 | Field | Type | Description |
 |-------|------|-------------|
+| Toggle All as Percentage Throughput | `boolean` | Shows all link labels as percentages (but does not override individual link settings when turned off) |
+| Default Link Units | `Unit` | The default units used when no specific unit has yet been set on a link |
 | Base Color | `picker` | Link color displayed when no data is available |
-| Stroke Width | `number` | Width of each link |
 | Spacing Horizontal | `number` | Constant spacing used between links on `Top` or `Bottom` anchors |
 | Spacing Vertical | `number` | Constant spacing used betwene links on `Left` or `Right` anchors |
 | **Label:** |
 | - Background Color | `picker` |
 | - Border Color | `picker` |
 | - Font Color | `picker` |
-
-### Arrow Options
-
-| Field | Type | Description |
-|-------|------|-------------|
-| Width | `number` | Distance from left vertex to right vertex of the arrow |
-| Height | `number` | Distance from base to tip vertiex of the arrow |
-| Offset | `number` | Distance between arrow tips in links |
 
 ### Grid Options
 
@@ -102,6 +109,8 @@ This page documents all editing fields with their expected inputs and usage. It 
 | Background Color | `picker` |
 | Text Color | `picker` |
 | Font Size | `number` |
+| Inbound Graph Color | `picker` |
+| Outbound Graph Color | `picker` |
 
 ### Scale Options
 

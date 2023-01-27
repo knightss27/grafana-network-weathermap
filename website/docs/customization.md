@@ -34,13 +34,13 @@ One of the most important parts of creating a weathermap is arranging the links 
         - (`Center | Top | Bottom | Left | Right`)
     - This makes it easy to try and avoid having too many overlapping links. By default, links are auto-spaced to be as far apart as possible when parallel to each other vertically (attached to a `Bottom` of one link, and `Top` of another). When parallel horiztonally (attached to a `Right` of one link, and `Left` of another), nodes will automatically grow to accomodate them.
 - Label Offset # (`number`): A number between 0 and 100 representing the location of the link's label as a percentage of that link's length. (Play around with it to see how it works! This is especially useful if you have close / overlapping links which need their labels to not overlap.)
+- See the [link reference](/reference/#link) for other options.
 
 ### Global Link Options
 
 These options are set on all links.
 
 - Base Color (`picker`): The no-data color for links.
-- Stroke Width (`number`): A number in pixels, representing the stroke width of all links.
 - Spacing Horizontal (`number`): A number in pixels, representing the spacing used between links when a node has `Constant Spacing` set to true.
 - Spacing Vertical (`number`): A number in pixels, representing the spacing used vertically between links, when a node has `Collapse Vertical Links` set to false (the default).
 
@@ -49,14 +49,6 @@ These options are for link labels (their current throughput):
 - Background (`color`): Label background color.
 - Border (`color`): Label border color.
 - Font (`color`): Label font color.
-
-### Global Arrow Options
-
-These options are set on all arrows.
-
-- Width (`number`): The width of the arrow in pixels. (You probably want it >= the link stroke width.)
-- Height (`number`): The height of the arrow in pixels (how long it looks).
-- Offset (`number`): The distance from the meeting point of the two links the point of the arrow will reach to. This is the offset for _one_ side of the link, meaning the actual space between two arrows will be twice this number.
 
 ## Node Options
 
@@ -99,6 +91,8 @@ These options are set on all arrows.
 - Background (`picker`): Node background color.
 - Border (`picker`): Node border color.
 - Font (`picker`): Node font color.
+
+See [node reference](/reference/#node) for more options.
 
 ## Font Options
 

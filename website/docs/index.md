@@ -1,4 +1,8 @@
-# Getting Started
+<center><img src="/assets/logo.svg" alt="Network Weathermap Logo" width="200" style="background: lightgrey; padding: 2rem; border-radius: 1rem; box-shadow: #aaa 0.5rem 0.5rem 1rem;"/></center>
+
+<center>
+# Grafana Network Weathermap Plugin
+</center>
 
 ## Installation
 
@@ -80,6 +84,7 @@ By default, the panel will start completely blank, looking something like this:
 - You probably want this number in `bits/sec`, unless your links are expecting something else.
 - The weathermap works best with 'instant' queries, which just use the most recent value retrieved. (Otherwise, the weathermap will always choose the most recent data point possible).
 - Once you have added a query in the panel editor, you can can see all queries and select one from the dropdown in the Query fields of the links.
+- See the [FAQ](/faq) or [Github issues](https://github.com/knightss27/grafana-network-weathermap/issues) if you are having issues adding data (especially Zabbix datasource users).
 
 **PLEASE NOTE:** _Queries with the exact same labels will be considered as such. If you have multiple queries and are unable to select the one that you want, double check to make sure it is labeled uniquely._
 
@@ -94,3 +99,16 @@ By default, the panel will start completely blank, looking something like this:
     - Color (`picker`): The color of this threshold, can be any valid CSS `color` chosen or input with the picker.
         - `green` | `#00FF00` | `rgb(0, 255, 0)`
 - By default, the scale will fill from the highest threshold to 100%. You can see the scale in the top left of the panel. When updating numerical values, click off of the input when you're finished to allow the scale to update.
+
+### Interacting with the Weathermap
+
+- In editing mode:
+    - `Click + Drag` nodes to move them.
+    - `Shift + Drag` or hold and drag `Middle Mouse` to move the map.
+    - `Scroll` to zoom.
+- Outside of editing mode (including read-only users):
+    - `Shift + Scroll` to zoom.
+    - `Shift + Drag` to move the map.
+- Hover over links to see tooltip information.
+    - Hold `Shift` while hovering to free up the mouse.
+    - Hover over the same link or another to unfreeze the tooltip.
