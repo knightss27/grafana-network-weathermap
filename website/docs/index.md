@@ -81,8 +81,8 @@ By default, the panel will start completely blank, looking something like this:
 ### Adding Data
 
 - The weathermap expects a data frame with two fields, a time and a number.
-- You probably want this number in `bits/sec`, unless your links are expecting something else.
-- The weathermap works best with 'instant' queries, which just use the most recent value retrieved. (Otherwise, the weathermap will always choose the most recent data point possible).
+- You probably want this number in `bits/sec`, unless your links are expecting something else (each link has customizable units, and default units are customizable in the global settings for the panel).
+- The weathermap will always choose the most recent data point available. If you want your links graphs to have data, make sure your queries are ranges and not "Instant" queries, as this will mean there is no data to show on each graph.
 - Once you have added a query in the panel editor, you can can see all queries and select one from the dropdown in the Query fields of the links.
 - See the [FAQ](/faq) or [Github issues](https://github.com/knightss27/grafana-network-weathermap/issues) if you are having issues adding data (especially Zabbix datasource users).
 
