@@ -8,6 +8,7 @@ import { PanelForm } from './PanelForm';
 import { v4 as uuidv4 } from 'uuid';
 import { useTheme2 } from '@grafana/ui';
 import { generateBasicNode, CURRENT_VERSION, generateBasicLink, handleVersionedStateUpdates } from 'utils';
+import { PathForm } from './PathForm';
 
 interface Settings {
   placeholder: string;
@@ -29,6 +30,7 @@ export const WeathermapBuilder = (props: Props) => {
       return v;
     }),
     links: [generateBasicLink([defaultNodes[0], defaultNodes[1]])],
+    paths: [],
     scale: [],
     settings: {
       link: {
@@ -108,6 +110,7 @@ export const WeathermapBuilder = (props: Props) => {
         <NodeForm {...props}></NodeForm>
         <LinkForm {...props}></LinkForm>
         <ColorForm {...props}></ColorForm>
+        <PathForm {...props}></PathForm>
         <PanelForm {...props}></PanelForm>
       </React.Fragment>
     );
