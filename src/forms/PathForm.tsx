@@ -13,7 +13,7 @@ export const PathForm = ({ value, onChange }: Props) => {
 
     const addPath = () => {
         let wm = value;
-        wm.paths.push({ id: uuidv4(), nodes: [] })
+        wm.paths.push({ id: uuidv4(), name: `Path ${wm.paths.length}`, nodes: [] })
         onChange(wm);
     }
 
@@ -61,6 +61,12 @@ export const PathForm = ({ value, onChange }: Props) => {
         onChange(wm);
     }
 
+    const updatePathName = (path: number, name: string) => {
+        let wm = value;
+        wm.paths[path].name = name;
+        onChange(wm);
+    }
+
     const [currentPath, setCurrentPath] = useState('null' as unknown as Path);
 
     return (
@@ -73,7 +79,7 @@ export const PathForm = ({ value, onChange }: Props) => {
                 value={currentPath}
                 options={value.paths}
                 getOptionValue={(p) => (p.id ? p.id : "Unknown option value")}
-                getOptionLabel={(p) => (p.id ? p.id : "Unknown option name")}
+                getOptionLabel={(p) => (p.name ? p.name : "Unknown option name")}
                 placeholder={"Select a Path"}
                 isClearable
             ></Select>
@@ -82,6 +88,12 @@ export const PathForm = ({ value, onChange }: Props) => {
                     if (currentPath && path.id == currentPath.id) {
                         return (
                             <React.Fragment>
+                                <InlineField grow label="Name" style={{marginTop: "4px"}}>
+                                    <Input
+                                        onChange={(v) => updatePathName(i, v.currentTarget.value)}
+                                        value={path.name}
+                                    />
+                                </InlineField>
                                 {
                                     (currentPath.nodes.length > 0) ? (
                                         currentPath.nodes.map((node: PathNode, ni: number) => {
@@ -101,7 +113,7 @@ export const PathForm = ({ value, onChange }: Props) => {
                                                             icon="arrow-down"
                                                             onClick={() => updateNodeOrder(i, ni, ni+1)}
                                                             disabled={ni == path.nodes.length-1}
-                                                            style={{marginRight: "4px"}}
+                                                            style={{marginRight: "4px", marginLeft: "4px"}}
                                                         ></Button>
                                                         <InlineField grow label="X">
                                                             <Input
@@ -109,7 +121,7 @@ export const PathForm = ({ value, onChange }: Props) => {
                                                                 onChange={(v) => updateNodePosition(i, ni, { x: v.currentTarget.valueAsNumber, y: node.position.y})}
                                                                 value={node.position.x}
                                                             />
-                                                            </InlineField>
+                                                        </InlineField>
                                                         <InlineField grow label="Y">
                                                             <Input
                                                                 type='number'

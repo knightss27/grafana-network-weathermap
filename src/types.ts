@@ -86,6 +86,7 @@ export interface PathNode {
 
 export interface Path {
     id: string;
+    name: string;
     nodes: PathNode[];
 }
 
