@@ -80,14 +80,14 @@ export interface Node {
 }
 
 export interface PathNode {
-    id: string;
-    position: Position;
+  id: string;
+  position: Position;
 }
 
 export interface Path {
-    id: string;
-    name: string;
-    nodes: PathNode[];
+  id: string;
+  name: string;
+  nodes: PathNode[];
 }
 
 export interface LinkSide {

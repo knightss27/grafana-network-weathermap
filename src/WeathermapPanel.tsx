@@ -118,10 +118,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   // Get offset point in direction
   function getOffsetPoint(source: Position, dirTarget: Position, offset: number): Position {
-    let vec = { x: source.x - dirTarget.x, y: source.y - dirTarget.y }
+    let vec = { x: source.x - dirTarget.x, y: source.y - dirTarget.y };
     let vecLength = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
     let norm = { x: vec.x / vecLength, y: vec.y / vecLength };
-    return { x: source.x + (offset * norm.x), y: source.y + (offset * norm.y) }
+    return { x: source.x + offset * norm.x, y: source.y + offset * norm.y };
   }
 
   // Find the points that create the two other points of a triangle for the arrow's tip
@@ -349,59 +349,62 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     }
 
     toReturn.lineEndZ = getMiddlePoint(
-        toReturn.lineStartZ,
-        toReturn.lineStartA,
-        toReturn.arrows.offset + toReturn.arrows.height
-      );
+      toReturn.lineStartZ,
+      toReturn.lineStartA,
+      toReturn.arrows.offset + toReturn.arrows.height
+    );
 
     if (toReturn.path) {
-        let path = wm.paths.filter(p => p.id == toReturn.path)[0]
-        let pathFirstNode = path.nodes[0];
-        if (pathFirstNode) {
-            toReturn.lineEndA = getOffsetPoint(pathFirstNode.position, toReturn.lineStartA, -toReturn.arrows.offset - toReturn.arrows.height);
-        }
-        let pathLastNode = path.nodes[path.nodes.length-1];
-        if (pathLastNode) {
-            toReturn.lineEndZ = getOffsetPoint(pathLastNode.position, toReturn.lineStartZ, -toReturn.arrows.offset - toReturn.arrows.height);
-        }
-
-        toReturn.arrowCenterA = getOffsetPoint(pathFirstNode.position, toReturn.lineStartA, -toReturn.arrows.offset);
-        toReturn.arrowPolygonA = getArrowPolygon(
+      let path = wm.paths.filter((p) => p.id == toReturn.path)[0];
+      let pathFirstNode = path.nodes[0];
+      if (pathFirstNode) {
+        toReturn.lineEndA = getOffsetPoint(
+          pathFirstNode.position,
           toReturn.lineStartA,
-          toReturn.arrowCenterA,
-          toReturn.arrows.height,
-          toReturn.arrows.width
+          -toReturn.arrows.offset - toReturn.arrows.height
         );
-    
-    
-        toReturn.arrowCenterZ = getOffsetPoint(pathLastNode.position, toReturn.lineStartZ, -toReturn.arrows.offset);
-        toReturn.arrowPolygonZ = getArrowPolygon(
+      }
+      let pathLastNode = path.nodes[path.nodes.length - 1];
+      if (pathLastNode) {
+        toReturn.lineEndZ = getOffsetPoint(
+          pathLastNode.position,
           toReturn.lineStartZ,
-          toReturn.arrowCenterZ,
-          toReturn.arrows.height,
-          toReturn.arrows.width
+          -toReturn.arrows.offset - toReturn.arrows.height
         );
+      }
 
+      toReturn.arrowCenterA = getOffsetPoint(pathFirstNode.position, toReturn.lineStartA, -toReturn.arrows.offset);
+      toReturn.arrowPolygonA = getArrowPolygon(
+        toReturn.lineStartA,
+        toReturn.arrowCenterA,
+        toReturn.arrows.height,
+        toReturn.arrows.width
+      );
+
+      toReturn.arrowCenterZ = getOffsetPoint(pathLastNode.position, toReturn.lineStartZ, -toReturn.arrows.offset);
+      toReturn.arrowPolygonZ = getArrowPolygon(
+        toReturn.lineStartZ,
+        toReturn.arrowCenterZ,
+        toReturn.arrows.height,
+        toReturn.arrows.width
+      );
     } else {
-        toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -toReturn.arrows.offset);
-        toReturn.arrowPolygonA = getArrowPolygon(
-          toReturn.lineStartA,
-          toReturn.arrowCenterA,
-          toReturn.arrows.height,
-          toReturn.arrows.width
-        );
-    
-    
-        toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, toReturn.arrows.offset);
-        toReturn.arrowPolygonZ = getArrowPolygon(
-          toReturn.lineStartZ,
-          toReturn.arrowCenterZ,
-          toReturn.arrows.height,
-          toReturn.arrows.width
-        );
+      toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -toReturn.arrows.offset);
+      toReturn.arrowPolygonA = getArrowPolygon(
+        toReturn.lineStartA,
+        toReturn.arrowCenterA,
+        toReturn.arrows.height,
+        toReturn.arrows.width
+      );
+
+      toReturn.arrowCenterZ = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, toReturn.arrows.offset);
+      toReturn.arrowPolygonZ = getArrowPolygon(
+        toReturn.lineStartZ,
+        toReturn.arrowCenterZ,
+        toReturn.arrows.height,
+        toReturn.arrows.width
+      );
     }
-
-
 
     return toReturn;
   }
@@ -807,19 +810,21 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       }}
                       style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                     ></line>
-                    {d.path ? (
-                        wm.paths.filter(p => p.id == d.path)[0].nodes.map((n, i, pns) => {
-                            if (i >= pns.length-1) {
-                                return;
+                    {d.path
+                      ? wm.paths
+                          .filter((p) => p.id == d.path)[0]
+                          .nodes.map((n, i, pns) => {
+                            if (i >= pns.length - 1) {
+                              return;
                             }
                             return (
-                                <line
+                              <line
                                 strokeWidth={d.stroke}
                                 stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
                                 x1={n.position.x}
                                 y1={n.position.y}
-                                x2={pns[i+1].position.x}
-                                y2={pns[i+1].position.y}
+                                x2={pns[i + 1].position.x}
+                                y2={pns[i + 1].position.y}
                                 onMouseMove={(e) => {
                                   handleLinkHover(d, 'A', e);
                                 }}
@@ -831,9 +836,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                                 }}
                                 style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                               ></line>
-                            )
-                        })
-                    ) : ('') }
+                            );
+                          })
+                      : ''}
                     {tempNodes[d.source.index].isConnection ? (
                       <circle
                         cx={d.lineStartA.x}
@@ -922,7 +927,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   return;
                 }
                 const transform = getPercentPoint(
-                  (d.path ? d.lineEndA : d.lineStartZ),
+                  d.path ? d.lineEndA : d.lineStartZ,
                   d.lineStartA,
                   (d.path ? 1.0 : 0.5) * (d.sides.A.labelOffset / 100)
                 );
@@ -969,10 +974,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   return;
                 }
                 const transform = getPercentPoint(
-                        (d.path ? d.lineEndZ : d.lineStartA),
-                        d.lineStartZ,
-                        (d.path ? 1.0 : 0.5) * (d.sides.Z.labelOffset / 100)
-                    );
+                  d.path ? d.lineEndZ : d.lineStartA,
+                  d.lineStartZ,
+                  (d.path ? 1.0 : 0.5) * (d.sides.Z.labelOffset / 100)
+                );
                 return (
                   <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
                     <rect
@@ -1074,43 +1079,41 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               ))}
             </g>
             <g>
-                {wm.paths.map((path, i) => {
-                    return (
-                        wm.paths[i].nodes.map((pn, ni) => (
-                            <PathNodeRenderer
-                                key={pn.id}
-                                index={ni}
-                                node={pn}
-                                onDrag={(e, position) => {
-                                    if (e.ctrlKey) {
-                                        return;
-                                    }
-                                    
-                                    let val = wm.paths[i].nodes[ni].position
-        
-                                    const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
-                                    val.x = Math.round(
-                                    wm.settings.panel.grid.enabled
-                                        ? wm.paths[i].nodes[ni].position.x + (val.x + scaledPos.x - wm.paths[i].nodes[ni].position.x)
-                                        : val.x + scaledPos.x
-                                    );
-                                    val.y = Math.round(
-                                    wm.settings.panel.grid.enabled
-                                        ? wm.paths[i].nodes[ni].position.y + (val.y + scaledPos.y - wm.paths[i].nodes[ni].position.y)
-                                        : val.y + scaledPos.y
-                                    );
-                                    
-                                    wm.paths[i].nodes[ni].position = val;
-                                    onOptionsChange({
-                                        ...options,
-                                        weathermap: wm,
-                                    })
-                                }}
-                                onStop={() => {}}
-                            />
-                        ))
-                    )
-                })}
+              {wm.paths.map((path, i) => {
+                return wm.paths[i].nodes.map((pn, ni) => (
+                  <PathNodeRenderer
+                    key={pn.id}
+                    index={ni}
+                    node={pn}
+                    onDrag={(e, position) => {
+                      if (e.ctrlKey) {
+                        return;
+                      }
+
+                      let val = wm.paths[i].nodes[ni].position;
+
+                      const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
+                      val.x = Math.round(
+                        wm.settings.panel.grid.enabled
+                          ? wm.paths[i].nodes[ni].position.x + (val.x + scaledPos.x - wm.paths[i].nodes[ni].position.x)
+                          : val.x + scaledPos.x
+                      );
+                      val.y = Math.round(
+                        wm.settings.panel.grid.enabled
+                          ? wm.paths[i].nodes[ni].position.y + (val.y + scaledPos.y - wm.paths[i].nodes[ni].position.y)
+                          : val.y + scaledPos.y
+                      );
+
+                      wm.paths[i].nodes[ni].position = val;
+                      onOptionsChange({
+                        ...options,
+                        weathermap: wm,
+                      });
+                    }}
+                    onStop={() => {}}
+                  />
+                ));
+              })}
             </g>
           </g>
         </svg>
