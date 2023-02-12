@@ -110,6 +110,7 @@ export interface Link {
   arrows: ArrowOptions;
   stroke: number;
   showThroughputPercentage: boolean;
+  path?: string;
 }
 
 export interface DrawnNode extends Node {

@@ -358,6 +358,22 @@ export const LinkForm = (props: Props) => {
                   }}
                 />
               </InlineField>
+              <InlineField grow label={'Link Path'} style={{ width: '100%' }}>
+                  <Select 
+                    value={value.paths.filter(p => p.id == link.path)[0]}
+                    options={value.paths}
+                    onChange={(v) => {
+                        let wm = value;
+                        wm.links[i].path = v.id;
+                        onChange(wm);
+                        console.log(wm)
+                    }}
+                    getOptionValue={(p) => (p.id ? p.id : "Unknown option value")}
+                    getOptionLabel={(p) => (p.name ? p.name : "Unknown option name")}
+                    placeholder={"Select a Path"}
+                    isClearable
+                  />
+              </InlineField>
               <ControlledCollapse label="Stroke and Arrow">
                 <InlineField grow label="Link Stroke Width" className={styles.inlineField}>
                   <Slider
