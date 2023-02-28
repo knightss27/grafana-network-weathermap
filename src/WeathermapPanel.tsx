@@ -356,38 +356,46 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
     if (toReturn.path) {
       let path = wm.paths.filter((p) => p.id == toReturn.path)[0];
+      let middlePathNode = null;
+      if (path.nodes.length % 2 == 1) {
+        middlePathNode = path.nodes[Math.floor(path.nodes.length / 2)].position;
+      }
+
+      let leftPathNode = toReturn.lineStartA;
+      let rightPathNode = toReturn.lineStartZ;
+
+      if (path.nodes.length > 1 && middlePathNode) {
+        let middleIndex = Math.floor(path.nodes.length / 2);
+        leftPathNode = path.nodes[middleIndex - 1].position;
+        rightPathNode = path.nodes[middleIndex + 1].position;
+      }
+
+      if (middlePathNode) {
+        toReturn.arrowCenterA = getOffsetPoint(middlePathNode, leftPathNode, -toReturn.arrows.offset);
+        toReturn.arrowPolygonA = getArrowPolygon(
+          leftPathNode,
+          toReturn.arrowCenterA,
+          toReturn.arrows.height,
+          toReturn.arrows.width
+        );
+
+        toReturn.arrowCenterZ = getOffsetPoint(middlePathNode, rightPathNode, -toReturn.arrows.offset);
+        toReturn.arrowPolygonZ = getArrowPolygon(
+          rightPathNode,
+          toReturn.arrowCenterZ,
+          toReturn.arrows.height,
+          toReturn.arrows.width
+        );
+      }
+
       let pathFirstNode = path.nodes[0];
       if (pathFirstNode) {
-        toReturn.lineEndA = getOffsetPoint(
-          pathFirstNode.position,
-          toReturn.lineStartA,
-          -toReturn.arrows.offset - toReturn.arrows.height
-        );
+        toReturn.lineEndA = pathFirstNode.position;
       }
       let pathLastNode = path.nodes[path.nodes.length - 1];
       if (pathLastNode) {
-        toReturn.lineEndZ = getOffsetPoint(
-          pathLastNode.position,
-          toReturn.lineStartZ,
-          -toReturn.arrows.offset - toReturn.arrows.height
-        );
+        toReturn.lineEndZ = pathLastNode.position;
       }
-
-      toReturn.arrowCenterA = getOffsetPoint(pathFirstNode.position, toReturn.lineStartA, -toReturn.arrows.offset);
-      toReturn.arrowPolygonA = getArrowPolygon(
-        toReturn.lineStartA,
-        toReturn.arrowCenterA,
-        toReturn.arrows.height,
-        toReturn.arrows.width
-      );
-
-      toReturn.arrowCenterZ = getOffsetPoint(pathLastNode.position, toReturn.lineStartZ, -toReturn.arrows.offset);
-      toReturn.arrowPolygonZ = getArrowPolygon(
-        toReturn.lineStartZ,
-        toReturn.arrowCenterZ,
-        toReturn.arrows.height,
-        toReturn.arrows.width
-      );
     } else {
       toReturn.arrowCenterA = getMiddlePoint(toReturn.lineStartZ, toReturn.lineStartA, -toReturn.arrows.offset);
       toReturn.arrowPolygonA = getArrowPolygon(
@@ -821,10 +829,44 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                               <line
                                 strokeWidth={d.stroke}
                                 stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
-                                x1={n.position.x}
-                                y1={n.position.y}
-                                x2={pns[i + 1].position.x}
-                                y2={pns[i + 1].position.y}
+                                // Offset for the arrow looking backward
+                                x1={
+                                  i === Math.floor(pns.length / 2)
+                                    ? getOffsetPoint(
+                                        n.position,
+                                        pns[i + 1].position,
+                                        -d.arrows.offset - d.arrows.height
+                                      ).x
+                                    : n.position.x
+                                }
+                                y1={
+                                  i === Math.floor(pns.length / 2)
+                                    ? getOffsetPoint(
+                                        n.position,
+                                        pns[i + 1].position,
+                                        -d.arrows.offset - d.arrows.height
+                                      ).y
+                                    : n.position.y
+                                }
+                                // Offset for the arrow looking forward
+                                x2={
+                                  i + 1 === Math.floor(pns.length / 2)
+                                    ? getOffsetPoint(
+                                        pns[i + 1].position,
+                                        n.position,
+                                        -d.arrows.offset - d.arrows.height
+                                      ).x
+                                    : pns[i + 1].position.x
+                                }
+                                y2={
+                                  i + 1 === Math.floor(pns.length / 2)
+                                    ? getOffsetPoint(
+                                        pns[i + 1].position,
+                                        n.position,
+                                        -d.arrows.offset - d.arrows.height
+                                      ).y
+                                    : pns[i + 1].position.y
+                                }
                                 onMouseMove={(e) => {
                                   handleLinkHover(d, 'A', e);
                                 }}
@@ -1110,7 +1152,21 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                         weathermap: wm,
                       });
                     }}
-                    onStop={() => {}}
+                    onStop={(e, position) => {
+                      let current: Weathermap = wm;
+                      current.paths[i].nodes[ni].position = {
+                        x: wm.settings.panel.grid.enabled
+                          ? nearestMultiple(wm.paths[i].nodes[ni].position.x, wm.settings.panel.grid.size)
+                          : wm.paths[i].nodes[ni].position.x,
+                        y: wm.settings.panel.grid.enabled
+                          ? nearestMultiple(wm.paths[i].nodes[ni].position.y, wm.settings.panel.grid.size)
+                          : wm.paths[i].nodes[ni].position.y,
+                      };
+                      onOptionsChange({
+                        ...options,
+                        weathermap: current,
+                      });
+                    }}
                   />
                 ));
               })}
