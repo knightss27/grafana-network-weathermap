@@ -259,13 +259,11 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       if (toReturn.sides[side].bandwidthQuery) {
         let dataFrame = dataFrameWithIds.filter((value) => value.id === toReturn.sides[side].bandwidthQuery);
 
-        // If we don't have any values, return early so the set values stay as they should
-        if (!(dataFrame[0] && dataFrame[0].value)) {
-          break;
+        // Ensure we have the values we should
+        if ((dataFrame[0] && dataFrame[0].value)) {
+            // If we have a value, go use it
+            toReturn.sides[side].bandwidth = dataFrame[0].value;
         }
-
-        // If we have a value, go use it
-        toReturn.sides[side].bandwidth = dataFrame[0].value;
       }
 
       // Set the display value to zero, just in case nothing exists
@@ -280,24 +278,22 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         let dataSource = toReturn.sides[side].query;
         let dataFrame = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
 
-        // If we don't have any values, return early so the set values stay as they should
-        if (!(dataFrame[0] && dataFrame[0].value)) {
-          break;
+        // Ensure we have the values we should
+        if ((dataFrame[0] && dataFrame[0].value)) {
+            // If we have a value, go use it
+            toReturn.sides[side].currentValue = dataFrame[0].value;
+
+            // Get the text formatted to KiB/MiB/etc.
+            let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
+            toReturn.sides[side].currentValueText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
+
+            // Get the percentage througput text
+            // Note that this does allow the text to be 0% even when a query doesn't return a value.
+            toReturn.sides[side].currentPercentageText =
+            toReturn.sides[side].bandwidth > 0
+                ? `${((toReturn.sides[side].currentValue / toReturn.sides[side].bandwidth) * 100).toFixed(2)}%`
+                : 'n/a%';
         }
-
-        // If we have a value, go use it
-        toReturn.sides[side].currentValue = dataFrame[0].value;
-
-        // Get the text formatted to KiB/MiB/etc.
-        let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
-        toReturn.sides[side].currentValueText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
-
-        // Get the percentage througput text
-        // Note that this does allow the text to be 0% even when a query doesn't return a value.
-        toReturn.sides[side].currentPercentageText =
-          toReturn.sides[side].bandwidth > 0
-            ? `${((toReturn.sides[side].currentValue / toReturn.sides[side].bandwidth) * 100).toFixed(2)}%`
-            : 'n/a%';
       }
 
       // Display throughput % when necessary
