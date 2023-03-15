@@ -1011,7 +1011,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             `
           )}
         >
-          {wm.settings.panel.showTimestamp ? timeRange.from.toLocaleString() : ''}
+          {wm.settings.panel.showTimestamp ? timeRange.to.toLocaleString() : ''}
         </div>
       </div>
     );
