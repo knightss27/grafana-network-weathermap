@@ -13,7 +13,7 @@ export const PathForm = ({ value, onChange }: Props) => {
 
   const addPath = () => {
     let wm = value;
-    wm.paths.push({ id: uuidv4(), name: `Path ${wm.paths.length}`, nodes: [] });
+    wm.paths.push({ id: uuidv4(), name: `Path ${wm.paths.length}`, nodes: [], numLinks: 0 });
     onChange(wm);
   };
 

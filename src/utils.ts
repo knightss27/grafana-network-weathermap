@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 16;
+export const CURRENT_VERSION = 17;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 

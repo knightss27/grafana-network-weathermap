@@ -88,6 +88,7 @@ export interface Path {
   id: string;
   name: string;
   nodes: PathNode[];
+  numLinks: number;
 }
 
 export interface LinkSide {

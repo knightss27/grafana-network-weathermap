@@ -391,6 +391,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       let pathFirstNode = path.nodes[0];
       if (pathFirstNode) {
         toReturn.lineEndA = pathFirstNode.position;
+        // Need to find a good way to keep track of how many links follow any given path
+        
       }
       let pathLastNode = path.nodes[path.nodes.length - 1];
       if (pathLastNode) {
@@ -826,6 +828,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                               return;
                             }
                             return (
+                                <React.Fragment>
                               <line
                                 strokeWidth={d.stroke}
                                 stroke={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
@@ -878,6 +881,18 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                                 }}
                                 style={d.sides.A.dashboardLink.length > 0 ? { cursor: 'pointer' } : {}}
                               ></line>
+                              {i === 0 || (i !== pns.length-1 && i + 1 !== Math.floor(pns.length / 2)) ?
+                                (
+                                    <circle
+                                    cx={pns[i === 0 ? i : i + 1].position.x}
+                                    cy={pns[i === 0 ? i : i + 1].position.y}
+                                    r={d.stroke / 2}
+                                    fill={getScaleColor(d.sides.A.currentValue, d.sides.A.bandwidth)}
+                                    style={{ paintOrder: 'stroke' }}
+                                ></circle>
+                                ) : ('')
+                            }
+                              </React.Fragment>
                             );
                           })
                       : ''}

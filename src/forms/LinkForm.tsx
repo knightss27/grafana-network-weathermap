@@ -365,6 +365,8 @@ export const LinkForm = (props: Props) => {
                   onChange={(v) => {
                     let wm = value;
                     wm.links[i].path = v.id;
+                    let path = wm.paths.filter(p => p.id == v.id)[0];
+                    path.numLinks += 1;
                     onChange(wm);
                     console.log(wm);
                   }}
