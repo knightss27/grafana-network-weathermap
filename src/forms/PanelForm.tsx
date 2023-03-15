@@ -419,6 +419,16 @@ export const PanelForm = ({ value, onChange }: Props) => {
             }}
           />
         </InlineLabel>
+        <InlineField grow label="Scale to Include Bandwidth" className={styles.inlineField}>
+          <InlineSwitch
+            value={value.settings.tooltip.scaleToBandwidth}
+            onChange={(e) => {
+              let wm = value;
+              wm.settings.tooltip.scaleToBandwidth = e.currentTarget.checked;
+              onChange(wm);
+            }}
+          />
+        </InlineField>
         <FormDivider title="Scale Options" />
         <InlineField grow label="Scale Title" className={styles.inlineField}>
           <Input

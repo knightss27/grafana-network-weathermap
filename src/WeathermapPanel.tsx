@@ -506,13 +506,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               Throughput (%) - Inbound: {hoveredLink.link.sides.Z.currentPercentageText}, Outbound:{' '}
               {hoveredLink.link.sides.A.currentPercentageText}
             </div>
-            <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
+            <div style={{ fontSize: wm.settings.tooltip.fontSize, paddingBottom: '4px' }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
             {(hoveredLink.link.sides.A.query || hoveredLink.link.sides.Z.query) && filteredGraphQueries.length > 0 ? (
               <React.Fragment>
                 <TimeSeries
-                  width={300}
+                  width={250}
                   height={100}
                   timeRange={timeRange}
                   timeZone={getTimeZone()}
@@ -538,7 +538,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   }}
                   tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
                     opts.softMin = 0;
-                    if (hoveredLink.link.sides[hoveredLink.side].bandwidth > 0) {
+                    if (
+                      wm.settings.tooltip.scaleToBandwidth &&
+                      hoveredLink.link.sides[hoveredLink.side].bandwidth > 0
+                    ) {
                       opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
                     }
                     return opts;
@@ -567,22 +570,29 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     );
                   }}
                 </TimeSeries>
-                <div style={{ display: 'flex', paddingTop: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', paddingTop: '10px' }}>
                   <div
                     style={{
-                      fontSize: wm.settings.tooltip.fontSize,
-                      borderLeft: `10px solid ${wm.settings.tooltip.inboundColor}`,
+                      width: '10px',
+                      height: '3px',
+                      background: wm.settings.tooltip.inboundColor,
                       paddingLeft: '5px',
-                      marginRight: '10px',
+                      marginRight: '4px',
                     }}
-                  >
-                    Inbound
-                  </div>
+                  ></div>
+                  <div style={{ fontSize: wm.settings.tooltip.fontSize }}>Inbound</div>
+                  <div
+                    style={{
+                      width: '10px',
+                      height: '3px',
+                      background: wm.settings.tooltip.outboundColor,
+                      marginLeft: '10px',
+                      marginRight: '4px',
+                    }}
+                  ></div>
                   <div
                     style={{
                       fontSize: wm.settings.tooltip.fontSize,
-                      borderLeft: `10px solid ${wm.settings.tooltip.outboundColor}`,
-                      paddingLeft: '5px',
                     }}
                   >
                     Outbound

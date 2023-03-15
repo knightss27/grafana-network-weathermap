@@ -4,12 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.3.5](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.4...v0.3.5) (2023-01-25)
 
-
 ### Features
 
-* dashboard links open in new tab ([2f45eba](https://github.com/knightss27/grafana-network-weathermap/commit/2f45eba0744a724412a77a1dea30add4ea9a124a))
-* graphs ([#41](https://github.com/knightss27/grafana-network-weathermap/issues/41), [#11](https://github.com/knightss27/grafana-network-weathermap/issues/11)) ([297b980](https://github.com/knightss27/grafana-network-weathermap/commit/297b98084d0dc04ab9b87030cba0bdf240400271))
-* node-specific dashboard links ([#36](https://github.com/knightss27/grafana-network-weathermap/issues/36)) ([5a9f51f](https://github.com/knightss27/grafana-network-weathermap/commit/5a9f51fad90d3f2a5431bb4de8a45f378de1d77b))
+- dashboard links open in new tab ([2f45eba](https://github.com/knightss27/grafana-network-weathermap/commit/2f45eba0744a724412a77a1dea30add4ea9a124a))
+- graphs ([#41](https://github.com/knightss27/grafana-network-weathermap/issues/41), [#11](https://github.com/knightss27/grafana-network-weathermap/issues/11)) ([297b980](https://github.com/knightss27/grafana-network-weathermap/commit/297b98084d0dc04ab9b87030cba0bdf240400271))
+- node-specific dashboard links ([#36](https://github.com/knightss27/grafana-network-weathermap/issues/36)) ([5a9f51f](https://github.com/knightss27/grafana-network-weathermap/commit/5a9f51fad90d3f2a5431bb4de8a45f378de1d77b))
 
 ### [0.3.4](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.3...v0.3.4) (2022-12-13)
 

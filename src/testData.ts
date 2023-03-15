@@ -80,6 +80,7 @@ export const getData = (theme: any): Weathermap => {
         backgroundColor: 'black',
         inboundColor: '#00cf00',
         outboundColor: '#fade2a',
+        scaleToBandwidth: false,
       },
       scale: {
         position: {
