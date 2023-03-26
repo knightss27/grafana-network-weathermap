@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.5...v0.3.6) (2023-03-26)
+
+
+### Features
+
+* customizable tooltip graph scaling ([#50](https://github.com/knightss27/grafana-network-weathermap/issues/50)) ([979868b](https://github.com/knightss27/grafana-network-weathermap/commit/979868b3d6b265c518a855d042ba50350d083962))
+
+
+### Bug Fixes
+
+* 0 values no longer treated as null ([#51](https://github.com/knightss27/grafana-network-weathermap/issues/51)) ([56481a3](https://github.com/knightss27/grafana-network-weathermap/commit/56481a38a1441dd749e7ee9ab8f26b5fd0f1cf38))
+* do not assume field existence ([#46](https://github.com/knightss27/grafana-network-weathermap/issues/46)) ([f895bea](https://github.com/knightss27/grafana-network-weathermap/commit/f895bea898e859348130959b59bc2bec6a82eaf6))
+* missing bandwidth queries default back to 0 ([612973e](https://github.com/knightss27/grafana-network-weathermap/commit/612973e5341dfdd9540a809f633ffcaf8732d844))
+* overwrite last values when query is null ([#47](https://github.com/knightss27/grafana-network-weathermap/issues/47)) ([f34afd2](https://github.com/knightss27/grafana-network-weathermap/commit/f34afd2e641b081265565712d0fb10eab461670e))
+* timestamp uses correct end of timerange ([56b8d34](https://github.com/knightss27/grafana-network-weathermap/commit/56b8d34f3fec5015733c84ba0f767b3c38fced39))
+
 ### [0.3.5](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.4...v0.3.5) (2023-01-25)
 
 ### Features
