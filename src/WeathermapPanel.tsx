@@ -260,7 +260,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         let dataFrame = dataFrameWithIds.filter((value) => value.id === toReturn.sides[side].bandwidthQuery);
 
         // Ensure we have the values we should
-        if (dataFrame[0] && dataFrame[0].value) {
+        if (dataFrame[0] && dataFrame[0].value != undefined) {
           // If we have a value, go use it
           toReturn.sides[side].bandwidth = dataFrame[0].value;
         }
@@ -279,7 +279,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         let dataFrame = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
 
         // Ensure we have the values we should
-        if (dataFrame[0] && dataFrame[0].value) {
+        if (dataFrame[0] && dataFrame[0].value != undefined) {
           // If we have a value, go use it
           toReturn.sides[side].currentValue = dataFrame[0].value;
 
