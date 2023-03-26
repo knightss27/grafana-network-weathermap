@@ -263,6 +263,8 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         if (dataFrame[0] !== undefined && dataFrame[0].value !== undefined) {
           // If we have a value, go use it
           toReturn.sides[side].bandwidth = dataFrame[0].value;
+        } else {
+          toReturn.sides[side].bandwidth = 0;
         }
       }
 
