@@ -241,6 +241,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
     let dataFrameWithIds: Array<{ value: number; id: string }> = [];
     data.series.forEach((frame) => {
+      if (frame.fields.length < 2) {
+        return;
+      }
       dataFrameWithIds.push({
         value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
         id: getDataFrameName(frame, data.series),
