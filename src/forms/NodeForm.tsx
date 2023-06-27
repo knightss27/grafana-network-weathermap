@@ -264,7 +264,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
       {value.nodes.map((node, i) => {
         if (currentNode && node.id === currentNode.id) {
           return (
-            <React.Fragment>
+            <React.Fragment key={node.id}>
               <InlineFieldRow className={styles.inlineRow}>
                 <InlineField grow label={'X'}>
                   <Input

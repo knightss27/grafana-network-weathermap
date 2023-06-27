@@ -7,12 +7,13 @@ import {
   InlineLabel,
   InlineSwitch,
   Input,
+  Select,
   Slider,
   stylesFactory,
   UnitPicker,
   useTheme2,
 } from '@grafana/ui';
-import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
+import { GrafanaTheme2, SelectableValue, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 import { FormDivider } from './FormDivider';
 import { css } from 'emotion';
@@ -43,7 +44,7 @@ export const PanelForm = ({ value, onChange }: Props) => {
         <InlineField grow label="Background:" className={styles.inlineField}>
           <React.Fragment></React.Fragment>
         </InlineField>
-        <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
+        <InlineLabel width={'auto'} style={{ marginBottom: '4px', marginLeft: '12px' }}>
           - Color:
           <ColorPicker
             color={
@@ -54,52 +55,69 @@ export const PanelForm = ({ value, onChange }: Props) => {
             onChange={handleColorChange}
           />
         </InlineLabel>
-        {/* <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
-          - Image:
-          <FileUpload
-            size="sm"
-            accept="image/*"
-            onFileUpload={({ currentTarget }) => {
-              if (
-                currentTarget.files &&
-                currentTarget.files[0] &&
-                currentTarget.files[0].type.startsWith('image') &&
-                currentTarget.files[0].size <= 1000000
-              ) {
-                console.log('Reading file: ' + currentTarget.files[0].name);
-                const reader = new FileReader();
-                reader.onload = (e: any) => {
-                  if (value.settings.panel.backgroundColor.startsWith('image')) {
-                    handleColorChange(
-                      'image|' + value.settings.panel.backgroundColor.split('|', 3)[1] + '|' + e.target.result
-                    );
-                  } else {
-                    handleColorChange('image|' + value.settings.panel.backgroundColor + '|' + e.target.result);
-                  }
-                };
-                reader.readAsDataURL(currentTarget.files[0]);
-              } else {
-                handleFileUploadErrors(currentTarget.files);
-              }
-            }}
-          />
-          {value.settings.panel.backgroundColor.startsWith('image') ? (
+        <InlineField grow label={'- Image:'} style={{ marginBottom: '4px', marginLeft: '12px' }}>
+        {value.settings.panel.backgroundImage ? (
             <Button
-              variant="destructive"
-              icon="trash-alt"
-              size="sm"
-              onClick={() => {
+            variant="destructive"
+            size="md"
+            icon="trash-alt"
+            onClick={() => {
+              if (!confirm('Are you sure you want remove the background image?')) {
+                return;
+              }
+              let options = value;
+              options.settings.panel.backgroundImage = undefined;
+              onChange(options);
+            }}
+            style={{ justifyContent: 'center' }}
+          ></Button>
+          ) : (
+            <Button onClick={() => {
                 let options = value;
-                options.settings.panel.backgroundColor = value.settings.panel.backgroundColor.split('|', 3)[1];
+                options.settings.panel.backgroundImage =  {
+                    url: "",
+                    fit: "contain"
+                }
+                onChange(options);
+            }}
+            icon="plus"
+            style={{ justifyContent: 'center' }}
+            ></Button>
+          )}
+        </InlineField>
+          {value.settings.panel.backgroundImage ? ( <>
+          <InlineField grow label="Image Source" className={styles.inlineField} style={{marginLeft: '24px'}}>
+            <Input
+              value={value.settings.panel.backgroundImage.url}
+              placeholder={'https://example.com/background.jpg'}
+              type={'text'}
+              name={'bgImageURL'}
+              onChange={(e) => {
+                let options = value;
+                if (options.settings.panel.backgroundImage) {
+                    options.settings.panel.backgroundImage.url = e.currentTarget.value;
+                }
                 onChange(options);
               }}
-              style={{ justifyContent: 'center' }}
-            ></Button>
-          ) : (
-            ''
-          )}
-        </InlineLabel> */}
-        <InlineFieldRow className={styles.inlineRow}>
+            ></Input>
+          </InlineField>
+          <InlineField grow label="Image Fit" className={styles.inlineField} style={{marginLeft: '24px'}}>
+            <Select
+                onChange={(v) => {
+                    let options = value;
+                    if (options.settings.panel.backgroundImage) {
+                        options.settings.panel.backgroundImage.fit = v.value ? v.value : "contain";
+                    }
+                    onChange(options);
+                    // TODO: find out how to get this to show current selection well
+                }}
+                value={value.settings.panel.backgroundImage.fit}
+                options={['contain', 'cover', 'auto'].map(s => { return { label: s, value: s}})}
+                getOptionValue={p => p.value ? p.value : ''}
+                placeholder={'Select image fit'}
+            ></Select>
+          </InlineField>
+          </>) : ('') }
           <InlineField grow label="Viewbox Width (px)" className={styles.inlineField}>
             <Input
               value={value.settings.panel.panelSize.width}
@@ -172,7 +190,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-        </InlineFieldRow>
         <FormDivider title="Link Options" />
         <InlineField grow label={'Toggle all as Percentage Throughput'}>
           <InlineSwitch
@@ -333,7 +350,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
           ''
         )}
         <FormDivider title="Font Options" />
-        <InlineFieldRow className={styles.inlineRow}>
           <InlineField grow label="Node Font Size" className={styles.inlineField}>
             <Slider
               min={2}
@@ -360,7 +376,6 @@ export const PanelForm = ({ value, onChange }: Props) => {
               }}
             />
           </InlineField>
-        </InlineFieldRow>
         <FormDivider title="Tootlip Options" />
         <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
           Background Color:

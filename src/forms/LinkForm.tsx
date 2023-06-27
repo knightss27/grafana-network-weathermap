@@ -218,7 +218,7 @@ export const LinkForm = (props: Props) => {
       {value.links.map((link: Link, i) => {
         if (currentLink && link.id === currentLink.id) {
           return (
-            <React.Fragment>
+            <React.Fragment key={link.id}>
               {Object.values(link.sides).map((side: LinkSide, sideIndex) => {
                 const sName: 'A' | 'Z' = sideIndex === 0 ? 'A' : 'Z';
                 return (

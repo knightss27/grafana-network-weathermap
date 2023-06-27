@@ -34,8 +34,6 @@ import {
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
-import { AxisProps } from '@grafana/ui/components/uPlot/config/UPlotAxisBuilder';
-import { ScaleProps } from '@grafana/ui/components/uPlot/config/UPlotScaleBuilder';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
@@ -536,18 +534,19 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     displayMode: LegendDisplayMode.List,
                     placement: 'bottom',
                     isVisible: true,
+		    showLegend: true,
                   }}
-                  tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
+                  tweakScale={(opts, forField: Field<any, Vector<any>>) => {
                     opts.softMin = 0;
                     if (
                       wm.settings.tooltip.scaleToBandwidth &&
                       hoveredLink.link.sides[hoveredLink.side].bandwidth > 0
                     ) {
-                      opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
+                     opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
                     }
                     return opts;
                   }}
-                  tweakAxis={(opts: AxisProps, forField: Field<any, Vector<any>>) => {
+                  tweakAxis={(opts, forField: Field<any, Vector<any>>) => {
                     opts.formatValue = getlinkGraphFormatter(
                       hoveredLink.link.units
                         ? hoveredLink.link.units
@@ -613,13 +612,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundImage: wm.settings.panel.backgroundColor.startsWith('image')
-              ? `url(${wm.settings.panel.backgroundColor.split('|', 3)[2]})`
+            backgroundImage: wm.settings.panel.backgroundImage
+              ? `url(${wm.settings.panel.backgroundImage.url})`
               : 'none',
-            backgroundSize: 'contain',
+            backgroundSize: wm.settings.panel.backgroundImage?.fit,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: wm.settings.panel.backgroundColor.startsWith('image')
+            backgroundColor: wm.settings.panel.backgroundImage
               ? 'none'
               : wm.settings.panel.backgroundColor,
           }}
