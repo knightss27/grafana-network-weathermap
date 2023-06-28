@@ -534,7 +534,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     displayMode: LegendDisplayMode.List,
                     placement: 'bottom',
                     isVisible: true,
-		    showLegend: true,
+                    showLegend: true,
                   }}
                   tweakScale={(opts, forField: Field<any, Vector<any>>) => {
                     opts.softMin = 0;
@@ -542,7 +542,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       wm.settings.tooltip.scaleToBandwidth &&
                       hoveredLink.link.sides[hoveredLink.side].bandwidth > 0
                     ) {
-                     opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
+                      opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
                     }
                     return opts;
                   }}
@@ -618,9 +618,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             backgroundSize: wm.settings.panel.backgroundImage?.fit,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: wm.settings.panel.backgroundImage
-              ? 'none'
-              : wm.settings.panel.backgroundColor,
+            backgroundColor: wm.settings.panel.backgroundImage ? 'none' : wm.settings.panel.backgroundColor,
           }}
           id={`nw-${wm.id}${isEditMode ? '_' : ''}`}
           width={width2}

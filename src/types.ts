@@ -15,8 +15,8 @@ export interface PanelOptions {
 }
 
 export interface BGImageOptions {
-    url: string;
-    fit: string;
+  url: string;
+  fit: string;
 }
 
 export interface TooltipOptions {

@@ -13,11 +13,10 @@ import {
   UnitPicker,
   useTheme2,
 } from '@grafana/ui';
-import { GrafanaTheme2, SelectableValue, StandardEditorProps } from '@grafana/data';
+import { GrafanaTheme2, StandardEditorProps } from '@grafana/data';
 import { Weathermap } from 'types';
 import { FormDivider } from './FormDivider';
 import { css } from 'emotion';
-// import { handleFileUploadErrors } from 'utils';
 
 interface Settings {}
 
@@ -56,140 +55,145 @@ export const PanelForm = ({ value, onChange }: Props) => {
           />
         </InlineLabel>
         <InlineField grow label={'- Image:'} style={{ marginBottom: '4px', marginLeft: '12px' }}>
-        {value.settings.panel.backgroundImage ? (
+          {value.settings.panel.backgroundImage ? (
             <Button
-            variant="destructive"
-            size="md"
-            icon="trash-alt"
-            onClick={() => {
-              if (!confirm('Are you sure you want remove the background image?')) {
-                return;
-              }
-              let options = value;
-              options.settings.panel.backgroundImage = undefined;
-              onChange(options);
-            }}
-            style={{ justifyContent: 'center' }}
-          ></Button>
-          ) : (
-            <Button onClick={() => {
-                let options = value;
-                options.settings.panel.backgroundImage =  {
-                    url: "",
-                    fit: "contain"
+              variant="destructive"
+              size="md"
+              icon="trash-alt"
+              onClick={() => {
+                if (!confirm('Are you sure you want remove the background image?')) {
+                  return;
                 }
+                let options = value;
+                options.settings.panel.backgroundImage = undefined;
                 onChange(options);
-            }}
-            icon="plus"
-            style={{ justifyContent: 'center' }}
+              }}
+              style={{ justifyContent: 'center' }}
+            ></Button>
+          ) : (
+            <Button
+              onClick={() => {
+                let options = value;
+                options.settings.panel.backgroundImage = {
+                  url: '',
+                  fit: 'contain',
+                };
+                onChange(options);
+              }}
+              icon="plus"
+              style={{ justifyContent: 'center' }}
             ></Button>
           )}
         </InlineField>
-          {value.settings.panel.backgroundImage ? ( <>
-          <InlineField grow label="Image Source" className={styles.inlineField} style={{marginLeft: '24px'}}>
-            <Input
-              value={value.settings.panel.backgroundImage.url}
-              placeholder={'https://example.com/background.jpg'}
-              type={'text'}
-              name={'bgImageURL'}
-              onChange={(e) => {
-                let options = value;
-                if (options.settings.panel.backgroundImage) {
+        {value.settings.panel.backgroundImage ? (
+          <>
+            <InlineField grow label="Image Source" className={styles.inlineField} style={{ marginLeft: '24px' }}>
+              <Input
+                value={value.settings.panel.backgroundImage.url}
+                placeholder={'https://example.com/background.jpg'}
+                type={'text'}
+                name={'bgImageURL'}
+                onChange={(e) => {
+                  let options = value;
+                  if (options.settings.panel.backgroundImage) {
                     options.settings.panel.backgroundImage.url = e.currentTarget.value;
-                }
-                onChange(options);
-              }}
-            ></Input>
-          </InlineField>
-          <InlineField grow label="Image Fit" className={styles.inlineField} style={{marginLeft: '24px'}}>
-            <Select
+                  }
+                  onChange(options);
+                }}
+              ></Input>
+            </InlineField>
+            <InlineField grow label="Image Fit" className={styles.inlineField} style={{ marginLeft: '24px' }}>
+              <Select
                 onChange={(v) => {
-                    let options = value;
-                    if (options.settings.panel.backgroundImage) {
-                        options.settings.panel.backgroundImage.fit = v.value ? v.value : "contain";
-                    }
-                    onChange(options);
-                    // TODO: find out how to get this to show current selection well
+                  let options = value;
+                  if (options.settings.panel.backgroundImage) {
+                    options.settings.panel.backgroundImage.fit = v.value ? v.value : 'contain';
+                  }
+                  onChange(options);
                 }}
                 value={value.settings.panel.backgroundImage.fit}
-                options={['contain', 'cover', 'auto'].map(s => { return { label: s, value: s}})}
-                getOptionValue={p => p.value ? p.value : ''}
+                options={['contain', 'cover', 'auto'].map((s) => {
+                  return { label: s, value: s };
+                })}
                 placeholder={'Select image fit'}
-            ></Select>
-          </InlineField>
-          </>) : ('') }
-          <InlineField grow label="Viewbox Width (px)" className={styles.inlineField}>
-            <Input
-              value={value.settings.panel.panelSize.width}
-              placeholder={'Panel Width'}
-              type={'number'}
-              name={'panelWidth'}
-              onChange={(e) => {
-                let options = value;
-                options.settings.panel.panelSize.width = e.currentTarget.valueAsNumber;
-                onChange(options);
-              }}
-            ></Input>
-          </InlineField>
-          <InlineField grow label="Viewbox Height (px)" className={styles.inlineField}>
-            <Input
-              value={value.settings.panel.panelSize.height}
-              placeholder={'Panel Height'}
-              type={'number'}
-              name={'panelHeight'}
-              onChange={(e) => {
-                let options = value;
-                options.settings.panel.panelSize.height = e.currentTarget.valueAsNumber;
-                onChange(options);
-              }}
-            ></Input>
-          </InlineField>
-          <InlineField grow label="Zoom Scale" className={styles.inlineField}>
-            <Input
-              value={value.settings.panel.zoomScale}
-              placeholder={'Zoom Scale'}
-              type={'number'}
-              onChange={(e) => {
-                let options = value;
-                options.settings.panel.zoomScale = e.currentTarget.valueAsNumber;
-                onChange(options);
-              }}
-            ></Input>
-          </InlineField>
-          <InlineField grow label="View Offset X" className={styles.inlineField}>
-            <Input
-              value={value.settings.panel.offset.x}
-              placeholder={'Offset X'}
-              type={'number'}
-              onChange={(e) => {
-                let options = value;
-                options.settings.panel.offset.x = e.currentTarget.valueAsNumber;
-                onChange(options);
-              }}
-            ></Input>
-          </InlineField>
-          <InlineField grow label="View Offset Y" className={styles.inlineField}>
-            <Input
-              value={value.settings.panel.offset.y}
-              placeholder={'Offset Y'}
-              type={'number'}
-              onChange={(e) => {
-                let options = value;
-                options.settings.panel.offset.y = e.currentTarget.valueAsNumber;
-                onChange(options);
-              }}
-            ></Input>
-          </InlineField>
-          <InlineField grow label={'Display Timestamp'}>
-            <InlineSwitch
-              value={value.settings.panel.showTimestamp}
-              onChange={(e) => {
-                let wm = value;
-                wm.settings.panel.showTimestamp = e.currentTarget.checked;
-                onChange(wm);
-              }}
-            />
-          </InlineField>
+              ></Select>
+            </InlineField>
+          </>
+        ) : (
+          ''
+        )}
+        <InlineField grow label="Viewbox Width (px)" className={styles.inlineField}>
+          <Input
+            value={value.settings.panel.panelSize.width}
+            placeholder={'Panel Width'}
+            type={'number'}
+            name={'panelWidth'}
+            onChange={(e) => {
+              let options = value;
+              options.settings.panel.panelSize.width = e.currentTarget.valueAsNumber;
+              onChange(options);
+            }}
+          ></Input>
+        </InlineField>
+        <InlineField grow label="Viewbox Height (px)" className={styles.inlineField}>
+          <Input
+            value={value.settings.panel.panelSize.height}
+            placeholder={'Panel Height'}
+            type={'number'}
+            name={'panelHeight'}
+            onChange={(e) => {
+              let options = value;
+              options.settings.panel.panelSize.height = e.currentTarget.valueAsNumber;
+              onChange(options);
+            }}
+          ></Input>
+        </InlineField>
+        <InlineField grow label="Zoom Scale" className={styles.inlineField}>
+          <Input
+            value={value.settings.panel.zoomScale}
+            placeholder={'Zoom Scale'}
+            type={'number'}
+            onChange={(e) => {
+              let options = value;
+              options.settings.panel.zoomScale = e.currentTarget.valueAsNumber;
+              onChange(options);
+            }}
+          ></Input>
+        </InlineField>
+        <InlineField grow label="View Offset X" className={styles.inlineField}>
+          <Input
+            value={value.settings.panel.offset.x}
+            placeholder={'Offset X'}
+            type={'number'}
+            onChange={(e) => {
+              let options = value;
+              options.settings.panel.offset.x = e.currentTarget.valueAsNumber;
+              onChange(options);
+            }}
+          ></Input>
+        </InlineField>
+        <InlineField grow label="View Offset Y" className={styles.inlineField}>
+          <Input
+            value={value.settings.panel.offset.y}
+            placeholder={'Offset Y'}
+            type={'number'}
+            onChange={(e) => {
+              let options = value;
+              options.settings.panel.offset.y = e.currentTarget.valueAsNumber;
+              onChange(options);
+            }}
+          ></Input>
+        </InlineField>
+        <InlineField grow label={'Display Timestamp'}>
+          <InlineSwitch
+            value={value.settings.panel.showTimestamp}
+            onChange={(e) => {
+              let wm = value;
+              wm.settings.panel.showTimestamp = e.currentTarget.checked;
+              onChange(wm);
+            }}
+          />
+        </InlineField>
         <FormDivider title="Link Options" />
         <InlineField grow label={'Toggle all as Percentage Throughput'}>
           <InlineSwitch
@@ -350,32 +354,32 @@ export const PanelForm = ({ value, onChange }: Props) => {
           ''
         )}
         <FormDivider title="Font Options" />
-          <InlineField grow label="Node Font Size" className={styles.inlineField}>
-            <Slider
-              min={2}
-              max={40}
-              value={value.settings.fontSizing.node}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.fontSizing.node = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
-          <InlineField grow label="Link Font Size" className={styles.inlineField}>
-            <Slider
-              min={2}
-              max={40}
-              value={value.settings.fontSizing.link}
-              step={1}
-              onChange={(num) => {
-                let options = value;
-                options.settings.fontSizing.link = num;
-                onChange(options);
-              }}
-            />
-          </InlineField>
+        <InlineField grow label="Node Font Size" className={styles.inlineField}>
+          <Slider
+            min={2}
+            max={40}
+            value={value.settings.fontSizing.node}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.fontSizing.node = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
+        <InlineField grow label="Link Font Size" className={styles.inlineField}>
+          <Slider
+            min={2}
+            max={40}
+            value={value.settings.fontSizing.link}
+            step={1}
+            onChange={(num) => {
+              let options = value;
+              options.settings.fontSizing.link = num;
+              onChange(options);
+            }}
+          />
+        </InlineField>
         <FormDivider title="Tootlip Options" />
         <InlineLabel width={'auto'} style={{ marginBottom: '4px' }}>
           Background Color:
