@@ -37,7 +37,7 @@ import ColorScale from 'components/ColorScale';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
-  let toReturn: DrawnNode = Object.create(d);
+  let toReturn: DrawnNode = {...d} as DrawnNode;
   toReturn.index = i;
   toReturn.x = toReturn.position[0];
   toReturn.y = toReturn.position[1];
@@ -227,8 +227,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   // Calculate link positions / text / colors / etc.
   function generateDrawnLink(d: Link, i: number): DrawnLink {
-    let toReturn: DrawnLink = Object.create(d);
+    let toReturn: DrawnLink = {...d, sides: { A: {...d.sides.A}, Z: {...d.sides.Z}}} as DrawnLink;
     toReturn.index = i;
+    
     const linkValueFormatter = getlinkValueFormatter(
       d.units ? d.units : wm.settings.link.defaultUnits ? wm.settings.link.defaultUnits : 'bps'
     );
@@ -365,7 +366,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   // Minimize uneeded state changes
   const mounted = useRef(false);
 
-  // Update nodes on props change
+  // Update nodes on props/data change
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
@@ -377,20 +378,19 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
+  }, [options, data]);
 
   tempNodes = nodes.slice();
 
-  // Update links on nodes change
+  // Update links on props/data change
   useEffect(() => {
     setLinks(
       options.weathermap.links.map((d, i) => {
         return generateDrawnLink(d, i);
       })
     );
-    // Yes, technically this allows for stale states if it were to updated in any way other than being passed down. But it's not.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes]);
+  }, [options, data]);
 
   const zoom = (e: WheelEvent) => {
     // Just don't allow zooming when not in edit mode
