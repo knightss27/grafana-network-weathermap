@@ -117,7 +117,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
       };
     } else {
       weathermap.nodes[i].nodeIcon!.src =
-        icon == 'custom_icon' ? '' : 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
+        icon === 'custom_icon' ? '' : 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
       weathermap.nodes[i].nodeIcon!.name = icon;
 
       if (weathermap.nodes[i].nodeIcon!.size.width === 0) {
@@ -326,7 +326,7 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                     placeholder={'Select an icon'}
                     isClearable
                   ></Select>
-                  {node.nodeIcon && node.nodeIcon.name == 'custom_icon' ? (
+                  {node.nodeIcon && node.nodeIcon.name === 'custom_icon' ? (
                     <>
                       <InlineField
                         grow
