@@ -37,7 +37,7 @@ import ColorScale from 'components/ColorScale';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
-  let toReturn: DrawnNode = {...d} as DrawnNode;
+  let toReturn: DrawnNode = { ...d } as DrawnNode;
   toReturn.index = i;
   toReturn.x = toReturn.position[0];
   toReturn.y = toReturn.position[1];
@@ -227,9 +227,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   // Calculate link positions / text / colors / etc.
   function generateDrawnLink(d: Link, i: number): DrawnLink {
-    let toReturn: DrawnLink = {...d, sides: { A: {...d.sides.A}, Z: {...d.sides.Z}}} as DrawnLink;
+    let toReturn: DrawnLink = { ...d, sides: { A: { ...d.sides.A }, Z: { ...d.sides.Z } } } as DrawnLink;
     toReturn.index = i;
-    
+
     const linkValueFormatter = getlinkValueFormatter(
       d.units ? d.units : wm.settings.link.defaultUnits ? wm.settings.link.defaultUnits : 'bps'
     );

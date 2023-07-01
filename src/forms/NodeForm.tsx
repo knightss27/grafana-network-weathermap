@@ -116,7 +116,8 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
         drawInside: false,
       };
     } else {
-      weathermap.nodes[i].nodeIcon!.src = 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
+      weathermap.nodes[i].nodeIcon!.src =
+        icon == 'custom_icon' ? '' : 'public/plugins/knightss27-weathermap-panel/icons/' + icon + '.svg';
       weathermap.nodes[i].nodeIcon!.name = icon;
 
       if (weathermap.nodes[i].nodeIcon!.size.width === 0) {
@@ -319,92 +320,82 @@ export const NodeForm = ({ value, onChange, context }: Props) => {
                       { label: 'Networking Icons', value: 'networking', options: networkingIconsFormatted },
                       { label: 'Database Icons', value: 'databases', options: databaseIconsFormatted },
                       { label: 'Computer Icons', value: 'computers_monitors', options: computerIconsFormatted },
+                      { label: 'Custom Icon', value: 'custom_icon' },
                     ]}
                     className={styles.nodeSelect}
                     placeholder={'Select an icon'}
                     isClearable
                   ></Select>
-                  {/* <InlineLabel className={styles.nodeSelect}>
-                    <FileUpload
-                      size="sm"
-                      className={styles.nodeSelect}
-                      accept="image/*"
-                      onFileUpload={({ currentTarget }) => {
-                        if (
-                          currentTarget.files &&
-                          currentTarget.files[0] &&
-                          currentTarget.files[0].type.startsWith('image') &&
-                          currentTarget.files[0].size <= 1000000
-                        ) {
-                          const reader = new FileReader();
-                          reader.onload = (e: any) => {
-                            let weathermap: Weathermap = value;
-                            weathermap.nodes[i].nodeIcon!.src = e.target.result;
-                            // @ts-ignore
-                            weathermap.nodes[i].nodeIcon!.name = currentTarget.files[0].name;
-                            if (weathermap.nodes[i].nodeIcon!.size.width === 0) {
-                              weathermap.nodes[i].nodeIcon!.size = { width: 40, height: 40 };
+                  {node.nodeIcon && node.nodeIcon.name == 'custom_icon' ? (
+                    <>
+                      <InlineField
+                        grow
+                        label="Custom Icon Source"
+                        className={styles.inlineField}
+                        style={{ marginLeft: '24px' }}
+                      >
+                        <Input
+                          value={node.nodeIcon.src}
+                          placeholder={'https://example.com/icon.svg'}
+                          type={'text'}
+                          name={'iconImageURL'}
+                          onChange={(e) => {
+                            let options = value;
+                            if (options.nodes[i].nodeIcon) {
+                              options.nodes[i].nodeIcon!.src = e.currentTarget.value;
                             }
-                            onChange(weathermap);
-                          };
-                          reader.readAsDataURL(currentTarget.files[0]);
-                        } else {
-                          handleFileUploadErrors(currentTarget.files);
-                        }
-                      }}
+                            onChange(options);
+                          }}
+                        ></Input>
+                      </InlineField>
+                    </>
+                  ) : (
+                    ''
+                  )}
+                  <InlineField grow label={'Width'}>
+                    <Input
+                      value={node.nodeIcon!.size.width}
+                      onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'width')}
+                      placeholder={'Width'}
+                      type={'number'}
+                      className={styles.nodeLabel}
+                      name={'iconWidth'}
                     />
-                    {node.nodeIcon?.name}
-                  </InlineLabel> */}
-                  <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField grow label={'Width'}>
-                      <Input
-                        value={node.nodeIcon!.size.width}
-                        onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'width')}
-                        placeholder={'Width'}
-                        type={'number'}
-                        className={styles.nodeLabel}
-                        name={'iconWidth'}
-                      />
-                    </InlineField>
-                    <InlineField grow label={'Height'}>
-                      <Input
-                        value={node.nodeIcon!.size.height}
-                        onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'height')}
-                        placeholder={'Height'}
-                        type={'number'}
-                        className={styles.nodeLabel}
-                        name={'iconHeight'}
-                      />
-                    </InlineField>
-                  </InlineFieldRow>
-                  <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField grow label={'Padding Horizontal'}>
-                      <Slider
-                        min={0}
-                        max={40}
-                        value={node.nodeIcon!.padding.horizontal}
-                        step={1}
-                        onChange={(num) => handleIconPaddingChange(num, i, 'horizontal')}
-                      />
-                    </InlineField>
-                    <InlineField grow label={'Padding Vertical'}>
-                      <Slider
-                        min={0}
-                        max={40}
-                        value={node.nodeIcon!.padding.vertical}
-                        step={1}
-                        onChange={(num) => handleIconPaddingChange(num, i, 'vertical')}
-                      />
-                    </InlineField>
-                  </InlineFieldRow>
-                  <InlineFieldRow className={styles.inlineRow}>
-                    <InlineField grow label={'Draw Inside'}>
-                      <InlineSwitch
-                        value={node.nodeIcon!.drawInside}
-                        onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
-                      />
-                    </InlineField>
-                  </InlineFieldRow>
+                  </InlineField>
+                  <InlineField grow label={'Height'}>
+                    <Input
+                      value={node.nodeIcon!.size.height}
+                      onChange={(e) => handleIconSizeChange(e.currentTarget.valueAsNumber, i, 'height')}
+                      placeholder={'Height'}
+                      type={'number'}
+                      className={styles.nodeLabel}
+                      name={'iconHeight'}
+                    />
+                  </InlineField>
+                  <InlineField grow label={'Padding Horizontal'}>
+                    <Slider
+                      min={0}
+                      max={40}
+                      value={node.nodeIcon!.padding.horizontal}
+                      step={1}
+                      onChange={(num) => handleIconPaddingChange(num, i, 'horizontal')}
+                    />
+                  </InlineField>
+                  <InlineField grow label={'Padding Vertical'}>
+                    <Slider
+                      min={0}
+                      max={40}
+                      value={node.nodeIcon!.padding.vertical}
+                      step={1}
+                      onChange={(num) => handleIconPaddingChange(num, i, 'vertical')}
+                    />
+                  </InlineField>
+                  <InlineField grow label={'Draw Inside'}>
+                    <InlineSwitch
+                      value={node.nodeIcon!.drawInside}
+                      onChange={(e) => handleIconDrawChange(e.currentTarget.checked, i)}
+                    />
+                  </InlineField>
                 </ControlledCollapse>
               </InlineFieldRow>
               <InlineFieldRow className={styles.inlineRow}>
