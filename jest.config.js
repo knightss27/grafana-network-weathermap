@@ -5,4 +5,5 @@ process.env.TZ = 'UTC';
 module.exports = {
   // Jest configuration provided by Grafana scaffolding
   ...require('./.config/jest.config'),
+  setupFilesAfterEnv: ["<rootDir>/jest-setup.js", "jest-canvas-mock"]
 };

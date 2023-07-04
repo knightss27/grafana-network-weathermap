@@ -17,7 +17,7 @@
     "typecheck": "tsc --noEmit"
   },
   "repository": "github:knightss27/grafana-network-weathermap",
-  "author": "knightss@catlin.edu",
+  "author": "seth@seth.cx",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/knightss27/grafana-network-weathermap/issues",
@@ -52,6 +52,7 @@
     "glob": "^10.2.7",
     "identity-obj-proxy": "3.0.0",
     "jest": "^29.5.0",
+    "jest-canvas-mock": "^2.5.2",
     "jest-environment-jsdom": "^29.5.0",
     "make-coverage-badge": "^1.2.0",
     "prettier": "^2.8.7",

@@ -16,6 +16,7 @@ test('getSolidFromAlphaColor', () => {
   expect(getSolidFromAlphaColor('rgba(255, 255, 255, 0.5)', '#000000')).toBe('rgb(127.5,127.5,127.5)');
 });
 
+// Doesn't work as expected in test env
 test('measureText', () => {
   expect(measureText('test', 12)).toHaveProperty('width', 4);
 });
