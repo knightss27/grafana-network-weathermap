@@ -7,7 +7,7 @@ This plugin brings customizeable and modern looking network weathermaps to Grafa
 
 [**Link to the WIKI!**](https://grafana-weathermap.seth.cx/) or [download the latest version.](https://github.com/knightss27/grafana-network-weathermap/releases/latest/). There are a lot of customization options for the weathermap, so it's recommended to read over the wiki at least at a glance to best understand how to use this plugin!
 
-You can nstall the current version from [their website](https://grafana.com/grafana/plugins/knightss27-weathermap-panel/) directly.
+You can install the current version from [their website](https://grafana.com/grafana/plugins/knightss27-weathermap-panel/) directly.
 
 ![Example Image 1](https://raw.githubusercontent.com/knightss27/grafana-network-weathermap/main/src/img/general-example.svg)
 
