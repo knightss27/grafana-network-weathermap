@@ -75,7 +75,10 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     onOptionsChange({ weathermap: handleVersionedStateUpdates(wm, theme) });
   }
 
+  // Check for editing-related feature set
   const isEditMode = window.location.search.includes('editPanel');
+
+  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -383,6 +386,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   tempNodes = nodes.slice();
 
   // Update links on props/data change
+  // TODO: Optimize this to only update the necessary links?
   useEffect(() => {
     setLinks(
       options.weathermap.links.map((d, i) => {
@@ -390,7 +394,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options, data]);
+  }, [options, data, nodes]); // need to keep nodes here for good looking updating
 
   const zoom = (e: WheelEvent) => {
     // Just don't allow zooming when not in edit mode
@@ -453,8 +457,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     }
     setHoveredLink(null as unknown as HoveredLink);
   };
-
-  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
 
   const filteredGraphQueries = data.series.filter((frame) => {
     let displayName = getDataFrameName(frame, data.series);
