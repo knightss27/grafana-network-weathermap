@@ -917,7 +917,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   (tempNodes[d.target.index].isConnection ? 1 : 0.5) * (d.sides.A.labelOffset / 100)
                 );
                 return (
-                  <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
+                  <g
+                    fontStyle={'italic'}
+                    transform={`translate(${transform.x},${transform.y})`}
+                    onMouseMove={(e) => {
+                      handleLinkHover(d, 'A', e);
+                    }}
+                    onMouseOut={handleLinkHoverLoss}
+                    key={i}
+                  >
                     <rect
                       x={
                         -measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width / 2 -
@@ -959,7 +967,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 }
                 const transform = getPercentPoint(d.lineStartA, d.lineStartZ, 0.5 * (d.sides.Z.labelOffset / 100));
                 return (
-                  <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                  <g
+                    fontStyle={'italic'}
+                    transform={`translate(${transform.x},${transform.y})`}
+                    onMouseMove={(e) => {
+                      handleLinkHover(d, 'Z', e);
+                    }}
+                    onMouseOut={handleLinkHoverLoss}
+                    key={i}
+                  >
                     <rect
                       x={
                         -measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width / 2 -
