@@ -488,8 +488,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
       // Check there is only one connection (otherwise this doesn't work)
       if (forwardLinks.length === 1) {
-        console.log(forwardLinks[0].sides.Z.query);
-        // d.sides.A.query = prevLinks[0].sides.A.query
         for (let key in forwardLinks[0].sides.Z) {
           if (key !== 'labelOffset' && key !== 'anchor') {
             // @ts-ignore
@@ -517,7 +515,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     }
 
     let displayName = getDataFrameName(frame, data.series);
-    console.log(hoveredLink.link.sides.A.query);
     return displayName === hoveredLink.link.sides.A.query || displayName === hoveredLink.link.sides.Z.query;
   });
 
@@ -591,7 +588,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     displayMode: LegendDisplayMode.List,
                     placement: 'bottom',
                     isVisible: true,
-                    showLegend: true,
+                    showLegend: false,
                   }}
                   tweakScale={(opts, forField: Field<any, Vector<any>>) => {
                     opts.softMin = 0;
