@@ -35,7 +35,10 @@ jobs:
         if: |
           steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
           steps.cache-node-modules.outputs.cache-hit != 'true'
-      - name: Build and test frontend
+      - name: Run CI tests just to make sure
+        run: npm run test:ci
+
+      - name: Build plugin
         run: npm run build
 
       - name: Sign plugin

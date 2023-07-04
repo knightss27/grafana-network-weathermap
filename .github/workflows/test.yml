@@ -18,4 +18,5 @@ jobs:
           node-version: '16'
       - run: npm install -g npm
       - run: npm ci
+      - run: npm run test:ci
       - run: npm run build

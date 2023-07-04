@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { WeathermapPanel } from 'WeathermapPanel';
 import { SimpleOptions } from 'types';
 import { handleVersionedStateUpdates } from 'utils';
-import { getConnectedLinkData, getData, getData2, theme } from 'testData';
+import { getConnectedLinkData, getData, theme } from 'testData';
 
 const mPanelProps: PanelProps<SimpleOptions> = {
   id: 1,
