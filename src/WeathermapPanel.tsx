@@ -79,6 +79,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   const isEditMode = window.location.search.includes('editPanel');
 
   const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+  const [selectedNodes, setSelectedNodes] = useState([] as DrawnNode[]);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -164,11 +165,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
     // Set x and y to the rounded value if we are using the grid
     x =
-      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+      wm.settings.panel.grid.enabled &&
+      draggedNode &&
+      (draggedNode.index === d.index || selectedNodes.find((n) => n.index === d.index))
         ? nearestMultiple(d.x, wm.settings.panel.grid.size)
         : x;
     y =
-      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+      wm.settings.panel.grid.enabled &&
+      draggedNode &&
+      (draggedNode.index === d.index || selectedNodes.find((n) => n.index === d.index))
         ? nearestMultiple(d.y, wm.settings.panel.grid.size)
         : y;
 
@@ -703,6 +708,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             panned.settings.panel.offset = offset;
             onOptionsChange({ weathermap: panned });
           }}
+          onDoubleClick={() => {
+            setSelectedNodes([]);
+          }}
         >
           {wm.settings.panel.grid.enabled ? (
             <defs>
@@ -1017,6 +1025,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   {...{
                     node: d,
                     draggedNode: draggedNode,
+                    selectedNodes: selectedNodes,
                     wm: wm,
                     onDrag: (e, position) => {
                       // Return early if we actually want to just pan the whole weathermap.
@@ -1028,16 +1037,16 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       setDraggedNode(d);
                       setNodes((prevState) =>
                         prevState.map((val, index) => {
-                          if (index === i) {
+                          if (index === i || selectedNodes.find((n) => n.id === nodes[index].id)) {
                             const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
                             val.x = Math.round(
                               wm.settings.panel.grid.enabled
-                                ? wm.nodes[i].position[0] + (val.x + scaledPos.x - wm.nodes[i].position[0])
+                                ? wm.nodes[index].position[0] + (val.x + scaledPos.x - wm.nodes[index].position[0])
                                 : val.x + scaledPos.x
                             );
                             val.y = Math.round(
                               wm.settings.panel.grid.enabled
-                                ? wm.nodes[i].position[1] + (val.y + scaledPos.y - wm.nodes[i].position[1])
+                                ? wm.nodes[index].position[1] + (val.y + scaledPos.y - wm.nodes[index].position[1])
                                 : val.y + scaledPos.y
                             );
                           }
@@ -1063,10 +1072,39 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                           ? nearestMultiple(nodes[i].y, wm.settings.panel.grid.size)
                           : nodes[i].y,
                       ];
+
+                      for (let node of selectedNodes) {
+                        current.nodes[node.index].position = [
+                          wm.settings.panel.grid.enabled
+                            ? nearestMultiple(nodes[node.index].x, wm.settings.panel.grid.size)
+                            : nodes[node.index].x,
+                          wm.settings.panel.grid.enabled
+                            ? nearestMultiple(nodes[node.index].y, wm.settings.panel.grid.size)
+                            : nodes[node.index].y,
+                        ];
+                      }
+
                       onOptionsChange({
                         ...options,
                         weathermap: current,
                       });
+                    },
+                    onClick: (e) => {
+                      if (e.ctrlKey && isEditMode) {
+                        setSelectedNodes((v) => {
+                          let cIndex = v.findIndex((n) => n.id === tempNodes[i].id);
+                          if (cIndex > -1) {
+                            v.splice(cIndex, 1);
+                          } else {
+                            v.push(tempNodes[i]);
+                          }
+                          return v;
+                        });
+                      } else if (!isEditMode && tempNodes[i].dashboardLink) {
+                        window.open(tempNodes[i].dashboardLink, '_blank');
+                      }
+                      // Force an update
+                      onOptionsChange(options);
                     },
                     disabled: !isEditMode,
                     data: data,
