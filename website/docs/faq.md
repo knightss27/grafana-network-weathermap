@@ -10,7 +10,7 @@
     - See the note on: [Adding Data](/#adding-data).
 
 - Q: Can I upload an image as a background? Will this be added as a feature?
-    - I would love to add this feature (and have in fact implemented it and then removed it), however Grafana does not currently have a good way to manage user image uploading through plugins, and during my original plugin review this feature was removed at their request. They said they are looking into adding a better way to manage this, so it's up to Grafana as to when this will be a possibility.
+    - Yes you can now! For node icons as well. You simple have to host the image somewhere and can insert the URL into the image box under the panel customization.
 
 - Q: Plugin is throwing `toReturn.source is undefined`?
     - Just reload or force reload the page. I have yet to properly track down this bug, but rest assured it seems to only occur directly after saving and applying your changes and can be easily fixed.

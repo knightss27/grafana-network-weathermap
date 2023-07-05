@@ -106,6 +106,8 @@ By default, the panel will start completely blank, looking something like this:
     - `Click + Drag` nodes to move them.
     - `Shift + Drag` or hold and drag `Middle Mouse` to move the map.
     - `Scroll` to zoom.
+    - `Ctrl + Click` to select/deselect multiple nodes before dragging.
+    - `Double Click` to deselect all nodes.
 - Outside of editing mode (including read-only users):
     - `Shift + Scroll` to zoom.
     - `Shift + Drag` to move the map.

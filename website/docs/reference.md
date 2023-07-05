@@ -13,7 +13,7 @@ This page documents all editing fields with their expected inputs and usage. It 
 | Label | `string` | Text displayed on the node, when set to an empty string the node's outline is not drawn |
 | Dashboard Link | `string` | URL which clicking on this node will direct you to |
 | **Icon:** |
-| - Icon | `Icon` | SVG icon drawn with the node |
+| - Icon | `Icon` | SVG icon drawn with the node, or a custom image |
 | - Width | `number` | Bounding width (icon will maintain its original aspect ratio) |
 | - Height | `number` | Bounding height (icon will maintain its original aspect ratio) |
 | - Padding Horizontal | `number` | Padding in pixels to the left and right of the icon |
@@ -28,7 +28,7 @@ This page documents all editing fields with their expected inputs and usage. It 
 | **Advanced:** |
 | - Constant Spacing | `boolean` | Use global link spacing values for this node |
 | - Compact Vertical Links | `boolean` | Do not allow the node to grow vertically |
-|  Use As Connection | `boolean` | Draw this node as a connection for use with two links |
+| - Use As Connection | `boolean` | Draw this node as a connection for use with two links |
 | **Colors:** |
 | - Background Color | `picker` |
 | - Border Color | `picker` |
@@ -66,6 +66,7 @@ This page documents all editing fields with their expected inputs and usage. It 
 | Field | Type | Description |
 |-------|------|-------------|
 | Background Color | `picker` |
+| Background Image | `url` |
 | Viewbox Width (px) | `number` | SVG viewbox width, allows for drawing larger maps |
 | Viewbox Height (px) | `number` | SVG viewbox height, allows for drawing larger maps |
 | Zoom Scale | `number` | The viewport zoom, negative is zoomed in, positive zoomed out |
