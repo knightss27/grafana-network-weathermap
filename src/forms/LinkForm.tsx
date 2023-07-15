@@ -188,7 +188,11 @@ export const LinkForm = (props: Props) => {
 
   let dataWithIds: string[] = [];
   context.data.forEach((d, i) => {
-    dataWithIds.push(getDataFrameName(d, context.data));
+    try {
+      dataWithIds.push(getDataFrameName(d, context.data));
+    } catch (e) {
+      console.warn('Network Weathermap: Error while attempting to access query data.', e);
+    }
   });
 
   return (

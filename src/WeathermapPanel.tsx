@@ -251,10 +251,14 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       if (frame.fields.length < 2) {
         return;
       }
-      dataFrameWithIds.push({
-        value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-        id: getDataFrameName(frame, data.series),
-      });
+      try {
+        dataFrameWithIds.push({
+            value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
+            id: getDataFrameName(frame, data.series),
+          });
+      } catch (e) {
+        console.warn('Network Weathermap: Error while attempting to access query data.', e);
+      }
     });
 
     let filteredDataFramesWithIds = dataFrameWithIds.filter(
@@ -519,7 +523,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       return;
     }
 
-    let displayName = getDataFrameName(frame, data.series);
+    let displayName = null;
+    try {
+      displayName = getDataFrameName(frame, data.series);
+    } catch (e) {
+      console.warn('Network Weathermap: Error while attempting to access query data.', e);
+    }
+
     return displayName === hoveredLink.link.sides.A.query || displayName === hoveredLink.link.sides.Z.query;
   });
 
