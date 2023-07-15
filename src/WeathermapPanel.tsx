@@ -253,9 +253,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       }
       try {
         dataFrameWithIds.push({
-            value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-            id: getDataFrameName(frame, data.series),
-          });
+          value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
+          id: getDataFrameName(frame, data.series),
+        });
       } catch (e) {
         console.warn('Network Weathermap: Error while attempting to access query data.', e);
       }
