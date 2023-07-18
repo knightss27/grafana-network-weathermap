@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/knightss27/grafana-network-weathermap/compare/v0.4.2...v0.4.3) (2023-07-18)
+
+
+### Bug Fixes
+
+* add try-catch calls to get series names ([#46](https://github.com/knightss27/grafana-network-weathermap/issues/46)) ([192dc26](https://github.com/knightss27/grafana-network-weathermap/commit/192dc265550fffe8fb8eb0c6a65911f1fd75c7de))
+
 ### [0.4.2](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.6...v0.4.2) (2023-07-05)
 
 ### Features
