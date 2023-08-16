@@ -28,14 +28,16 @@
       }
     ],
     "screenshots": [
-      { "name": "General Example", "path": "img/general-example.png" },
-      { "name": "v0.0.2-alpha", "path": "img/v0.0.2-alpha.png" }
+      { "name": "General Example 1", "path": "img/general-example.png" },
+      { "name": "General Example 2", "path": "img/example_00.png" },
+      { "name": "General Example 3", "path": "img/example_01.png" },
+      { "name": "General Example 4", "path": "img/example_02.png" }
     ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=8.0.0",
+    "grafanaDependency": ">=9.0.5",
     "plugins": []
   }
 }

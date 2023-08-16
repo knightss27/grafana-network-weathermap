@@ -16,9 +16,11 @@ import { PanelData } from '@grafana/data';
 interface NodeProps {
   node: DrawnNode;
   draggedNode: DrawnNode;
+  selectedNodes: DrawnNode[];
   wm: Weathermap;
   onDrag: DraggableEventHandler;
   onStop: DraggableEventHandler;
+  onClick: React.MouseEventHandler<SVGGElement>;
   disabled: boolean;
   data: PanelData;
 }
@@ -43,7 +45,7 @@ function calculateRectY(d: DrawnNode, wm: Weathermap) {
 }
 
 const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
-  const { node, draggedNode, wm, onDrag, onStop, disabled, data } = props;
+  const { node, draggedNode, selectedNodes, wm, onDrag, onStop, onClick, disabled, data } = props;
   const styles = getStyles();
 
   const rectX = useMemo(() => calculateRectX(node, wm), [node, wm]);
@@ -62,23 +64,26 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
     nodeIsDown = recentFrame.length === 0 || (recentFrame.length > 0 && recentFrame[0] < 1);
   }
 
+  // Check if this node is selected for dragging
+  let nodeIsSelected = selectedNodes.find((n) => n.index === node.index);
+
   return (
     <DraggableCore disabled={disabled} onDrag={onDrag} onStop={onStop}>
       <g
         cursor={disabled ? (node.dashboardLink ? 'pointer' : '') : 'move'}
         display={node.label !== undefined ? 'inline' : 'none'}
-        onClick={() => {
-          if (disabled && node.dashboardLink) {
-            window.open(node.dashboardLink, '_blank');
-          }
-        }}
+        onClick={onClick}
         transform={`translate(${
-          wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === node.index
+          wm.settings.panel.grid.enabled &&
+          draggedNode &&
+          (draggedNode.index === node.index || selectedNodes.find((n) => n.index === node.index))
             ? nearestMultiple(node.x, wm.settings.panel.grid.size)
             : node.x
         },
                     ${
-                      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === node.index
+                      wm.settings.panel.grid.enabled &&
+                      draggedNode &&
+                      (draggedNode.index === node.index || selectedNodes.find((n) => n.index === node.index))
                         ? nearestMultiple(node.y, wm.settings.panel.grid.size)
                         : node.y
                     })`}
@@ -96,7 +101,9 @@ const MapNode: React.FC<NodeProps> = (props: NodeProps) => {
                   : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)
               }
               stroke={
-                node.isConnection
+                nodeIsSelected
+                  ? getSolidFromAlphaColor(node.colors.font, wm.settings.panel.backgroundColor)
+                  : node.isConnection
                   ? disabled
                     ? 'transparent'
                     : getSolidFromAlphaColor(node.colors.background, wm.settings.panel.backgroundColor)

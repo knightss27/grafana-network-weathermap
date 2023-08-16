@@ -2,6 +2,7 @@ import { DataFrame } from '@grafana/data';
 
 export interface PanelOptions {
   backgroundColor: string;
+  backgroundImage?: BGImageOptions;
   panelSize: AreaSize;
   zoomScale: number;
   offset: Position;
@@ -13,12 +14,18 @@ export interface PanelOptions {
   };
 }
 
+export interface BGImageOptions {
+  url: string;
+  fit: string;
+}
+
 export interface TooltipOptions {
   fontSize: number;
   textColor: string;
   backgroundColor: string;
   inboundColor: string;
   outboundColor: string;
+  scaleToBandwidth: boolean;
 }
 
 export interface AreaSize {

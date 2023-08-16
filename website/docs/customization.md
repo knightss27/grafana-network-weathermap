@@ -12,6 +12,7 @@ The diagram below illustrates some of the basic terminology this plugin uses.
 There are three main panel settings:
 
 - Background Color (`color`): Use the picker to set whatever background you want (including transparent).
+    - Newly added is the possibility for a background image, simply click the plus and enter a URL.
 - Viewbox Width (`number`): The width in pixels of the SVG viewbox.
 - Viewbox Height (`number`): The height in pixels of the SVG viewbox.
 

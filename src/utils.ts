@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 import { Anchor, DrawnNode, Link, Node, Weathermap } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const CURRENT_VERSION = 17;
+export const CURRENT_VERSION = 14;
 
 let colorsCalculatedCache: { [colors: string]: string } = {};
 
@@ -68,10 +68,17 @@ function parseColor(input: string) {
 
 // Taken from https://github.com/grafana/grafana/blob/main/packages/grafana-ui/src/utils/measureText.ts
 // I want to ensure this function remains available regardless of Grafana version
-const context = document.createElement('canvas').getContext('2d')!;
+let context: CanvasRenderingContext2D;
 const cache = new Map<string, TextMetrics>();
 const cacheLimit = 500;
 let ctxFontStyle = '';
+
+function getCanvasContext() {
+  if (!context) {
+    context = document.createElement('canvas').getContext('2d')!;
+  }
+  return context;
+}
 
 export function measureText(text: string, fontSize: number): TextMetrics {
   const fontStyle = `${fontSize}px 'Roboto'`;
@@ -81,6 +88,8 @@ export function measureText(text: string, fontSize: number): TextMetrics {
   if (fromCache) {
     return fromCache;
   }
+
+  const context = getCanvasContext();
 
   if (ctxFontStyle !== fontStyle) {
     context.font = ctxFontStyle = fontStyle;
@@ -316,6 +325,7 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
         backgroundColor: 'black',
         inboundColor: '#00cf00',
         outboundColor: '#fade2a',
+        scaleToBandwidth: false,
       },
       scale: {
         position: {

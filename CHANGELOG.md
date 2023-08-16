@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/knightss27/grafana-network-weathermap/compare/v0.4.2...v0.4.3) (2023-07-18)
+
+
+### Bug Fixes
+
+* add try-catch calls to get series names ([#46](https://github.com/knightss27/grafana-network-weathermap/issues/46)) ([192dc26](https://github.com/knightss27/grafana-network-weathermap/commit/192dc265550fffe8fb8eb0c6a65911f1fd75c7de))
+
+### [0.4.2](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.6...v0.4.2) (2023-07-05)
+
+### Features
+
+- background images (from urls!) ([#5](https://github.com/knightss27/grafana-network-weathermap/issues/5)) ([b00ad48](https://github.com/knightss27/grafana-network-weathermap/commit/b00ad48dd91911bc7a990212eb428bf5ebbb92c2))
+- custom node icons ([#60](https://github.com/knightss27/grafana-network-weathermap/issues/60)) ([68d9b71](https://github.com/knightss27/grafana-network-weathermap/commit/68d9b717f2090ba632219ee8a0e9e6e3ef5a7f72))
+- select and drag multipl nodes ([03c8d9c](https://github.com/knightss27/grafana-network-weathermap/commit/03c8d9c368d83fe136d2aaa7e10b1a4d71cd80f9))
+
+### Bug Fixes
+
+- display all data on connection links ([580206b](https://github.com/knightss27/grafana-network-weathermap/commit/580206b408260b3bee17a3e53054a96388c02d3c))
+- link labels now hoverable ([f6d1ea3](https://github.com/knightss27/grafana-network-weathermap/commit/f6d1ea3550ebca76c40650361bc3ecdbf9033f5f))
+- temp changes no longer written to state ([#61](https://github.com/knightss27/grafana-network-weathermap/issues/61)) ([cb6d3e3](https://github.com/knightss27/grafana-network-weathermap/commit/cb6d3e32876175ed32ea6c6ac934252d65f01e74))
+- update grafana dependency ([323eaec](https://github.com/knightss27/grafana-network-weathermap/commit/323eaecbc8a7bf7d9f984d7dbc5ccb3234dfbe62))
+
+### [0.4.1](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.6...v0.4.1) (2023-07-05)
+
+### Features
+
+- background images (from urls!) ([#5](https://github.com/knightss27/grafana-network-weathermap/issues/5)) ([b00ad48](https://github.com/knightss27/grafana-network-weathermap/commit/b00ad48dd91911bc7a990212eb428bf5ebbb92c2))
+- custom node icons ([#60](https://github.com/knightss27/grafana-network-weathermap/issues/60)) ([68d9b71](https://github.com/knightss27/grafana-network-weathermap/commit/68d9b717f2090ba632219ee8a0e9e6e3ef5a7f72))
+- select and drag multipl nodes ([03c8d9c](https://github.com/knightss27/grafana-network-weathermap/commit/03c8d9c368d83fe136d2aaa7e10b1a4d71cd80f9))
+
+### Bug Fixes
+
+- display all data on connection links ([580206b](https://github.com/knightss27/grafana-network-weathermap/commit/580206b408260b3bee17a3e53054a96388c02d3c))
+- link labels now hoverable ([f6d1ea3](https://github.com/knightss27/grafana-network-weathermap/commit/f6d1ea3550ebca76c40650361bc3ecdbf9033f5f))
+- temp changes no longer written to state ([#61](https://github.com/knightss27/grafana-network-weathermap/issues/61)) ([cb6d3e3](https://github.com/knightss27/grafana-network-weathermap/commit/cb6d3e32876175ed32ea6c6ac934252d65f01e74))
+
+### [0.3.6](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.5...v0.3.6) (2023-03-26)
+
+### Features
+
+- customizable tooltip graph scaling ([#50](https://github.com/knightss27/grafana-network-weathermap/issues/50)) ([979868b](https://github.com/knightss27/grafana-network-weathermap/commit/979868b3d6b265c518a855d042ba50350d083962))
+
+### Bug Fixes
+
+- 0 values no longer treated as null ([#51](https://github.com/knightss27/grafana-network-weathermap/issues/51)) ([56481a3](https://github.com/knightss27/grafana-network-weathermap/commit/56481a38a1441dd749e7ee9ab8f26b5fd0f1cf38))
+- do not assume field existence ([#46](https://github.com/knightss27/grafana-network-weathermap/issues/46)) ([f895bea](https://github.com/knightss27/grafana-network-weathermap/commit/f895bea898e859348130959b59bc2bec6a82eaf6))
+- missing bandwidth queries default back to 0 ([612973e](https://github.com/knightss27/grafana-network-weathermap/commit/612973e5341dfdd9540a809f633ffcaf8732d844))
+- overwrite last values when query is null ([#47](https://github.com/knightss27/grafana-network-weathermap/issues/47)) ([f34afd2](https://github.com/knightss27/grafana-network-weathermap/commit/f34afd2e641b081265565712d0fb10eab461670e))
+- timestamp uses correct end of timerange ([56b8d34](https://github.com/knightss27/grafana-network-weathermap/commit/56b8d34f3fec5015733c84ba0f767b3c38fced39))
+
 ### [0.3.5](https://github.com/knightss27/grafana-network-weathermap/compare/v0.3.4...v0.3.5) (2023-01-25)
 
 ### Features

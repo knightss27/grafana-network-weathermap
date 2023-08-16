@@ -34,13 +34,10 @@ import {
 } from 'utils';
 import MapNode from './components/MapNode';
 import ColorScale from 'components/ColorScale';
-import { AxisProps } from '@grafana/ui/components/uPlot/config/UPlotAxisBuilder';
-import { ScaleProps } from '@grafana/ui/components/uPlot/config/UPlotScaleBuilder';
-import PathNodeRenderer from 'components/PathNode';
 
 // Calculate node position, width, etc.
 function generateDrawnNode(d: Node, i: number, wm: Weathermap): DrawnNode {
-  let toReturn: DrawnNode = Object.create(d);
+  let toReturn: DrawnNode = { ...d } as DrawnNode;
   toReturn.index = i;
   toReturn.x = toReturn.position[0];
   toReturn.y = toReturn.position[1];
@@ -78,7 +75,11 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     onOptionsChange({ weathermap: handleVersionedStateUpdates(wm, theme) });
   }
 
+  // Check for editing-related feature set
   const isEditMode = window.location.search.includes('editPanel');
+
+  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
+  const [selectedNodes, setSelectedNodes] = useState([] as DrawnNode[]);
 
   function getScaleColor(current: number, max: number) {
     if (max === 0) {
@@ -172,11 +173,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
     // Set x and y to the rounded value if we are using the grid
     x =
-      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+      wm.settings.panel.grid.enabled &&
+      draggedNode &&
+      (draggedNode.index === d.index || selectedNodes.find((n) => n.index === d.index))
         ? nearestMultiple(d.x, wm.settings.panel.grid.size)
         : x;
     y =
-      wm.settings.panel.grid.enabled && draggedNode && draggedNode.index === d.index
+      wm.settings.panel.grid.enabled &&
+      draggedNode &&
+      (draggedNode.index === d.index || selectedNodes.find((n) => n.index === d.index))
         ? nearestMultiple(d.y, wm.settings.panel.grid.size)
         : y;
 
@@ -238,8 +243,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
   // Calculate link positions / text / colors / etc.
   function generateDrawnLink(d: Link, i: number): DrawnLink {
-    let toReturn: DrawnLink = Object.create(d);
+    let toReturn: DrawnLink = { ...d, sides: { A: { ...d.sides.A }, Z: { ...d.sides.Z } } } as DrawnLink;
     toReturn.index = i;
+
     const linkValueFormatter = getlinkValueFormatter(
       d.units ? d.units : wm.settings.link.defaultUnits ? wm.settings.link.defaultUnits : 'bps'
     );
@@ -250,10 +256,17 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
 
     let dataFrameWithIds: Array<{ value: number; id: string }> = [];
     data.series.forEach((frame) => {
-      dataFrameWithIds.push({
-        value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
-        id: getDataFrameName(frame, data.series),
-      });
+      if (frame.fields.length < 2) {
+        return;
+      }
+      try {
+        dataFrameWithIds.push({
+          value: frame.fields[1].values.get(frame.fields[1].values.length - 1),
+          id: getDataFrameName(frame, data.series),
+        });
+      } catch (e) {
+        console.warn('Network Weathermap: Error while attempting to access query data.', e);
+      }
     });
 
     let filteredDataFramesWithIds = dataFrameWithIds.filter(
@@ -268,13 +281,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       if (toReturn.sides[side].bandwidthQuery) {
         let dataFrame = dataFrameWithIds.filter((value) => value.id === toReturn.sides[side].bandwidthQuery);
 
-        // If we don't have any values, return early so the set values stay as they should
-        if (!(dataFrame[0] && dataFrame[0].value)) {
-          break;
+        // Ensure we have the values we should
+        if (dataFrame[0] !== undefined && dataFrame[0].value !== undefined) {
+          // If we have a value, go use it
+          toReturn.sides[side].bandwidth = dataFrame[0].value;
+        } else {
+          toReturn.sides[side].bandwidth = 0;
         }
-
-        // If we have a value, go use it
-        toReturn.sides[side].bandwidth = dataFrame[0].value;
       }
 
       // Set the display value to zero, just in case nothing exists
@@ -289,24 +302,22 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
         let dataSource = toReturn.sides[side].query;
         let dataFrame = filteredDataFramesWithIds.filter((s) => s.id === dataSource);
 
-        // If we don't have any values, return early so the set values stay as they should
-        if (!(dataFrame[0] && dataFrame[0].value)) {
-          break;
+        // Ensure we have the values we should
+        if (dataFrame[0] !== undefined && dataFrame[0].value !== undefined) {
+          // If we have a value, go use it
+          toReturn.sides[side].currentValue = dataFrame[0].value;
+
+          // Get the text formatted to KiB/MiB/etc.
+          let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
+          toReturn.sides[side].currentValueText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
+
+          // Get the percentage througput text
+          // Note that this does allow the text to be 0% even when a query doesn't return a value.
+          toReturn.sides[side].currentPercentageText =
+            toReturn.sides[side].bandwidth > 0
+              ? `${((toReturn.sides[side].currentValue / toReturn.sides[side].bandwidth) * 100).toFixed(2)}%`
+              : 'n/a%';
         }
-
-        // If we have a value, go use it
-        toReturn.sides[side].currentValue = dataFrame[0].value;
-
-        // Get the text formatted to KiB/MiB/etc.
-        let scaledSideValue = linkValueFormatter(toReturn.sides[side].currentValue);
-        toReturn.sides[side].currentValueText = `${scaledSideValue.text} ${scaledSideValue.suffix}`;
-
-        // Get the percentage througput text
-        // Note that this does allow the text to be 0% even when a query doesn't return a value.
-        toReturn.sides[side].currentPercentageText =
-          toReturn.sides[side].bandwidth > 0
-            ? `${((toReturn.sides[side].currentValue / toReturn.sides[side].bandwidth) * 100).toFixed(2)}%`
-            : 'n/a%';
       }
 
       // Display throughput % when necessary
@@ -422,7 +433,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
   // Minimize uneeded state changes
   const mounted = useRef(false);
 
-  // Update nodes on props change
+  // Update nodes on props/data change
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
@@ -434,20 +445,20 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
+  }, [options, data]);
 
   tempNodes = nodes.slice();
 
-  // Update links on nodes change
+  // Update links on props/data change
+  // TODO: Optimize this to only update the necessary links?
   useEffect(() => {
     setLinks(
       options.weathermap.links.map((d, i) => {
         return generateDrawnLink(d, i);
       })
     );
-    // Yes, technically this allows for stale states if it were to updated in any way other than being passed down. But it's not.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes]);
+  }, [options, data, nodes]); // need to keep nodes here for good looking updating
 
   const zoom = (e: WheelEvent) => {
     // Just don't allow zooming when not in edit mode
@@ -501,6 +512,57 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     if (e.shiftKey) {
       return;
     }
+
+    if (tempNodes[d.source.index].isConnection) {
+      // If this link is coming from a connection, we want
+      // to take the link to that connection's data
+
+      // Find the link with that data
+      let prevLinks = links.filter((l) => l.target.id === d.source.id);
+
+      // Find previous links
+      while (prevLinks.length === 1 && tempNodes[prevLinks[0].source.index].isConnection) {
+        prevLinks = links.filter((l) => l.target.id === prevLinks[0].source.id);
+      }
+
+      // Check there is only one connection (otherwise this doesn't work)
+      if (prevLinks.length === 1) {
+        for (let key in prevLinks[0].sides.A) {
+          if (key !== 'labelOffset' && key !== 'anchor') {
+            // @ts-ignore
+            d.sides.A[key] = prevLinks[0].sides.A[key];
+          }
+        }
+      } else {
+        console.warn(`Connection node "${d.source.label}" missing input connection.`);
+      }
+    }
+
+    if (tempNodes[d.target.index].isConnection) {
+      // If this link is going to a connection, we want
+      // to get the forward data as well.
+
+      // Find the link with that data
+      let forwardLinks = links.filter((l) => l.source.id === d.target.id);
+
+      // Find forward links
+      while (forwardLinks.length === 1 && tempNodes[forwardLinks[0].target.index].isConnection) {
+        forwardLinks = links.filter((l) => l.source.id === forwardLinks[0].target.id);
+      }
+
+      // Check there is only one connection (otherwise this doesn't work)
+      if (forwardLinks.length === 1) {
+        for (let key in forwardLinks[0].sides.Z) {
+          if (key !== 'labelOffset' && key !== 'anchor') {
+            // @ts-ignore
+            d.sides.Z[key] = forwardLinks[0].sides.Z[key];
+          }
+        }
+      } else {
+        console.warn(`Connection node "${d.target.label}" missing output connection.`);
+      }
+    }
+
     setHoveredLink({ link: d, side, mouseEvent: e });
   };
 
@@ -511,13 +573,18 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
     setHoveredLink(null as unknown as HoveredLink);
   };
 
-  const [draggedNode, setDraggedNode] = useState(null as unknown as DrawnNode);
-
   const filteredGraphQueries = data.series.filter((frame) => {
-    let displayName = getDataFrameName(frame, data.series);
     if (!hoveredLink) {
       return;
     }
+
+    let displayName = null;
+    try {
+      displayName = getDataFrameName(frame, data.series);
+    } catch (e) {
+      console.warn('Network Weathermap: Error while attempting to access query data.', e);
+    }
+
     return displayName === hoveredLink.link.sides.A.query || displayName === hoveredLink.link.sides.Z.query;
   });
 
@@ -562,13 +629,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               Throughput (%) - Inbound: {hoveredLink.link.sides.Z.currentPercentageText}, Outbound:{' '}
               {hoveredLink.link.sides.A.currentPercentageText}
             </div>
-            <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
+            <div style={{ fontSize: wm.settings.tooltip.fontSize, paddingBottom: '4px' }}>
               {hoveredLink.link.sides[hoveredLink.side].dashboardLink.length > 0 ? 'Click to see more.' : ''}
             </div>
             {(hoveredLink.link.sides.A.query || hoveredLink.link.sides.Z.query) && filteredGraphQueries.length > 0 ? (
               <React.Fragment>
                 <TimeSeries
-                  width={300}
+                  width={250}
                   height={100}
                   timeRange={timeRange}
                   timeZone={getTimeZone()}
@@ -591,15 +658,19 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     displayMode: LegendDisplayMode.List,
                     placement: 'bottom',
                     isVisible: true,
+                    showLegend: false,
                   }}
-                  tweakScale={(opts: ScaleProps, forField: Field<any, Vector<any>>) => {
+                  tweakScale={(opts, forField: Field<any, Vector<any>>) => {
                     opts.softMin = 0;
-                    if (hoveredLink.link.sides[hoveredLink.side].bandwidth > 0) {
+                    if (
+                      wm.settings.tooltip.scaleToBandwidth &&
+                      hoveredLink.link.sides[hoveredLink.side].bandwidth > 0
+                    ) {
                       opts.softMax = hoveredLink.link.sides[hoveredLink.side].bandwidth;
                     }
                     return opts;
                   }}
-                  tweakAxis={(opts: AxisProps, forField: Field<any, Vector<any>>) => {
+                  tweakAxis={(opts, forField: Field<any, Vector<any>>) => {
                     opts.formatValue = getlinkGraphFormatter(
                       hoveredLink.link.units
                         ? hoveredLink.link.units
@@ -623,22 +694,29 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                     );
                   }}
                 </TimeSeries>
-                <div style={{ display: 'flex', paddingTop: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', paddingTop: '10px' }}>
                   <div
                     style={{
-                      fontSize: wm.settings.tooltip.fontSize,
-                      borderLeft: `10px solid ${wm.settings.tooltip.inboundColor}`,
+                      width: '10px',
+                      height: '3px',
+                      background: wm.settings.tooltip.inboundColor,
                       paddingLeft: '5px',
-                      marginRight: '10px',
+                      marginRight: '4px',
                     }}
-                  >
-                    Inbound
-                  </div>
+                  ></div>
+                  <div style={{ fontSize: wm.settings.tooltip.fontSize }}>Inbound</div>
+                  <div
+                    style={{
+                      width: '10px',
+                      height: '3px',
+                      background: wm.settings.tooltip.outboundColor,
+                      marginLeft: '10px',
+                      marginRight: '4px',
+                    }}
+                  ></div>
                   <div
                     style={{
                       fontSize: wm.settings.tooltip.fontSize,
-                      borderLeft: `10px solid ${wm.settings.tooltip.outboundColor}`,
-                      paddingLeft: '5px',
                     }}
                   >
                     Outbound
@@ -658,15 +736,13 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundImage: wm.settings.panel.backgroundColor.startsWith('image')
-              ? `url(${wm.settings.panel.backgroundColor.split('|', 3)[2]})`
+            backgroundImage: wm.settings.panel.backgroundImage
+              ? `url(${wm.settings.panel.backgroundImage.url})`
               : 'none',
-            backgroundSize: 'contain',
+            backgroundSize: wm.settings.panel.backgroundImage?.fit,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: wm.settings.panel.backgroundColor.startsWith('image')
-              ? 'none'
-              : wm.settings.panel.backgroundColor,
+            backgroundColor: wm.settings.panel.backgroundImage ? 'none' : wm.settings.panel.backgroundColor,
           }}
           id={`nw-${wm.id}${isEditMode ? '_' : ''}`}
           width={width2}
@@ -696,6 +772,9 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             let panned = wm;
             panned.settings.panel.offset = offset;
             onOptionsChange({ weathermap: panned });
+          }}
+          onDoubleClick={() => {
+            setSelectedNodes([]);
           }}
         >
           {wm.settings.panel.grid.enabled ? (
@@ -778,7 +857,6 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                 // Automatic data collection through connection links
                 if (tempNodes[d.source.index].isConnection) {
                   // If this link is coming from a connection, we want to take the link to that connection's data
-
                   // Find the link with that data
                   prevLinks = links.filter((l) => l.target.id === d.source.id);
                   // Check there is only one connection (otherwise this doesn't work)
@@ -989,7 +1067,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   (d.path ? 1.0 : 0.5) * (d.sides.A.labelOffset / 100)
                 );
                 return (
-                  <g fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`} key={i}>
+                  <g
+                    fontStyle={'italic'}
+                    transform={`translate(${transform.x},${transform.y})`}
+                    onMouseMove={(e) => {
+                      handleLinkHover(d, 'A', e);
+                    }}
+                    onMouseOut={handleLinkHoverLoss}
+                    key={i}
+                  >
                     <rect
                       x={
                         -measureText(`${d.sides.A.currentText}`, wm.settings.fontSizing.link).width / 2 -
@@ -1036,7 +1122,15 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   (d.path ? 1.0 : 0.5) * (d.sides.Z.labelOffset / 100)
                 );
                 return (
-                  <g key={i} fontStyle={'italic'} transform={`translate(${transform.x},${transform.y})`}>
+                  <g
+                    fontStyle={'italic'}
+                    transform={`translate(${transform.x},${transform.y})`}
+                    onMouseMove={(e) => {
+                      handleLinkHover(d, 'Z', e);
+                    }}
+                    onMouseOut={handleLinkHoverLoss}
+                    key={i}
+                  >
                     <rect
                       x={
                         -measureText(`${d.sides.Z.currentText}`, wm.settings.fontSizing.link).width / 2 -
@@ -1078,6 +1172,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                   {...{
                     node: d,
                     draggedNode: draggedNode,
+                    selectedNodes: selectedNodes,
                     wm: wm,
                     onDrag: (e, position) => {
                       // Return early if we actually want to just pan the whole weathermap.
@@ -1089,16 +1184,16 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                       setDraggedNode(d);
                       setNodes((prevState) =>
                         prevState.map((val, index) => {
-                          if (index === i) {
+                          if (index === i || selectedNodes.find((n) => n.id === nodes[index].id)) {
                             const scaledPos = getScaledMousePos({ x: position.deltaX, y: position.deltaY });
                             val.x = Math.round(
                               wm.settings.panel.grid.enabled
-                                ? wm.nodes[i].position[0] + (val.x + scaledPos.x - wm.nodes[i].position[0])
+                                ? wm.nodes[index].position[0] + (val.x + scaledPos.x - wm.nodes[index].position[0])
                                 : val.x + scaledPos.x
                             );
                             val.y = Math.round(
                               wm.settings.panel.grid.enabled
-                                ? wm.nodes[i].position[1] + (val.y + scaledPos.y - wm.nodes[i].position[1])
+                                ? wm.nodes[index].position[1] + (val.y + scaledPos.y - wm.nodes[index].position[1])
                                 : val.y + scaledPos.y
                             );
                           }
@@ -1124,10 +1219,39 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
                           ? nearestMultiple(nodes[i].y, wm.settings.panel.grid.size)
                           : nodes[i].y,
                       ];
+
+                      for (let node of selectedNodes) {
+                        current.nodes[node.index].position = [
+                          wm.settings.panel.grid.enabled
+                            ? nearestMultiple(nodes[node.index].x, wm.settings.panel.grid.size)
+                            : nodes[node.index].x,
+                          wm.settings.panel.grid.enabled
+                            ? nearestMultiple(nodes[node.index].y, wm.settings.panel.grid.size)
+                            : nodes[node.index].y,
+                        ];
+                      }
+
                       onOptionsChange({
                         ...options,
                         weathermap: current,
                       });
+                    },
+                    onClick: (e) => {
+                      if (e.ctrlKey && isEditMode) {
+                        setSelectedNodes((v) => {
+                          let cIndex = v.findIndex((n) => n.id === tempNodes[i].id);
+                          if (cIndex > -1) {
+                            v.splice(cIndex, 1);
+                          } else {
+                            v.push(tempNodes[i]);
+                          }
+                          return v;
+                        });
+                      } else if (!isEditMode && tempNodes[i].dashboardLink) {
+                        window.open(tempNodes[i].dashboardLink, '_blank');
+                      }
+                      // Force an update
+                      onOptionsChange(options);
                     },
                     disabled: !isEditMode,
                     data: data,
@@ -1200,7 +1324,7 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
             `
           )}
         >
-          {wm.settings.panel.showTimestamp ? timeRange.from.toLocaleString() : ''}
+          {wm.settings.panel.showTimestamp ? timeRange.to.toLocaleString() : ''}
         </div>
       </div>
     );

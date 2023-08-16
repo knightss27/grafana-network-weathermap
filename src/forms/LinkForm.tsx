@@ -188,7 +188,11 @@ export const LinkForm = (props: Props) => {
 
   let dataWithIds: string[] = [];
   context.data.forEach((d, i) => {
-    dataWithIds.push(getDataFrameName(d, context.data));
+    try {
+      dataWithIds.push(getDataFrameName(d, context.data));
+    } catch (e) {
+      console.warn('Network Weathermap: Error while attempting to access query data.', e);
+    }
   });
 
   return (
@@ -218,7 +222,7 @@ export const LinkForm = (props: Props) => {
       {value.links.map((link: Link, i) => {
         if (currentLink && link.id === currentLink.id) {
           return (
-            <React.Fragment>
+            <React.Fragment key={link.id}>
               {Object.values(link.sides).map((side: LinkSide, sideIndex) => {
                 const sName: 'A' | 'Z' = sideIndex === 0 ? 'A' : 'Z';
                 return (
