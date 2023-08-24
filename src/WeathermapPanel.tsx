@@ -558,10 +558,27 @@ export const WeathermapPanel: React.FC<PanelProps<SimpleOptions>> = (props: Pane
               z-index: 10000;
               display: ${hoveredLink ? 'flex' : 'none'};
               flex-direction: column;
-              padding: 5px;
+              padding: ${wm.settings.tooltip.fontSize}px;
               border-radius: 4px;
+              border: 1px solid
+                ${getScaleColor(
+                  hoveredLink.link.sides[hoveredLink.side].currentValue,
+                  hoveredLink.link.sides[hoveredLink.side].bandwidth
+                )};
             `}
           >
+            <div
+              style={{
+                fontSize: wm.settings.tooltip.fontSize,
+                borderBottom: `1px solid ${theme.colors.border.medium}`,
+                marginBottom: '4px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              {hoveredLink.link.nodes[0].label} {hoveredLink.side === 'A' ? '--->' : '<---'}{' '}
+              {hoveredLink.link.nodes[1].label}
+            </div>
             <div style={{ fontSize: wm.settings.tooltip.fontSize }}>
               Usage - Inbound: {hoveredLink.link.sides.Z.currentValueText}, Outbound:{' '}
               {hoveredLink.link.sides.A.currentValueText}

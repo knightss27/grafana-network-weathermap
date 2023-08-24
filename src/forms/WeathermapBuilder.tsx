@@ -69,9 +69,9 @@ export const WeathermapBuilder = (props: Props) => {
         },
       },
       tooltip: {
-        fontSize: 8,
+        fontSize: 9,
         textColor: 'white',
-        backgroundColor: 'black',
+        backgroundColor: theme.colors.background.canvas,
         inboundColor: '#00cf00',
         outboundColor: '#fade2a',
         scaleToBandwidth: false,
