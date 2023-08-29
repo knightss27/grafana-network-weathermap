@@ -257,6 +257,7 @@ export function generateBasicLink(nodes?: [Node, Node]): Link {
     },
     stroke: 8,
     showThroughputPercentage: false,
+    path: undefined,
   };
 }
 
@@ -278,6 +279,7 @@ export function handleVersionedStateUpdates(wm: Weathermap, theme: GrafanaTheme2
     id: '',
     nodes: [],
     links: [],
+    paths: [],
     scale: [],
     settings: {
       link: {

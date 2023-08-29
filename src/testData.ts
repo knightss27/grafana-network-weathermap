@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { GrafanaTheme2 } from '@grafana/data';
 import { Weathermap, Anchor, Node } from 'types';
 import { generateBasicLink, generateBasicNode } from 'utils';

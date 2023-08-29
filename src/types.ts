@@ -86,6 +86,18 @@ export interface Node {
   statusQuery?: string;
 }
 
+export interface PathNode {
+  id: string;
+  position: Position;
+}
+
+export interface Path {
+  id: string;
+  name: string;
+  nodes: PathNode[];
+  numLinks: number;
+}
+
 export interface LinkSide {
   bandwidth: number;
   bandwidthQuery: string | undefined;
@@ -106,6 +118,7 @@ export interface Link {
   arrows: ArrowOptions;
   stroke: number;
   showThroughputPercentage: boolean;
+  path?: string;
 }
 
 export interface DrawnNode extends Node {
@@ -206,6 +219,7 @@ export interface Weathermap {
   id: string;
   nodes: Node[];
   links: Link[];
+  paths: Path[];
   scale: Threshold[];
   settings: WeathermapSettings;
 }
